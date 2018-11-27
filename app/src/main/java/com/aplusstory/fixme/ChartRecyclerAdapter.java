@@ -53,7 +53,6 @@ public class ChartRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         GradientDrawable textViewBackGround = (GradientDrawable)colorRecyclerViewHolder.percentText.getBackground();
 
-
         switch(i % 11) {
             case 0:
                 textViewBackGround.setColor(context.getResources().getColor(R.color.chartColor1));

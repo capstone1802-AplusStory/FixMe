@@ -8,11 +8,13 @@
     <color name="blue_50">#780000FF</color>
     <color name="white_20">#32FFFFFF</color>
     <color name="black_10">#16000000</color>
-
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlue">#2196F3</color>
     <drawable name="bg_select">#2196F3</drawable>
     <drawable name="bg">#EEEEEE</drawable>
+
+
+    <color name="graybg20">#33838383</color>
 
     <color name="chartColor1">#ff8576</color>
     <color name="chartColor2">#ff9750</color>

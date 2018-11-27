@@ -52,7 +52,6 @@ public class ScheduleRepeatWeeklyFragment extends Fragment implements View.OnCli
 
         Button confirmButton = (Button) returnView.findViewById(R.id.confirmButton);
         confirmButton.setOnClickListener(this);
-
         return returnView;
     }
 

@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.ik024.calendar_lib.custom.YearView;
+
+import io.github.memfis19.cadar.view.MonthCalendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +27,8 @@ public class YearlyCalendarFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    YearView yearView;
+    MonthCalendar monthCalendar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -67,12 +72,35 @@ public class YearlyCalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View returnView = inflater.inflate(R.layout.fragment_yearly_calendar, container, false);
 
-        TextView textView = (TextView) returnView.findViewById(R.id.yeartest);
-        textView.setBackgroundResource(R.color.chartColor5);
+        TextView janTextView = (TextView) returnView.findViewById(R.id.janText),
+                febTextView = (TextView) returnView.findViewById(R.id.febText),
+                marTextView = (TextView) returnView.findViewById(R.id.marText),
+                aprTextView = (TextView) returnView.findViewById(R.id.aprText),
+                mayTextView = (TextView) returnView.findViewById(R.id.mayText),
+                junTextView = (TextView) returnView.findViewById(R.id.junText),
+                julTextView = (TextView) returnView.findViewById(R.id.julText),
+                augTextView = (TextView) returnView.findViewById(R.id.augText),
+                sepTextView = (TextView) returnView.findViewById(R.id.sepText),
+                octTextView = (TextView) returnView.findViewById(R.id.octText),
+                novTextView = (TextView) returnView.findViewById(R.id.novText),
+                decTextView = (TextView) returnView.findViewById(R.id.decText);
+
+        //set background of textview
+        janTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        febTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        marTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        aprTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        mayTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        junTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        julTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        augTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        sepTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        octTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        novTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        decTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
 
         return returnView;
     }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

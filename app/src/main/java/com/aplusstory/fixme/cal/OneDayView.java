@@ -1,6 +1,5 @@
 package com.aplusstory.fixme.cal;
 
-
 import java.util.Calendar;
 import android.content.Context;
 import android.graphics.Color;
@@ -174,5 +173,4 @@ public class OneDayView extends RelativeLayout {
         msgTv.setText((one.getMessage()==null)?"":one.getMessage());
 
     }
-
 }

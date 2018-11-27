@@ -11,8 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aplusstory.fixme.cal.OneMonthView;
-import com.aplusstory.fixme.cal.OneDayView;
+import  com.aplusstory.fixme.cal.*;
 
 import java.util.Calendar;
 

@@ -52,8 +52,6 @@ public class LightSensActivity extends AppCompatActivity implements  SettingsUIM
                 LightSensActivity.this.dm.setSensitivity(level);
             }
         });
-
-
     }
 
 

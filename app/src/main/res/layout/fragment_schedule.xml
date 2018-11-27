@@ -9,7 +9,6 @@
     tools:context=".ScheduleFragment"
     android:background="@android:color/white">
 
-
     <TextView
         android:id="@+id/scheduleDate"
         android:layout_width="match_parent"

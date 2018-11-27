@@ -67,8 +67,6 @@ public class ScheduleRepeationActivity extends AppCompatActivity
         textViewED = (TextView) findViewById(R.id.endRDate);
         textViewED.setText(year+"년 "+(month + 1)+"월 "+day+"일");
         textViewED.setOnClickListener(this);
-
-
         if(this.fragmentManager == null){
             this.fragmentManager = this.getSupportFragmentManager();
         }
@@ -87,7 +85,6 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 
         Button yearlyButton = (Button) findViewById(R.id.yearlyButton);
         yearlyButton.setOnClickListener(this);
-
     }
 
     @Override

@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BlankFragment"
-    android:id="@+id/fragment_blank">
+    tools:context="com.aplusstory.fixme.BlankFragment"
+    android:id="@+id/fragment_blank"
+    android:background="@android:color/white">
 
     <!-- TODO: Update blank fragment layout -->
 

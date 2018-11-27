@@ -101,7 +101,6 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
             textView.setText(String.format("%02d", hourOfDay)+":"+String.format("%02d", minute));
             ScheduleTimeActivity.this.cStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
             ScheduleTimeActivity.this.cStart.set(Calendar.MINUTE, hourOfDay);
-
         }
     };
 

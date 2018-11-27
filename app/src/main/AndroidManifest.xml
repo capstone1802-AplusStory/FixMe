@@ -62,7 +62,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_full_alarm"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".ChartActivity" />
+        <activity android:name=".FootprintActivity" />
         <activity android:name=".FavoriteActivity" />
         <activity android:name=".FootprintRoutineActivity"/>
         <activity android:name=".TMapActivity"/>

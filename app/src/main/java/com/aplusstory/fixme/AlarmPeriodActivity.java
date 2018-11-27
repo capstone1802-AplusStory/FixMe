@@ -59,8 +59,6 @@ public class AlarmPeriodActivity extends AppCompatActivity implements SettingsUI
                     }
                 }
         );
-
-
     }
 
     @Override

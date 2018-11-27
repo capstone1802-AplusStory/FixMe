@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#095e96"
-            android:text="   사용자세 어드바이저"
+            android:paddingLeft="10dp"
+            android:text="사용자세 어드바이저"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,6 +57,7 @@
             android:id="@+id/settingList1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +67,7 @@
 
         <ListView
             android:id="@+id/settingListV"
+            android:divider="@null"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -73,7 +76,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#095e96"
-            android:text="   오늘의 발자취"
+            android:paddingLeft="10dp"
+            android:text="오늘의 발자취"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +87,8 @@
 
         <ListView
             android:id="@+id/settingList2"
+            android:divider="@null"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

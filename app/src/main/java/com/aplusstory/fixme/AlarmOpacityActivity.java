@@ -57,8 +57,6 @@ public class AlarmOpacityActivity extends AppCompatActivity implements SettingsU
                 update();
             }
         });
-
-
     }
 
     public void update() {

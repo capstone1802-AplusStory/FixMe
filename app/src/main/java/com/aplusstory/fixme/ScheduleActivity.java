@@ -72,7 +72,7 @@ public class ScheduleActivity extends AppCompatActivity
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
                     ft.add(R.id.frame_schedule, this.schFrg);
-//                    ft.addToBackStack(null);
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
                 rt = true;
@@ -151,7 +151,7 @@ public class ScheduleActivity extends AppCompatActivity
             }
             schFrg.setArguments(arg);
             ft.add(R.id.frame_schedule, this.schFrg);
-//                    ft.addToBackStack(null);
+                    ft.addToBackStack(null);
             ft.commit();
         }
     }
