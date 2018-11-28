@@ -34,8 +34,8 @@ public class FootDataSettingsActivity extends AppCompatActivity implements Setti
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         spinner = (Spinner) findViewById(R.id.maintainSpinner);
 

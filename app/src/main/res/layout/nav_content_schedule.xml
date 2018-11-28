@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ScheduleActivity"
+    tools:showIn="@layout/app_bar_schedule">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3a99d7"
+        android:minHeight="?attr/actionBarSize" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/frame_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <fragment
+                android:id="@+id/monthly"
+                android:name="com.aplusstory.fixme.CalendarFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_calendar" />
+        </FrameLayout>
+        <!--<CalendarView-->
+        <!--android:id="@+id/calendarView4"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+
+        <!--<fragment-->
+        <!--android:id="@+id/fragment"-->
+        <!--android:name="com.aplusstory.fixme.BlankFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="456dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentStart="true" />-->
+        <FrameLayout
+            android:id="@+id/frame_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="454dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+        </FrameLayout>
+    </RelativeLayout>
+</LinearLayout>

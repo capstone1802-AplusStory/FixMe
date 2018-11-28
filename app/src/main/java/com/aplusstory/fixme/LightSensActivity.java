@@ -29,7 +29,7 @@ public class LightSensActivity extends AppCompatActivity implements  SettingsUIM
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         seekBar.setProgress(LightSensActivity.this.dm.getSensitivity());
