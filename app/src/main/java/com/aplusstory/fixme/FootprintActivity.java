@@ -15,6 +15,7 @@ public class FootprintActivity extends AppCompatActivity {
     Toolbar toolbar;
     Fragment fragment;
     private FragmentManager fragmentManager = null;
+    private Menu menuHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class FootprintActivity extends AppCompatActivity {
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
                     ft.addToBackStack(null);
-
+                    menuHide.findItem(R.id.ic_footprint_calendar).setVisible(false);
                     ft.commit();
                 }
 
@@ -72,6 +73,8 @@ public class FootprintActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chart_menu, menu);
+        menuHide = menu;
+
         return true;
     }
 }
