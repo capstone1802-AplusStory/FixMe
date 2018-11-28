@@ -1,26 +1,23 @@
 package com.aplusstory.fixme;
 
-import android.arch.lifecycle.CompositeGeneratedAdaptersObserver;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-//import android.support.v4.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
-
-import java.util.Calendar;
 
 
 public class CalendarFragment extends Fragment {
     public static final String ARG_PARAM_CALENDER = "calendar";
 
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
     private OnFragmentInteractionListener mListener;
     private TextView thisMonthTv = null;
     private Bundle arg;
@@ -29,8 +26,21 @@ public class CalendarFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static CalendarFragment newInstance() {
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment YearlyCalendarFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static CalendarFragment newInstance(String param1, String param2) {
         CalendarFragment fragment = new CalendarFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
         return fragment;
     }
 

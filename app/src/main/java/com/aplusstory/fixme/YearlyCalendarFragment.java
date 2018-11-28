@@ -4,12 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.ik024.calendar_lib.custom.YearView;
+
+import java.util.Calendar;
 
 import io.github.memfis19.cadar.view.MonthCalendar;
 
@@ -21,7 +25,7 @@ import io.github.memfis19.cadar.view.MonthCalendar;
  * Use the {@link YearlyCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class YearlyCalendarFragment extends Fragment {
+public class YearlyCalendarFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -98,9 +102,22 @@ public class YearlyCalendarFragment extends Fragment {
         octTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
         novTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
         decTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        janTextView.setOnClickListener(this);
+        febTextView.setOnClickListener(this);
+        marTextView.setOnClickListener(this);
+        aprTextView.setOnClickListener(this);
+        mayTextView.setOnClickListener(this);
+        junTextView.setOnClickListener(this);
+        julTextView.setOnClickListener(this);
+        augTextView.setOnClickListener(this);
+        sepTextView.setOnClickListener(this);
+        octTextView.setOnClickListener(this);
+        novTextView.setOnClickListener(this);
+        decTextView.setOnClickListener(this);
 
         return returnView;
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -123,6 +140,75 @@ public class YearlyCalendarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Fragment calendarFragment = (Fragment)new CalendarFragment();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+
+        switch(v.getId()){
+            case R.id.janText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.febText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.marText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.aprText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.mayText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.junText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.julText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.augText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.sepText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.octText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.novText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.decText:
+                ft.replace(R.id.footprint_frame,calendarFragment);
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+        }
     }
 
     /**
