@@ -1,19 +1,23 @@
 package com.aplusstory.fixme;
 
-//import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-//import android.app.FragmentManager;
-import android.support.v4.app.FragmentManager;
-//import android.app.Fragment;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-//import android.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
@@ -22,10 +26,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
 public class ScheduleActivity extends AppCompatActivity
-        implements ScheduleUIManager,
+        implements NavigationView.OnNavigationItemSelectedListener, ScheduleUIManager,
         ScheduleFragment.OnFragmentInteractionListener, MonthlyFragment.OnMonthChangeListener {
+    DrawerLayout drawerLayout;
     Toolbar toolbar;
     private FragmentManager fgm = null;
     private Fragment schFrg = null;
@@ -36,13 +40,36 @@ public class ScheduleActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(false);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_full_menu, this.getTheme());
+        toggle.setHomeAsUpIndicator(drawable);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawerLayout.isDrawerVisible(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         Calendar today = Calendar.getInstance();
         if(this.fgm == null){
             this.fgm = this.getSupportFragmentManager();
@@ -52,7 +79,16 @@ public class ScheduleActivity extends AppCompatActivity
         }
 
         this.monthlyList = this.dm.getMonthlyList(today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+    }
 
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -77,12 +113,6 @@ public class ScheduleActivity extends AppCompatActivity
                 }
                 rt = true;
                 break;
-            case android.R.id.home:
-                Toast.makeText(this, "Menu",Toast.LENGTH_SHORT).show();
-                rt =  true;
-                break;
-            default:
-                //error
         }
 
         return rt;
@@ -151,8 +181,31 @@ public class ScheduleActivity extends AppCompatActivity
             }
             schFrg.setArguments(arg);
             ft.add(R.id.frame_schedule, this.schFrg);
-                    ft.addToBackStack(null);
+            ft.addToBackStack(null);
             ft.commit();
         }
     }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_gps_schedule) {
+
+        } else if (id == R.id.nav_today_footprint) {
+            startActivity(new Intent(this, FootprintActivity.class));
+            finish();
+
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            finish();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

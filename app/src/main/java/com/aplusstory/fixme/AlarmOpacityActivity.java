@@ -28,8 +28,8 @@ public class AlarmOpacityActivity extends AppCompatActivity implements SettingsU
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         seekBar = (SeekBar) findViewById(R.id.seekBar3);
         seekBar.setProgress(AlarmOpacityActivity.this.dm.getTransparency());

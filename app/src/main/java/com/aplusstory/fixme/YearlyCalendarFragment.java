@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ik024.calendar_lib.custom.YearView;
@@ -225,4 +228,13 @@ public class YearlyCalendarFragment extends android.support.v4.app.Fragment impl
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        menu.findItem(R.id.ic_footprint_calendar).setVisible(false);
+//    }
+
+
 }

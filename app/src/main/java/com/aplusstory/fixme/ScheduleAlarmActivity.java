@@ -23,8 +23,8 @@ public class ScheduleAlarmActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         spinner = (Spinner) findViewById(R.id.alarmSpinner);
 
