@@ -18,7 +18,7 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
     }
 
     public static final double DISTANCE_THRESHOLD = CurrentLocationManager.DISTANCE_THRESHOLD;
-    public static final long INTERVAL_THRESHOLD = 5 * 60 * 1000;
+    public static final long INTERVAL_THRESHOLD = 10 * 60 * 1000;
 
     private LocationFileManager fm = null;
     private Context context;
@@ -94,25 +94,47 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
                     Log.d(this.getClass().getName(), "nearby location : " + lastLoca.toString());
                 }
             } else {
-                bufPath.add(loca);
-                if(loca.datetime - lastLoca.datetime < INTERVAL_THRESHOLD
-                || loca.distanceTo(lastLoca) >= DISTANCE_THRESHOLD){
-                    tEnd = loca.datetime;
-                    lastLoca = loca;
-                    Log.d(this.getClass().getName(), "path location : " + lastLoca.toString());
-                } else{
+                if(loca.datetime - lastLoca.datetime >= INTERVAL_THRESHOLD
+                        && loca.distanceTo(lastLoca) >= DISTANCE_THRESHOLD){
                     path = new LocationDataManager.PathData(bufPath);
-                    data = new FootPrintData(path);
+                    data = new FootPrintData(tBegin, tEnd, path);
                     if(this.namer != null){
                         data.name = this.namer.getName(path);
                     }
                     this.dataArr.add(data);
                     bufPath = null;
                     lastLoca = loca;
-                    tBegin = loca.datetime;
+                    tBegin = tEnd;
                     tEnd = loca.datetime;
                     Log.d(this.getClass().getName(), "path ends on : " + loca.toString());
+                }else if(loca.distanceTo(lastLoca) >= DISTANCE_THRESHOLD){
+                    bufPath.add(loca);
+                    tEnd = loca.datetime;
+                    lastLoca = loca;
+                    Log.d(this.getClass().getName(), "path location : " + lastLoca.toString());
+                }else{
+                    tEnd = loca.datetime;
+                    Log.d(this.getClass().getName(), "nearby location : " + lastLoca.toString());
                 }
+
+//                if(loca.datetime - lastLoca.datetime < INTERVAL_THRESHOLD
+//                || loca.distanceTo(lastLoca) >= DISTANCE_THRESHOLD){
+//                    tEnd = loca.datetime;
+//                    lastLoca = loca;
+//                    Log.d(this.getClass().getName(), "path location : " + lastLoca.toString());
+//                } else{
+//                    path = new LocationDataManager.PathData(bufPath);
+//                    data = new FootPrintData(path);
+//                    if(this.namer != null){
+//                        data.name = this.namer.getName(path);
+//                    }
+//                    this.dataArr.add(data);
+//                    bufPath = null;
+//                    lastLoca = loca;
+//                    tBegin = loca.datetime;
+//                    tEnd = loca.datetime;
+//                    Log.d(this.getClass().getName(), "path ends on : " + loca.toString());
+//                }
             }
         }
 

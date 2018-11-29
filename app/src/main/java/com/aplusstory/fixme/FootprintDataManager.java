@@ -2,6 +2,8 @@ package com.aplusstory.fixme;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -41,18 +43,20 @@ public interface FootprintDataManager extends UserDataManager{
             this(begin.getTime(), end.getTime(), loca);
         }
 
-        public FootPrintData(LocationDataManager.PathData path){
-            if(path != null) {
-                this.dtBigin = path.dtBegin;
-                this.dtEnd = path.dtEnd;
+        public FootPrintData(@NotNull LocationDataManager.PathData path){
+            this(path.dtBegin, path.dtEnd, path);
+        }
+        public FootPrintData(long begin, long end, LocationDataManager.PathData path) {
+            this.dtBigin = begin;
+            this.dtEnd = end;
+            if (path != null) {
                 this.locaData = (Serializable) path;
                 this.locaDataType = path.getClass();
-            } else{
-                throw new NullPointerException();
+            } else {
+                this.locaData = null;
+                this.locaDataType = null;
             }
         }
-
-
         public long getInterval(){
             return this.dtEnd - this.dtBigin;
         }

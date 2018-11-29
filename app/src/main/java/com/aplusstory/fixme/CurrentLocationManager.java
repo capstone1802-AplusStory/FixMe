@@ -114,9 +114,11 @@ public class CurrentLocationManager extends Service implements LocationDataManag
 
         if(this.fm != null){
             if( this.priviousLocation == null
-            ||( (location.hasAccuracy() && priviousLocation.hasAccuracy() &&
-                location.getAccuracy() >= priviousLocation.getAccuracy()) &&
-                location.distanceTo(this.priviousLocation) > CurrentLocationManager.DISTANCE_THRESHOLD)){
+            || (
+                (location.hasAccuracy() && priviousLocation.hasAccuracy()
+            &&   location.getAccuracy() >= priviousLocation.getAccuracy())
+//            && location.distanceTo(this.priviousLocation) > CurrentLocationManager.DISTANCE_THRESHOLD
+            )){
                 LocationData loca = new LocationData(now, latitude, longtitude);
                 this.fm.setCurrentLocation(loca);
             }
@@ -146,21 +148,21 @@ public class CurrentLocationManager extends Service implements LocationDataManag
             CurrentLocationManager that = CurrentLocationManager.this;
             if(that.lm != null){
                 LocationProvider gps = that.lm.getProvider(LocationManager.GPS_PROVIDER);
-                LocationProvider net = that.lm.getProvider(LocationManager.NETWORK_PROVIDER);
-                LocationProvider passive = that.lm.getProvider(LocationManager.PASSIVE_PROVIDER);
-                boolean coasePermission = that.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED;
+//                LocationProvider net = that.lm.getProvider(LocationManager.NETWORK_PROVIDER);
+//                LocationProvider passive = that.lm.getProvider(LocationManager.PASSIVE_PROVIDER);
+//                boolean coasePermission = that.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+//                        == PackageManager.PERMISSION_GRANTED;
                 boolean finePermission = that.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
-                if(passive != null && (finePermission)){
-                    Log.d(this.getClass().getName(), "passive provider request");
-                    that.lm.requestLocationUpdates(
-                            LocationManager.PASSIVE_PROVIDER
-                            , CurrentLocationManager.MIN_LOCA_UPDATE
-                            , 5
-                            , that
-                    );
-                }
+//                if(passive != null && (finePermission)){
+//                    Log.d(this.getClass().getName(), "passive provider request");
+//                    that.lm.requestLocationUpdates(
+//                            LocationManager.PASSIVE_PROVIDER
+//                            , CurrentLocationManager.MIN_LOCA_UPDATE
+//                            , 5
+//                            , that
+//                    );
+//                }
                 if (gps != null && finePermission) {
                     Log.d(this.getClass().getName(), "gps provider request");
                     that.lm.requestLocationUpdates(
@@ -170,15 +172,15 @@ public class CurrentLocationManager extends Service implements LocationDataManag
                             , that
                     );
                 }
-                if (net != null && coasePermission) {
-                    Log.d(this.getClass().getName(), "network provider request");
-                    that.lm.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER
-                            , CurrentLocationManager.MIN_LOCA_UPDATE
-                            , 5
-                            , that
-                    );
-                }
+//                if (net != null && coasePermission) {
+//                    Log.d(this.getClass().getName(), "network provider request");
+//                    that.lm.requestLocationUpdates(
+//                            LocationManager.NETWORK_PROVIDER
+//                            , CurrentLocationManager.MIN_LOCA_UPDATE
+//                            , 5
+//                            , that
+//                    );
+//                }
             }
         }
     }
