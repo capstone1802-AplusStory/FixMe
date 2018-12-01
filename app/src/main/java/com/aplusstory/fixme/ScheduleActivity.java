@@ -111,7 +111,7 @@ public class ScheduleActivity extends AppCompatActivity
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
-                    ft.add(R.id.frame_schedule, this.schFrg);
+                    ft.replace(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);
                     this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     ft.commit();
@@ -186,8 +186,10 @@ public class ScheduleActivity extends AppCompatActivity
                 arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
             }
             schFrg.setArguments(arg);
-            ft.add(R.id.frame_schedule, this.schFrg);
-            ft.addToBackStack(null);
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft.commit();
         }
     }
