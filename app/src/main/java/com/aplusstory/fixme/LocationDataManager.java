@@ -175,6 +175,20 @@ public interface LocationDataManager {
             return json;
         }
 
+        public double distance(){
+            double distance = 0.0;
+            if(this.locaArr != null){
+                LocationData loca = this.locaArr[0];
+
+                for(int i = 1; i < locaArr.length; i++){
+                    distance += loca.distanceTo(locaArr[i]);
+                    loca = locaArr[i];
+                }
+            }
+
+            return distance;
+        }
+
         @Override
         public String toString() {
             return this.JSONify().toString();

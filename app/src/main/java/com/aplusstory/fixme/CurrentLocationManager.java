@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,7 +37,7 @@ public class CurrentLocationManager extends Service implements LocationDataManag
     private Thread thd = null;
     private boolean isEnabled = false;
     private Handler hd = null;
-    private Location priviousLocation = null;
+    private LocationData priviousLocation = null;
     private long tLocaReq = -1;
     private long dLocaReq = MIN_LOCA_UPDATE;
 
@@ -103,6 +104,13 @@ public class CurrentLocationManager extends Service implements LocationDataManag
         String dStr = df.format(date);
         double latitude =  location.getLatitude();
         double longtitude = location.getLongitude();
+        LocationData loca = new LocationData(now, latitude, longtitude);
+        LocationData lastKnownLocation;
+
+        if(this.priviousLocation == null
+                && (lastKnownLocation = this.fm.getCurrentLocation()) != null){
+            this.priviousLocation = lastKnownLocation;
+        }
 
         Log.d(CurrentLocationManager.class.getName(),
              "You're now on : "
@@ -111,20 +119,23 @@ public class CurrentLocationManager extends Service implements LocationDataManag
                 + ", at : "
                 + dStr
         );
-
+        if(this.priviousLocation != null) {
+            Log.d(CurrentLocationManager.class.getName(),
+                    "moved : "
+                    + Double.toString(priviousLocation.distanceTo(loca))
+            );
+        }
         if(this.fm != null){
             if( this.priviousLocation == null
-            || (
-                (location.hasAccuracy() && priviousLocation.hasAccuracy()
-            &&   location.getAccuracy() >= priviousLocation.getAccuracy())
-//            && location.distanceTo(this.priviousLocation) > CurrentLocationManager.DISTANCE_THRESHOLD
-            )){
-                LocationData loca = new LocationData(now, latitude, longtitude);
+            ||  location.getProvider().equals(LocationManager.NETWORK_PROVIDER)
+            ){
                 this.fm.setCurrentLocation(loca);
+
             }
         }
+
         this.lm.removeUpdates(this);
-        this.priviousLocation = location;
+        this.priviousLocation = loca;
     }
 
     @Override
@@ -148,10 +159,10 @@ public class CurrentLocationManager extends Service implements LocationDataManag
             CurrentLocationManager that = CurrentLocationManager.this;
             if(that.lm != null){
                 LocationProvider gps = that.lm.getProvider(LocationManager.GPS_PROVIDER);
-//                LocationProvider net = that.lm.getProvider(LocationManager.NETWORK_PROVIDER);
+                LocationProvider net = that.lm.getProvider(LocationManager.NETWORK_PROVIDER);
 //                LocationProvider passive = that.lm.getProvider(LocationManager.PASSIVE_PROVIDER);
-//                boolean coasePermission = that.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-//                        == PackageManager.PERMISSION_GRANTED;
+                boolean coasePermission = that.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED;
                 boolean finePermission = that.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
 //                if(passive != null && (finePermission)){
@@ -172,15 +183,15 @@ public class CurrentLocationManager extends Service implements LocationDataManag
                             , that
                     );
                 }
-//                if (net != null && coasePermission) {
-//                    Log.d(this.getClass().getName(), "network provider request");
-//                    that.lm.requestLocationUpdates(
-//                            LocationManager.NETWORK_PROVIDER
-//                            , CurrentLocationManager.MIN_LOCA_UPDATE
-//                            , 5
-//                            , that
-//                    );
-//                }
+                if (net != null && coasePermission) {
+                    Log.d(this.getClass().getName(), "network provider request");
+                    that.lm.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER
+                            , CurrentLocationManager.MIN_LOCA_UPDATE
+                            , 5
+                            , that
+                    );
+                }
             }
         }
     }

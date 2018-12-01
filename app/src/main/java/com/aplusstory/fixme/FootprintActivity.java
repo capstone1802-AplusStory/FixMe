@@ -20,6 +20,8 @@ import android.view.View;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class FootprintActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -69,8 +71,12 @@ public class FootprintActivity extends AppCompatActivity
             this.fragmentManager = this.getSupportFragmentManager();
         }
 
+        Calendar c = Calendar.getInstance();
+//        c.add(Calendar.DAY_OF_MONTH, 0);
+        Date today = c.getTime();
+
         if(this.dm == null){
-            this.dm = new TodayFootPrintDataManager(this);
+            this.dm = new TodayFootPrintDataManager(this, today);
             this.dm.setNamer(this);
         }
 
@@ -78,6 +84,7 @@ public class FootprintActivity extends AppCompatActivity
         Bundle bd = new Bundle();
         ArrayList<FootprintDataManager.FootPrintData> dataArr = this.dm.getData();
         bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
+        bd.putLong(PieChartFragment.KEY_DATE, today.getTime());
         fragment.setArguments(bd);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.footprint_frame, fragment);

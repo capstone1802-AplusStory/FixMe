@@ -24,10 +24,12 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
 public class PieChartFragment extends Fragment {
+    public static final String KEY_DATE = "today";
 
     private Bundle arg = null;
     private OnFragmentInteractionListener mListener;
@@ -55,8 +57,12 @@ public class PieChartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_pie_chart, container, false);
-
-        Date today = new Date();
+        Date today;
+        if(this.arg != null && this.arg.containsKey(KEY_DATE)){
+            today = new Date(this.arg.getLong(KEY_DATE));
+        }else {
+            today = new Date();
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
         TextView chartDate = (TextView) returnView.findViewById(R.id.chart_date);
