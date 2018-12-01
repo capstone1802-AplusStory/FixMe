@@ -304,7 +304,6 @@ public class UserMovementRecognizer implements Recognizer, SensorEventListener{
                             this. Th[0] = x;
                             this. Th[1] = y;
                             this. Th[2] = z;
-
 //                            Log.d(this.getClass().getName(),
 //                                    "gyroscope value changed"
 //                                            + " , x : " + Float.toString(x)

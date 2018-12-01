@@ -118,9 +118,15 @@ public class FootprintFragment extends Fragment {
         tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
 
         tmapview.setSightVisible(true);
-        addPathPoint(37.570841, 126.985302); // SKT타워
-        addPathPoint(37.551135, 126.988205); // N서울타워
-        addPathPoint(37.579567, 126.976998); // 경복궁
+        addPathPoint(37.5050881, 126.957101); // SKT타워
+        addPathPoint(37.505536, 126.9567); // N서울타워
+        addPathPoint(37.5044113, 126.950567); // N서울타워
+        addPathPoint(37.4888071, 126.9635373); // N서울타워
+        addPathPoint(37.4863095, 126.98870369); // N서울타워
+        addPathPoint(37.500318, 127.003479); // 1N서울타워
+        addPathPoint(37.5154864, 127.03752039); // N서울타워
+        addPathPoint(37.521885, 127.062315); // N서울타워
+        addPathPoint(37.5389565, 127.07112789); // 경복궁
 
         TMapPolyLine tMapPolyLine = new TMapPolyLine();
         tMapPolyLine.setLineColor(Color.BLUE);
@@ -195,7 +201,7 @@ public class FootprintFragment extends Fragment {
             public void onFindAllPOI(ArrayList<TMapPOIItem> poiItem) {
                 TMapInfo tmapInfo = tmapview.getDisplayTMapInfo(m_pathPoint);
                 tmapview.setCenterPoint(tmapInfo.getTMapPoint().getLongitude(), tmapInfo.getTMapPoint().getLatitude());
-                tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel()-1);
+                tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel());
             }
         });
     }

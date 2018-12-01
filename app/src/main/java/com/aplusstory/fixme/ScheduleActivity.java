@@ -1,5 +1,7 @@
 package com.aplusstory.fixme;
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -75,6 +77,7 @@ public class ScheduleActivity extends AppCompatActivity
         if(this.fgm == null){
             this.fgm = this.getSupportFragmentManager();
         }
+
         if(this.dm == null){
             this.dm = new ScheduleManager(this);
         }
@@ -119,8 +122,10 @@ public class ScheduleActivity extends AppCompatActivity
                 if(this.fgm != null && !this.fgm.isDestroyed()){
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
+                    String fragmentTag = this.schFrg.getClass().getSimpleName();
                     ft.add(R.id.frame_schedule, this.schFrg);
-                    ft.addToBackStack(null);
+                    ft.addToBackStack(fragmentTag);
+                    this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     ft.commit();
                 }
                 rt = true;
@@ -133,7 +138,8 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Bundle arg) {
         if(arg.containsKey(ScheduleFragment.ARG_KEY_SCHEDULE)){
-            if(this.dm.putData((ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE))) {
+            ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
+            if(this.dm.putData(sch)) {
                 String savedMsg = "schedule saved";
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }

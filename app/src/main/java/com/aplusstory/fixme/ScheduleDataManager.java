@@ -56,6 +56,36 @@ public interface ScheduleDataManager extends UserDataManager{
         int alarmInterval = -1;
         int tableColor = 0;
 
+        public ScheduleData(){
+
+        }
+
+        public ScheduleData(ScheduleData target){
+            this.name = new String(target.name);
+            this.isRepeated = target.isRepeated;
+            if(this.isRepeated){
+                this.repeatType = target.repeatType;
+                if(this.repeatType == RepeatDuration.REPEAT_WEEKLY){
+                    System.arraycopy(this.repeatDayOfWeek, 0, target.repeatDayOfWeek, 0, this.repeatDayOfWeek.length);
+                }
+                this.repeatEnd = target.repeatEnd;
+            }
+            this.scheduleBegin = target.scheduleBegin;
+            this.scheduleEnd = target.scheduleEnd;
+            this.hasLocation = target.hasLocation;
+            if(this.hasLocation){
+                this.latitude = target.latitude;
+                this.longitude = target.longitude;
+                this.locationAddress = new String(target.locationAddress);
+            }
+            this.memo = new String(target.memo);
+            this.hasAlarm = target.hasAlarm;
+            if(this.hasAlarm){
+                this.alarmInterval = target.alarmInterval;
+            }
+            this.tableColor = target.tableColor;
+        }
+
         @Nullable
         public static ScheduleData parseJSON(JSONObject json){
             ScheduleData sch = new ScheduleData();
@@ -82,8 +112,8 @@ public interface ScheduleDataManager extends UserDataManager{
                     sch.scheduleEnd = df.parse(json.getString(KEY_DATE_SCHEDULE_END)).getTime();
                     if(json.has(KEY_LOCATION)){
                         sch.hasLocation = true;
-                        LocationDataManager.LocatonData loca =
-                        LocationDataManager.LocatonData.parseJSON(json.getJSONObject(KEY_LOCATION));
+                        LocationDataManager.LocationData loca =
+                        LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION));
                         if(loca != null) {
                             sch.latitude = loca.latitude;
                             sch.longitude = loca.longitude;
@@ -133,8 +163,8 @@ public interface ScheduleDataManager extends UserDataManager{
                 json.put(KEY_DATE_SCHEDULE_BEGIN, df.format(new Date(this.scheduleBegin)));
                 json.put(KEY_DATE_SCHEDULE_END, df.format(new Date(this.scheduleEnd)));
                 if(this.hasLocation){
-                    LocationDataManager.LocatonData loca;
-                    loca = new LocationDataManager.LocatonData(
+                    LocationDataManager.LocationData loca;
+                    loca = new LocationDataManager.LocationData(
                             this.scheduleBegin, this.latitude, this.longitude);
                     json.put(KEY_LOCATION, loca.JSONify());
                     json.put(KEY_LOCATION_TAG, this.locationAddress);
@@ -159,12 +189,32 @@ public interface ScheduleDataManager extends UserDataManager{
         }
 
         public boolean isValid(){
-            return this.isValid(System.currentTimeMillis());
+            boolean rt = false;
+
+            if(this.scheduleBegin > this.scheduleEnd){
+                rt = false;
+            } else if(this.repeatType < RepeatDuration.REPEAT_DAYLY || this.repeatType > RepeatDuration.REPEAT_YEARLY ){
+                rt = false;
+            } else if(this.name == null || this.name.length() == 0){
+                rt = false;
+            } else{
+                rt = true;
+            }
+
+            return rt;
         }
 
-        public boolean isValid(long now){
-            boolean rt = false;
-            if(this.isRepeated){
+        public boolean isValidNow(){
+            return this.isValidNow(System.currentTimeMillis());
+        }
+
+        public boolean isValidNow(long now){
+            boolean rt = this.isValid();
+
+            if(rt && this.isRepeated){
+                if(now > this.scheduleEnd){
+                    rt = false;
+                }
                 if(now > this.repeatEnd){
                     rt = false;
                 } else {
@@ -229,9 +279,10 @@ public interface ScheduleDataManager extends UserDataManager{
                             //something wrong
                     }
                 }
-            } else {
-                rt = this.scheduleBegin >= now && this.scheduleEnd <= now;
+            } else if(rt) {
+                rt = this.scheduleBegin <= now && this.scheduleEnd >= now;
             }
+
 
             return rt;
         }

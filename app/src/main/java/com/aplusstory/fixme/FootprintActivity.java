@@ -21,12 +21,25 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import com.aplusstory.fixme.cal.OneDayView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 public class FootprintActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener
+        ,TodayFootPrintDataManager.LocationNamer
+        , MonthlyFragment.OnMonthChangeListener{
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     Fragment fragment;
     private FragmentManager fragmentManager = null;
+
+    private TodayFootPrintDataManager dm = null;
+    private Menu menuHide;
+    private Date today = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +90,21 @@ public class FootprintActivity extends AppCompatActivity
             this.fragmentManager = this.getSupportFragmentManager();
         }
 
+        Calendar c = Calendar.getInstance();
+//        c.add(Calendar.DAY_OF_MONTH, 0);
+        this.today = c.getTime();
+
+        if(this.dm == null){
+            this.dm = new TodayFootPrintDataManager(this, today);
+            this.dm.setNamer(this);
+        }
+
         fragment = new PieChartFragment();
+        Bundle bd = new Bundle();
+        ArrayList<FootprintDataManager.FootPrintData> dataArr = this.dm.getData();
+        bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
+        bd.putLong(PieChartFragment.KEY_DATE, today.getTime());
+        fragment.setArguments(bd);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.footprint_frame, fragment);
         fragmentTransaction.commit();
@@ -109,10 +136,16 @@ public class FootprintActivity extends AppCompatActivity
             case R.id.ic_footprint_calendar:
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed()){
                     Fragment yearlyCalendarFragment = (Fragment) new YearlyCalendarFragment();
+                    String fragmentTag = yearlyCalendarFragment.getClass().getSimpleName();
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
-                    ft.addToBackStack(null);
+
+                    ft.addToBackStack(fragmentTag);
+                    yearlyCalendarFragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+//                    menuHide.findItem(R.id.ic_footprint_calendar).setVisible(false);
                     ft.commit();
+//                    ft.disallowAddToBackStack();
                 }
 
                 rt = true;
@@ -121,10 +154,9 @@ public class FootprintActivity extends AppCompatActivity
         return rt;
     }
 
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
+
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -144,4 +176,49 @@ public class FootprintActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public String getName(LocationDataManager.LocationData location) {
+        //TODO : if there's favorite with the location, get its name; otherwise, get address of it.
+        return null;
+    }
+
+    @Override
+    public String getName(LocationDataManager.PathData path) {
+        //TODO : if there's favorite with the location, get its name; otherwise, default value.
+        return this.getString(R.string.footprint_path_default);
+    }
+
+    @Override
+    public void onChange(int year, int month) {
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(this.today);
+//        c.set(Calendar.YEAR, year);
+//        c.set(Calendar.MONTH, month);
+//        this.today = c.getTime();
+    }
+
+    @Override
+    public void onDayClick(OneDayView dayView) {
+        if(this.fragmentManager == null){
+            this.fragmentManager = this.getSupportFragmentManager();
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, dayView.get(Calendar.YEAR));
+        cal.set(Calendar.MONTH, dayView.get(Calendar.MONTH));
+        cal.set(Calendar.DAY_OF_MONTH, dayView.get(Calendar.DAY_OF_MONTH));
+
+        Date date = cal.getTime();
+
+        Fragment fragment = new PieChartFragment();
+        Bundle bd = new Bundle();
+        TodayFootPrintDataManager dm = new TodayFootPrintDataManager(this, date);
+        dm.setNamer(this);
+        ArrayList<FootprintDataManager.FootPrintData> dataArr = dm.getData();
+        bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
+        bd.putLong(PieChartFragment.KEY_DATE, date.getTime());
+        fragment.setArguments(bd);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.footprint_frame, fragment);
+        fragmentTransaction.commit();
+    }
 }

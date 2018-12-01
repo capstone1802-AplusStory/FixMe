@@ -56,7 +56,6 @@
         <activity android:name=".ScheduleRepeationActivity" />
         <activity android:name=".ScheduleAlarmIntervalActivity" />
         <activity android:name=".ScheduleColorActivity" />
-        <activity android:name=".NewCalendarActivity" />
         <activity
             android:name=".FullAlarmActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
