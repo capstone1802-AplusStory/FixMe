@@ -321,6 +321,25 @@ public interface ScheduleDataManager extends UserDataManager{
                     return -1;
             }
         }
+
+        public static String getTimeText(int alarmTimeCode){
+            switch (alarmTimeCode){
+                case INTERVAL_AMINUTE:
+                    return "1분 전";
+                case INTERVAL_FIVEMINUTE:
+                    return "5분 전";
+                case INTERVAL_TENMINUTE:
+                    return "10분 전";
+                case INTERVAL_THIRTYMINUTE:
+                    return "30분 전";
+                case INTERVAL_ANHOUR:
+                    return "1시간 전";
+                case INTERVAL_SIXHOUR:
+                    return "6시간 전";
+                default:
+                    return "";
+            }
+        }
     }
 
     public static class RepeatDuration {
