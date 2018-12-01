@@ -76,6 +76,7 @@ public class ScheduleActivity extends AppCompatActivity
         if(this.fgm == null){
             this.fgm = this.getSupportFragmentManager();
         }
+
         if(this.dm == null){
             this.dm = new ScheduleManager(this);
         }

@@ -106,7 +106,7 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
                                 +   ", distance : " + pathEnd.distanceTo(loca));
                 if(loca.datetime - pathEnd.datetime >= INTERVAL_THRESHOLD
                         && loca.distanceTo(pathEnd) <= DISTANCE_THRESHOLD){
-                    tEnd = loca.datetime;
+                    tEnd = pathEnd.datetime;
                     Log.d(this.getClass().getName(), "path ends on : " + pathEnd.toString());
                     path = new LocationDataManager.PathData(bufPath);
                     double pathDistance = path.distance();

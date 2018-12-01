@@ -130,7 +130,6 @@ public class CurrentLocationManager extends Service implements LocationDataManag
             ||  location.getProvider().equals(LocationManager.NETWORK_PROVIDER)
             ){
                 this.fm.setCurrentLocation(loca);
-
             }
         }
 
