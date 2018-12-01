@@ -121,7 +121,7 @@ public class ScheduleActivity extends AppCompatActivity
             case R.id.add_schedule:
                 if(this.fgm != null && !this.fgm.isDestroyed()){
                     FragmentTransaction ft = this.fgm.beginTransaction();
-                    this.schFrg = (Fragment) new ScheduleFragment();
+                    this.schFrg = (Fragment) new ScheduleListFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
                     ft.add(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);
@@ -175,7 +175,7 @@ public class ScheduleActivity extends AppCompatActivity
         Log.d(this.getClass().getName(), "onDayClick, " + c.getTime().toString());
         if(this.fgm != null && !this.fgm.isDestroyed()){
             FragmentTransaction ft = this.fgm.beginTransaction();
-            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg = (Fragment) new ScheduleListFragment();
             boolean hasSch = false;
             ScheduleDataManager.ScheduleData sch = null;
             for(String s : this.monthlyList){
