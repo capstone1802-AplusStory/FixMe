@@ -154,9 +154,9 @@ public class LocationFileManager implements FileManager {
         LocationDataManager.LocationData rt = null;
         if(this.sp != null){
             rt = new LocationDataManager.LocationData(
-                     this.sp.getString(LocationDataManager.LocationData.KEY_DATETIME,"")
-                    ,Double.parseDouble(this.sp.getString(LocationDataManager.LocationData.KEY_LATITUDE, ""))
-                    ,Double.parseDouble(this.sp.getString(LocationDataManager.LocationData.KEY_LONGITUDE, ""))
+                     this.sp.getString(LocationDataManager.LocationData.KEY_DATETIME,"-1")
+                    ,Double.parseDouble(this.sp.getString(LocationDataManager.LocationData.KEY_LATITUDE, "0.0"))
+                    ,Double.parseDouble(this.sp.getString(LocationDataManager.LocationData.KEY_LONGITUDE, "0.0"))
             );
         }
 
