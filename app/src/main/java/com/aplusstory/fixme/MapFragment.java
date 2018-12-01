@@ -333,6 +333,7 @@ public class MapFragment extends Fragment
         //다이얼로그 띄워서, 검색창에 입력받음
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle("통합 검색");
+        builder.setMessage("구체적으로 해주십시오\n(예 : 중앙대학교 310관)");
 
         final EditText input = new EditText(this.getContext());
         builder.setView(input);

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ik024.calendar_lib.custom.YearView;
+
+import java.util.Calendar;
 
 import io.github.memfis19.cadar.view.MonthCalendar;
 
@@ -24,7 +28,7 @@ import io.github.memfis19.cadar.view.MonthCalendar;
  * Use the {@link YearlyCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class YearlyCalendarFragment extends Fragment {
+public class YearlyCalendarFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -101,9 +105,22 @@ public class YearlyCalendarFragment extends Fragment {
         octTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
         novTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
         decTextView.setBackgroundColor(getContext().getResources().getColor(R.color.graybg20));
+        janTextView.setOnClickListener(this);
+        febTextView.setOnClickListener(this);
+        marTextView.setOnClickListener(this);
+        aprTextView.setOnClickListener(this);
+        mayTextView.setOnClickListener(this);
+        junTextView.setOnClickListener(this);
+        julTextView.setOnClickListener(this);
+        augTextView.setOnClickListener(this);
+        sepTextView.setOnClickListener(this);
+        octTextView.setOnClickListener(this);
+        novTextView.setOnClickListener(this);
+        decTextView.setOnClickListener(this);
 
         return returnView;
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -126,6 +143,91 @@ public class YearlyCalendarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        CalendarFragment calendarFragment = (CalendarFragment)new CalendarFragment();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Calendar today = Calendar.getInstance();
+        int now_year = today.get(Calendar.YEAR);
+        int now_month = today.get(Calendar.MONTH);
+        int real_year = now_year;
+
+        switch(v.getId()){
+            case R.id.janText:
+//                if(now_month < 0) real_year--;
+                ft.replace(R.id.footprint_frame,calendarFragment.newInstance(real_year,0));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.febText:
+                if(now_month - 1 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,1));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.marText:
+                if(now_month - 2 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,2));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.aprText:
+                if(now_month - 3 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,3));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.mayText:
+                if(now_month - 4 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,4));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.junText:
+                if(now_month - 5 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,5));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.julText:
+                if(now_month - 6 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,6));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.augText:
+                if(now_month - 7 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,7));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.sepText:
+                if(now_month - 8 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,8));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.octText:
+                if(now_month - 9 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,9));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.novText:
+                if(now_month - 10 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,10));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+            case R.id.decText:
+                if(now_month - 11 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,11));
+                ft.addToBackStack(null);
+                ft.commit();
+                break;
+        }
     }
 
     /**
