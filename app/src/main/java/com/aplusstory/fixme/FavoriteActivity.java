@@ -29,7 +29,11 @@ public class FavoriteActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         TextView favoriteName = (TextView) findViewById(R.id.favoriteName);
-        favoriteName.setText(intent.getStringExtra("location"));
+        try {
+            favoriteName.setText(intent.getStringExtra("location"));
+        } catch (NullPointerException e) {
+            favoriteName.setText("");
+        }
 
         TextView favoriteAddress = (TextView) findViewById(R.id.favoriteAddress);
         favoriteAddress.setText("address of location"); //get address from map api?
@@ -55,6 +59,11 @@ public class FavoriteActivity extends AppCompatActivity {
         });
 
         EditText favoriteNick = (EditText) findViewById(R.id.favoriteNickname);
+        try {
+            favoriteNick.setText(intent.getStringExtra("nickname"));
+        } catch (NullPointerException e) {
+            favoriteNick.setText("");
+        }
         nickname = String.valueOf(favoriteNick.getText());
     }
 }

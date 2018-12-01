@@ -17,6 +17,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import java.util.List;
 
 public class FootprintActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,7 +27,6 @@ public class FootprintActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fragment;
     private FragmentManager fragmentManager = null;
-    private Menu menuHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,17 @@ public class FootprintActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_footprint);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+        ImageView homeImage = (ImageView) header.findViewById(R.id.homeImage);
+        homeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
         if(this.fragmentManager == null) {
             this.fragmentManager = this.getSupportFragmentManager();
         }
@@ -84,7 +97,6 @@ public class FootprintActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chart_menu, menu);
-        menuHide = menu;
 
         return true;
     }
@@ -100,7 +112,6 @@ public class FootprintActivity extends AppCompatActivity
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
                     ft.addToBackStack(null);
-                    menuHide.findItem(R.id.ic_footprint_calendar).setVisible(false);
                     ft.commit();
                 }
 

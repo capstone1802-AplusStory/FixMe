@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
@@ -79,6 +80,17 @@ public class ScheduleActivity extends AppCompatActivity
         }
 
         this.monthlyList = this.dm.getMonthlyList(today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+
+        View header = navigationView.getHeaderView(0);
+        ImageView homeImage = (ImageView) header.findViewById(R.id.homeImage);
+        homeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
