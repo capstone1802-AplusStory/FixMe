@@ -173,7 +173,7 @@ public class MonthlyFragment extends Fragment {
 
         private OneMonthView[] monthViews;
         /** Default year to calculate the page position */
-        final static int BASE_YEAR = 2017;
+        final static int BASE_YEAR = 2018;
         /** Default month to calculate the page position */
         final static int BASE_MONTH = Calendar.JANUARY;
         /** Calendar instance based on default year and month */

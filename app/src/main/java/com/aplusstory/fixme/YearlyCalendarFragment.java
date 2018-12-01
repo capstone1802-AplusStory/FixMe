@@ -147,67 +147,83 @@ public class YearlyCalendarFragment extends android.support.v4.app.Fragment impl
 
     @Override
     public void onClick(View v) {
-        Fragment calendarFragment = (Fragment)new CalendarFragment();
+        CalendarFragment calendarFragment = (CalendarFragment)new CalendarFragment();
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Calendar today = Calendar.getInstance();
+        int now_year = today.get(Calendar.YEAR);
+        int now_month = today.get(Calendar.MONTH);
+        int real_year = now_year;
 
         switch(v.getId()){
             case R.id.janText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+//                if(now_month < 0) real_year--;
+                ft.replace(R.id.footprint_frame,calendarFragment.newInstance(real_year,0));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.febText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 1 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,1));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.marText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 2 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,2));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.aprText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 3 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,3));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.mayText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 4 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,4));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.junText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 5 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,5));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.julText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 6 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,6));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.augText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 7 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,7));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.sepText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 8 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,8));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.octText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 9 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,9));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.novText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 10 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,10));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
             case R.id.decText:
-                ft.replace(R.id.footprint_frame,calendarFragment);
+                if(now_month - 11 < 0) real_year--;
+                ft.replace(R.id.footprint_frame,CalendarFragment.newInstance(real_year,11));
                 ft.addToBackStack(null);
                 ft.commit();
                 break;
