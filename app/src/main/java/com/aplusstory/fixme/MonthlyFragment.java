@@ -2,8 +2,8 @@ package com.aplusstory.fixme;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
-//import android.support.v4.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -173,7 +173,7 @@ public class MonthlyFragment extends Fragment {
 
         private OneMonthView[] monthViews;
         /** Default year to calculate the page position */
-        final static int BASE_YEAR = 2017;
+        final static int BASE_YEAR = 2018;
         /** Default month to calculate the page position */
         final static int BASE_MONTH = Calendar.JANUARY;
         /** Calendar instance based on default year and month */
