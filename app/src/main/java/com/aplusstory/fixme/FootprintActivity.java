@@ -90,8 +90,11 @@ public class FootprintActivity extends AppCompatActivity
         bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
         bd.putLong(PieChartFragment.KEY_DATE, today.getTime());
         fragment.setArguments(bd);
+        String fragmentTag = fragment.getClass().getSimpleName();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.footprint_frame, fragment);
+        fragmentTransaction.replace(R.id.footprint_frame, fragment);
+        fragmentTransaction.addToBackStack(fragmentTag);
+        fragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.commit();
     }
 
@@ -202,8 +205,11 @@ public class FootprintActivity extends AppCompatActivity
         bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
         bd.putLong(PieChartFragment.KEY_DATE, date.getTime());
         fragment.setArguments(bd);
+        String fragmentTag = "mainChart";
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.footprint_frame, fragment);
+        fragmentTransaction.addToBackStack(fragmentTag);
+        fragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.commit();
     }
 }
