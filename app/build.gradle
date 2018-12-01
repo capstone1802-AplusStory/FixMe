@@ -40,4 +40,3 @@ dependencies {
     implementation 'io.github.memfis19:cadar:0.4.8'
 
 }
-

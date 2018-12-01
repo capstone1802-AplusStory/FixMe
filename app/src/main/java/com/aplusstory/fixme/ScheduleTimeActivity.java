@@ -38,8 +38,8 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar2);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
 
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);

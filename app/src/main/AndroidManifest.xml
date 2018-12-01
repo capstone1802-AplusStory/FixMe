@@ -3,13 +3,13 @@
     package="com.aplusstory.fixme">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_OWNER_DATA"/>
-    <uses-permission android:name="android.permission.READ_OWNER_DATA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
+    <uses-permission android:name="android.permission.READ_OWNER_DATA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,24 +18,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <service android:name=".NotificationUIService"
-            android:permission="android.permission.VIBRATE">
-        </service>
-        <service android:name=".WinDetectService"
+        <service
+            android:name=".NotificationUIService"
+            android:permission="android.permission.VIBRATE" />
+        <service
+            android:name=".WinDetectService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
         </service>
-        <service android:name=".CurrentLocationManager"/>
-        <service android:name=".ScheduleAlarmManager"/>
+        <service android:name=".CurrentLocationManager" />
+        <service android:name=".ScheduleAlarmManager" />
 
         <activity android:name=".MainActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".SplashActivity"
@@ -43,11 +44,10 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScheduleActivity" />
-        <activity android:name=".SettingsActivity" />
         <activity android:name=".FootDataSettingsActivity" />
         <activity android:name=".AlarmPeriodActivity" />
         <activity android:name=".AlarmOpacityActivity" />
@@ -55,16 +55,18 @@
         <activity android:name=".ScheduleTimeActivity" />
         <activity android:name=".ScheduleRepeationActivity" />
         <activity android:name=".ScheduleAlarmIntervalActivity" />
-        <activity android:name=".ScheduleColorActivity"/>
-        <activity android:name=".NewCalendarActivity"/>
+        <activity android:name=".ScheduleColorActivity" />
         <activity
             android:name=".FullAlarmActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_full_alarm"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".FootprintActivity" />
         <activity android:name=".FavoriteActivity" />
-        <activity android:name=".FootprintRoutineActivity"/>
-        <activity android:name=".TMapActivity"/>
+        <activity android:name=".FootprintRoutineActivity" />
+        <activity android:name=".TMapActivity" />
+        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".FootprintActivity"/>
+        <activity android:name=".SettingsActivity"/>
     </application>
+
 </manifest>

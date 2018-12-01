@@ -1,47 +1,64 @@
 package com.aplusstory.fixme;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
-import android.widget.Switch;
-import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
-public class SettingsActivity extends AppCompatActivity {
-
-    Toolbar toolbar2;
+public class SettingsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
+    DrawerLayout drawerLayout;
+    Toolbar toolbar;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
 
-        toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-        setSupportActionBar(toolbar2);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_settings);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(false);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_full_menu, this.getTheme());
+        toggle.setHomeAsUpIndicator(drawable);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawerLayout.isDrawerVisible(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_settings);
+        navigationView.setNavigationItemSelectedListener(this);
+
         final String[] setlist1 = {
-                 this.getString(R.string.setting_item_alert_transperancy)
+                this.getString(R.string.setting_item_alert_transperancy)
                 ,this.getString(R.string.setting_item_alert_light_sensivity)
                 ,this.getString(R.string.setting_item_alert_period)
         };
@@ -80,7 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
         listV.setAdapter(listviewAdapter);
 
         final String[] setlist2 = {
-                 this.getString(R.string.setting_item_footprint_data_duration)
+                this.getString(R.string.setting_item_footprint_data_duration)
                 ,this.getString(R.string.setting_item_footprint_location_bookmark)
         };
         ListView list2 = (ListView) findViewById(R.id.settingList2);
@@ -105,4 +122,37 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_settings);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_gps_schedule) {
+            startActivity(new Intent(this, ScheduleActivity.class));
+            finish();
+        } else if (id == R.id.nav_today_footprint) {
+            startActivity(new Intent(this, FootprintActivity.class));
+            finish();
+        } else if (id == R.id.nav_settings) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_settings);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 }

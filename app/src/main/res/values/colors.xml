@@ -13,6 +13,9 @@
     <drawable name="bg_select">#2196F3</drawable>
     <drawable name="bg">#EEEEEE</drawable>
 
+
+    <color name="graybg20">#33838383</color>
+
     <color name="chartColor1">#ff8576</color>
     <color name="chartColor2">#ff9750</color>
     <color name="chartColor3">#ffd042</color>

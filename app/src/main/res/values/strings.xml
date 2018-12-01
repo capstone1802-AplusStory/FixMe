@@ -17,16 +17,16 @@
     <string name="advice_msg_posture">SIT UP STRAIGHT</string>
     <string name="advise_msg_light">TOO DARK HERE</string>
     <!--<string-array name="advice_msg_posture_list">-->
-        <!--<item>back</item>-->
-        <!--<item>neck</item>-->
-        <!--<item>head</item>-->
-        <!--<item>hand</item>-->
-        <!--<item>arm</item>-->
+    <!--<item>back</item>-->
+    <!--<item>neck</item>-->
+    <!--<item>head</item>-->
+    <!--<item>hand</item>-->
+    <!--<item>arm</item>-->
     <!--</string-array>-->
     <!--<string-array name="advice_msg_light_list">-->
-        <!--<item>default</item>-->
-        <!--<item>shortterm</item>-->
-        <!--<item>longterm</item>-->
+    <!--<item>default</item>-->
+    <!--<item>shortterm</item>-->
+    <!--<item>longterm</item>-->
     <!--</string-array>-->
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -62,4 +62,15 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_full_alarm">FullAlarmActivity</string>
+
+
+    <string name="nav_item_attachment">Attachment</string>
+    <string name="nav_item_images">Images</string>
+    <string name="nav_item_location">My Location</string>
+    <string name="nav_sub_menu">Sub Menu</string>
+    <string name="nav_sub_menu_item01">Sub Menu Item 1</string>
+    <string name="nav_sub_menu_item02">Sub Menu Item 2</string>
+    <string name="drawer_header_text">Drawer Header</string>
+    <string name="second_activity_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consectetur diam id aliquam scelerisque. Donec ultrices lacus vel dignissim pharetra. Vivamus pharetra augue quis rhoncus placerat. Sed ultricies at risus non cursus. Nam rutrum leo nec placerat consectetur. Vestibulum feugiat eleifend diam, nec interdum augue tincidunt sit amet. Praesent feugiat est auctor lacus consectetur, vitae pellentesque dolor laoreet.</string>
+    <string name="title_activity_second">SecondActivity</string>
 </resources>

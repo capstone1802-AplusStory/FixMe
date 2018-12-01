@@ -27,7 +27,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
+
 
         favlist = new ArrayList<String>();
         favlist.add("학교");
