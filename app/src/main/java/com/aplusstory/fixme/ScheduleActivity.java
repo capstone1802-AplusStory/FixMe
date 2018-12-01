@@ -107,8 +107,10 @@ public class ScheduleActivity extends AppCompatActivity
                 if(this.fgm != null && !this.fgm.isDestroyed()){
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
+                    String fragmentTag = this.schFrg.getClass().getSimpleName();
                     ft.add(R.id.frame_schedule, this.schFrg);
-                    ft.addToBackStack(null);
+                    ft.addToBackStack(fragmentTag);
+                    this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     ft.commit();
                 }
                 rt = true;
