@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -148,5 +150,12 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
         this.setResult(RESULT_OK, it);
         this.finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.schedule_attribute_menu, menu);
+        return true;
     }
 }

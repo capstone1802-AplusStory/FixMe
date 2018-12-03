@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -113,12 +114,23 @@ public class SettingsActivity extends AppCompatActivity
                         intent = new Intent(getApplicationContext(), FootDataSettingsActivity.class);
                         break;
                     case 1:
-                        intent = new Intent(getApplicationContext(), FootprintRoutineActivity.class);
+                        intent = new Intent(getApplicationContext(), SettingsFavoritesActivity.class);
                         break;
                 }
                 if(intent != null) {
                     startActivity(intent);
                 }
+            }
+        });
+
+        View header = navigationView.getHeaderView(0);
+        ImageView homeImage = (ImageView) header.findViewById(R.id.homeImage);
+        homeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
     }
