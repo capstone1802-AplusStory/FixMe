@@ -4,7 +4,6 @@ package com.aplusstory.fixme;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -109,19 +108,7 @@ public class ScheduleManager implements ScheduleDataManager {
                 } else{
                     reqCode = (int)System.currentTimeMillis();
                 }
-                int rt = ScheduleAlarmManager.setAlarm(this.context, alm, sch, reqCode);
-//                int rt = ScheduleAlarmManager.setAlarm(this.context
-//                        , alm
-//                        , sch.scheduleBegin - ScheduleDataManager.AlarmInterval.getTime(sch.alarmInterval)
-//                        , new LocationDataManager.LocationData(System.currentTimeMillis(), 3,3)
-//                        , (int)System.currentTimeMillis());
-                if(rt >= 0){
-                    Log.d(this.getClass().getName(), "alarm request code : " + rt);
-                } else{
-                    Log.d(this.getClass().getName(), "alarm request failed");
-                }
-            } else if(alm == null){
-                Log.d(this.getClass().getName(), "no alarm manager");
+                ScheduleAlarmManager.setAlarm(this.context, alm, sch, reqCode);
             }
         }
 

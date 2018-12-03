@@ -84,8 +84,6 @@ public class CalendarFragment extends Fragment {
                 Context context = CalendarFragment.this.getContext();
                 if(context instanceof ScheduleActivity) {
                     ((ScheduleActivity) CalendarFragment.this.getContext()).onDayClick(dayView);
-                } else if(context instanceof FootprintActivity){
-                    ((FootprintActivity) CalendarFragment.this.getContext()).onDayClick(dayView);
                 }
             }
         });
