@@ -121,7 +121,7 @@ public class ScheduleActivity extends AppCompatActivity
             case R.id.add_schedule:
                 if(this.fgm != null && !this.fgm.isDestroyed()){
                     FragmentTransaction ft = this.fgm.beginTransaction();
-                    this.schFrg = (Fragment) new ScheduleListFragment();
+                    this.schFrg = (Fragment) new ScheduleFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
                     ft.add(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);

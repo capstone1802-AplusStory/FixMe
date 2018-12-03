@@ -29,12 +29,12 @@ import java.util.Date;
  * create an instance of this fragment.
  */
 public class ScheduleListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+    // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    // Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -59,7 +59,7 @@ public class ScheduleListFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment ScheduleListFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // Rename and change types and number of parameters
     public static ScheduleListFragment newInstance(String param1, String param2) {
         ScheduleListFragment fragment = new ScheduleListFragment();
         Bundle args = new Bundle();
@@ -85,6 +85,7 @@ public class ScheduleListFragment extends Fragment {
         View returnView = inflater.inflate(R.layout.fragment_schedule_list, container, false);
 
         TextView textView = (TextView) returnView.findViewById(R.id.today_date);
+        //  TODO: setText to selected date
         textView.setText(date.format(today));
 
         recyclerView = (RecyclerView) returnView.findViewById(R.id.schedule_recycler);
@@ -104,7 +105,6 @@ public class ScheduleListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //add today's schedule
-
             }
         });
 
@@ -112,7 +112,7 @@ public class ScheduleListFragment extends Fragment {
         return returnView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    // Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -147,7 +147,7 @@ public class ScheduleListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        // Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
