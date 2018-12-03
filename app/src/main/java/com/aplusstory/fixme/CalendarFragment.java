@@ -91,7 +91,6 @@ public class CalendarFragment extends Fragment {
         });
         getChildFragmentManager().beginTransaction().replace(R.id.main_container,mf).commit();
 
-
         return v;
     }
 

@@ -24,11 +24,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class CurrentLocationManager extends Service implements LocationDataManager, LocationListener {
-    public static final long MIN_LOCA_UPDATE = 90000;
+    public static final long MIN_LOCA_UPDATE = 60000;
 //    public static final long MIN_LOCA_UPDATE = 10000;
-    public static final long DELAY_THREAD_LOOP = 12500;
-    public static final double DISTANCE_THRESHOLD = 10.0;
-    public static final float ACCURACY_THRESHOLD = 30.0F;
+    public static final long DELAY_THREAD_LOOP = 7500;
+    public static final double DISTANCE_THRESHOLD = 15.0;
+    public static final float ACCURACY_THRESHOLD = (float)DISTANCE_THRESHOLD;
 
     private static boolean isRunning = false;
 
