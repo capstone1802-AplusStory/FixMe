@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -177,8 +178,12 @@ public class ScheduleActivity extends AppCompatActivity
             FragmentTransaction ft = this.fgm.beginTransaction();
             this.schFrg = (Fragment) new ScheduleListFragment();
             boolean hasSch = false;
-            ScheduleDataManager.ScheduleData sch = null;
+            ArrayList<ScheduleDataManager.ScheduleData> schList = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+
             for(String s : this.monthlyList){
+                ScheduleDataManager.ScheduleData sch;
+                Log.d(this.getClass().getName(), "monthly schedule " + s);
                 if((sch = this.dm.getData(s)) != null){
                     Calendar cBegin = Calendar.getInstance();
                     cBegin.setTime(new Date(sch.scheduleBegin));
@@ -186,14 +191,17 @@ public class ScheduleActivity extends AppCompatActivity
                     cEnd.setTime(new Date(sch.scheduleEnd));
                     int date = c.get(Calendar.DAY_OF_MONTH);
                     if(date >= cBegin.get(Calendar.DAY_OF_MONTH) && date <= cEnd.get(Calendar.DAY_OF_MONTH)){
-                        break;
+                        schList.add(sch);
+                        sb.append(sch.toString());
+                        sb.append('\n');
                     }
                 }
             }
+
             Bundle arg = new Bundle();
-            if(sch != null) {
-                Log.d(this.getClass().getName(), "loaded schedule json : \n" + sch.toString());
-                arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, sch);
+            if(schList.size() > 0) {
+                Log.d(this.getClass().getName(), "loaded schedule json : " + sb.toString());
+                arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, schList);
             } else{
                 arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
             }

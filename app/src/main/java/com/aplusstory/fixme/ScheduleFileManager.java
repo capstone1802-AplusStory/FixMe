@@ -67,7 +67,8 @@ public class ScheduleFileManager implements FileManager {
         String filepath;
 
         if(this.listSch.containsKey(sch.name)){
-            filepath = this.listSch.get(sch.name);
+            return rt;
+//            filepath = this.listSch.get(sch.name);
         } else{
             filepath = context.getFilesDir() + "/" + FILENAME_SCHEDULE_PREFIX + sch.name;
         }

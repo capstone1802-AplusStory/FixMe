@@ -36,7 +36,7 @@ public interface ScheduleDataManager extends UserDataManager{
         public static final String KEY_ALARM_INTERVAL_CODE = "alarm_interval";
         public static final String KEY_TABLE_COLOR_CODE = "table_color";
 
-        public static final String DATE_FORMAT_GMT = "yyyy-MM-dd HH:mm:ss";
+        public static final String DATE_FORMAT_GMT = "yyyy-MM-ddHH:mm:ss";
 
         String name = null;
         boolean isRepeated = false;
@@ -89,7 +89,7 @@ public interface ScheduleDataManager extends UserDataManager{
         @Nullable
         public static ScheduleData parseJSON(JSONObject json){
             ScheduleData sch = new ScheduleData();
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US);
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT);
 
             try{
                 sch.name = json.getString(KEY_NAME);
@@ -105,33 +105,34 @@ public interface ScheduleDataManager extends UserDataManager{
                     }
                     try {
                         sch.repeatEnd = df.parse(json.getString(KEY_REPEAT_END)).getTime();
-                    }catch(ParseException e){
+                    } catch (ParseException e) {
                         Log.d(ScheduleData.class.getName(), e.toString());
                     }
-                    sch.scheduleBegin = df.parse(json.getString(KEY_DATE_SCHEDULE_BEGIN)).getTime();
-                    sch.scheduleEnd = df.parse(json.getString(KEY_DATE_SCHEDULE_END)).getTime();
-                    if(json.has(KEY_LOCATION)){
-                        sch.hasLocation = true;
-                        LocationDataManager.LocationData loca =
-                        LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION));
-                        if(loca != null) {
-                            sch.latitude = loca.latitude;
-                            sch.longitude = loca.longitude;
-                            sch.locationAddress = json.getString(KEY_LOCATION_TAG);
-                        }
-                    }
-
-                    sch.memo = json.getString(KEY_MEMO);
-                    if(json.has(KEY_ALARM_INTERVAL_CODE)) {
-                        sch.hasAlarm = true;
-                        sch.alarmInterval = json.getInt(KEY_ALARM_INTERVAL_CODE);
-                    }
-                    sch.tableColor = json.getInt(KEY_TABLE_COLOR_CODE);
                 }
+                sch.scheduleBegin = df.parse(json.getString(KEY_DATE_SCHEDULE_BEGIN)).getTime();
+                sch.scheduleEnd = df.parse(json.getString(KEY_DATE_SCHEDULE_END)).getTime();
+                if(json.has(KEY_LOCATION)){
+                    sch.hasLocation = true;
+                    LocationDataManager.LocationData loca =
+                    LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION));
+                    if(loca != null) {
+                        sch.latitude = loca.latitude;
+                        sch.longitude = loca.longitude;
+                        sch.locationAddress = json.getString(KEY_LOCATION_TAG);
+                    }
+                }
+
+                sch.memo = json.getString(KEY_MEMO);
+                if(json.has(KEY_ALARM_INTERVAL_CODE)) {
+                    sch.hasAlarm = true;
+                    sch.alarmInterval = json.getInt(KEY_ALARM_INTERVAL_CODE);
+                }
+                sch.tableColor = json.getInt(KEY_TABLE_COLOR_CODE);
             } catch(Exception e){
                 Log.d(ScheduleData.class.getName(), e.toString());
                 sch = null;
             }
+
 
             return sch;
         }
@@ -139,7 +140,7 @@ public interface ScheduleDataManager extends UserDataManager{
         @Nullable
         public JSONObject JSONify(){
             JSONObject json = new JSONObject();
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US);
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT);
 
             try {
                 json.put(KEY_NAME, this.name);
@@ -160,8 +161,8 @@ public interface ScheduleDataManager extends UserDataManager{
                     }
                     json.put(KEY_REPEAT_END, df.format(new Date(this.repeatEnd)));
                 }
-                json.put(KEY_DATE_SCHEDULE_BEGIN, df.format(new Date(this.scheduleBegin)));
-                json.put(KEY_DATE_SCHEDULE_END, df.format(new Date(this.scheduleEnd)));
+                json.put(KEY_DATE_SCHEDULE_BEGIN, df.format(this.scheduleBegin));
+                json.put(KEY_DATE_SCHEDULE_END, df.format(this.scheduleEnd));
                 if(this.hasLocation){
                     LocationDataManager.LocationData loca;
                     loca = new LocationDataManager.LocationData(
