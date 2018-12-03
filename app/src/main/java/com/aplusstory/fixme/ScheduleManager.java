@@ -34,6 +34,14 @@ public class ScheduleManager implements ScheduleDataManager {
         }
     }
 
+    private void refreshData(){
+        this.schBuf = new HashMap<>();
+        this.schList = this.fm.getScheduleList();
+        for(String s : schList){
+            schBuf.put(s, this.fm.getSchedule(s));
+        }
+    }
+
     public List<String> getScheduleList(){
         ArrayList<String> rt = new ArrayList<>(this.schList.size());
         Collections.copy(rt, this.schList);
@@ -133,7 +141,11 @@ public class ScheduleManager implements ScheduleDataManager {
         }
 
         if(this.fm != null && !this.schList.contains(sch.name)){
-            return this.fm.putSchedule(sch);
+            boolean rt = this.fm.putSchedule(sch);
+            if(rt){
+                this.refreshData();
+            }
+            return rt;
         } else {
             return false;
         }

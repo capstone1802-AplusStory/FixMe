@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,21 +30,20 @@ import java.util.Date;
  * create an instance of this fragment.
  */
 public class ScheduleListFragment extends Fragment {
-    // Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static final String ARG_KEY_SCHEDULE = "argument_schedule";
+    public static final String ARG_KEY_SCHEDULE_LIST = "argument_schedule_list";
+    public static final String ARG_KEY_DELETE = "argument_delete";
+    public static final String ARG_KEY_TODAY = "argument_today";
+    public static final String ARG_KEY_SCHEDULE_LOAD = "argument_load";
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     FragmentManager fragmentManager = getFragmentManager();
 
-    Date today = new Date();
+    private Date today = new Date();
     SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+    private Bundle arg;
+    private ArrayList<ScheduleDataManager.ScheduleData> schList = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -51,20 +51,9 @@ public class ScheduleListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScheduleListFragment.
-     */
-    // Rename and change types and number of parameters
-    public static ScheduleListFragment newInstance(String param1, String param2) {
+    public static ScheduleListFragment newInstance(Bundle bd) {
         ScheduleListFragment fragment = new ScheduleListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        Bundle args = new Bundle(bd);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,9 +61,21 @@ public class ScheduleListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        this.arg = this.getArguments();
+        if (this.arg != null) {
+            if(this.arg.containsKey(ARG_KEY_TODAY)){
+                this.today = new Date(this.arg.getLong(ARG_KEY_TODAY));
+            }
+
+            if(this.arg.containsKey(ARG_KEY_SCHEDULE_LIST)){
+                Serializable argData = this.arg.getSerializable(ARG_KEY_SCHEDULE_LIST);
+                ArrayList<?> argList = (ArrayList<?>)argData;
+                for(Object arg : argList){
+                    if(arg instanceof ScheduleDataManager.ScheduleData){
+                        this.schList.add((ScheduleDataManager.ScheduleData)arg);
+                    }
+                }
+            }
         }
     }
 
@@ -95,8 +96,14 @@ public class ScheduleListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList<ScheduleListInfo> scheduleArrayList = new ArrayList<>();
-        scheduleArrayList.add(new ScheduleListInfo(R.drawable.ic_red_circle_padding, "scheduleName"));
+        if(this.schList != null && this.schList.size() > 0) {
+            for(ScheduleDataManager.ScheduleData sch : this.schList){
+                scheduleArrayList.add(new ScheduleListInfo(ScheduleListInfo.getColorIconCode(sch.tableColor), sch.name));
 
+            }
+        } else {
+            scheduleArrayList.add(new ScheduleListInfo(R.drawable.ic_red_circle_padding, "scheduleName"));
+        }
         ScheduleListColorRecyclerAdapter scheduleListColorRecyclerAdapter = new ScheduleListColorRecyclerAdapter(scheduleArrayList);
         recyclerView.setAdapter(scheduleListColorRecyclerAdapter);
 
@@ -110,13 +117,6 @@ public class ScheduleListFragment extends Fragment {
 
 
         return returnView;
-    }
-
-    // Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -148,6 +148,6 @@ public class ScheduleListFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Bundle bd);
     }
 }

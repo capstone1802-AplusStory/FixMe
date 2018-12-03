@@ -1,5 +1,6 @@
 package com.aplusstory.fixme;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.jetbrains.annotations.Nullable;
@@ -7,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.CharArrayReader;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -341,6 +343,25 @@ public interface ScheduleDataManager extends UserDataManager{
                     return "";
             }
         }
+
+        public static String getTimeText(Context context, int alarmTimeCode){
+            switch (alarmTimeCode){
+                case INTERVAL_AMINUTE:
+                    return "1분 전";
+                case INTERVAL_FIVEMINUTE:
+                    return "5분 전";
+                case INTERVAL_TENMINUTE:
+                    return "10분 전";
+                case INTERVAL_THIRTYMINUTE:
+                    return "30분 전";
+                case INTERVAL_ANHOUR:
+                    return "1시간 전";
+                case INTERVAL_SIXHOUR:
+                    return "6시간 전";
+                default:
+                    return "";
+            }
+        }
     }
 
     public static class RepeatDuration {
@@ -348,6 +369,94 @@ public interface ScheduleDataManager extends UserDataManager{
         public static final int REPEAT_WEEKLY = 1;
         public static final int REPEAT_MONTHLY = 2;
         public static final int REPEAT_YEARLY = 3;
+
+        public static String getRepeatitionText(int repeatCode, boolean[] weeklyArr){
+            StringBuilder sb = new StringBuilder();
+            switch(repeatCode){
+                case REPEAT_DAYLY:
+                    sb.append("Every Day");
+                    break;
+                case REPEAT_WEEKLY:
+                    String tmpStr = null;
+                    boolean cond = false;
+                    if(weeklyArr != null && weeklyArr.length == 8) {
+                        for(int i = 0; i < 8; i++){
+                            switch (i){
+                                case 0:
+                                    tmpStr = "Every";
+                                    break;
+                                case 1:
+                                    tmpStr ="Sun";
+                                    break;
+                                case 2:
+                                    tmpStr = "Mon";
+                                    break;
+                                case 3:
+                                    tmpStr = "Tue";
+                                    break;
+                                case 4:
+                                    tmpStr = "Wed";
+                                    break;
+                                case 5:
+                                    tmpStr = "Thu";
+                                    break;
+                                case 6:
+                                    tmpStr = "Fri";
+                                    break;
+                                case 7:
+                                    tmpStr = "Sat";
+                                    break;
+                            }
+                            if(weeklyArr[i]){
+                                sb.append(tmpStr);
+                            } else if(i == 0){
+                                break;
+                            } else{
+                                cond = true;
+                            }
+                        }
+                    }
+
+                    if(!cond){
+
+                    }
+                    break;
+                case REPEAT_MONTHLY:
+                    sb.append("Every Month");
+                    break;
+                case REPEAT_YEARLY:
+                    sb.append("Every Year");
+                    break;
+                default:
+                    sb.append("None");
+            }
+
+
+            return sb.toString();
+        }
+
+        public static String getRepeatitionText(Context context, int repeatCode, boolean[] weeklyArr){
+            StringBuilder sb = new StringBuilder();
+            switch(repeatCode){
+                case REPEAT_DAYLY:
+                    sb.append("");
+                    break;
+                case REPEAT_WEEKLY:
+                    sb.append("");
+                    break;
+                case REPEAT_MONTHLY:
+                    sb.append("");
+                    break;
+                case REPEAT_YEARLY:
+                    sb.append("");
+                    break;
+                default:
+                    sb.append("");
+            }
+
+
+            return sb.toString();
+        }
     }
 
     public static class TableColor {
@@ -364,6 +473,35 @@ public interface ScheduleDataManager extends UserDataManager{
         public static final int BLACK = 10;
 
         public static String getColorText(int colorCode){
+            switch (colorCode){
+                case BLACK:
+                    return "black";
+                case RED:
+                    return "red";
+                case BLUE:
+                    return "blue";
+                case GREEN:
+                    return "green";
+                case YELLOW:
+                    return "yellow";
+                case PURPLE:
+                    return "purple";
+                case PINK:
+                    return "pink";
+                case CYAN:
+                    return "cyan";
+                case SKYBLUE:
+                    return "skyblue";
+                case LIGHTGREEN:
+                    return "lightGreen";
+                case WHITE:
+                    return "white";
+                default:
+                    return "";
+            }
+        }
+
+        public static String getColorText(Context context, int colorCode){
             switch (colorCode){
                 case BLACK:
                     return "black";

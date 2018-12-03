@@ -75,7 +75,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         }
 
         TextView repeationDetail = (TextView) returnView.findViewById(R.id.repeationDetail);
-        repeationDetail.setText("aaa");
+
 
         ImageButton timeButton = (ImageButton) returnView.findViewById(R.id.timeButton);
         timeButton.setOnClickListener(new View.OnClickListener() {
