@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.aplusstory.fixme.cal.OneDayView;
 
 import java.time.Month;
+import java.util.Calendar;
 
 
 public class CalendarFragment extends Fragment {
@@ -25,6 +26,7 @@ public class CalendarFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TextView thisMonthTv = null;
     private Bundle arg;
+    private MonthlyFragment.OnMonthChangeListener childFragmentListener = null;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -52,6 +54,10 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Context context = this.getContext();
+        if(context instanceof MonthlyFragment.OnMonthChangeListener){
+            this.childFragmentListener = (MonthlyFragment.OnMonthChangeListener)context;
+        }
         Log.d(this.getClass().getName(), "Created");
     }
 
@@ -69,23 +75,27 @@ public class CalendarFragment extends Fragment {
         mf.setOnMonthChangeListener(new MonthlyFragment.OnMonthChangeListener() {
             @Override
             public void onChange(int year, int month) {
-                Log.d(CalendarFragment.this.getClass().getName(), "onChange " + year + "." + month);
-                if(CalendarFragment.this.thisMonthTv != null) {
-                    CalendarFragment.this.thisMonthTv.setText(year + "." + (month + 1));
+                CalendarFragment that = CalendarFragment.this;
+                Log.d(that.getClass().getName(), "onChange " + year + "." + month);
+                if(that.thisMonthTv != null) {
+                    String text = year + "." + (month + 1);
+                    that.thisMonthTv.setText(text);
+                    Log.d(that.getClass().getName(), "text : " + text);
+                } else {
+                    Log.d(that.getClass().getName(), "No textview?!");
                 }
-                Context context = CalendarFragment.this.getContext();
-                if(context instanceof ScheduleActivity) {
-                    ((ScheduleActivity) CalendarFragment.this.getContext()).onChange(year, month);
+                Context context = that.getContext();
+                if(that.childFragmentListener != null) {
+                    that.childFragmentListener.onChange(year, month);
                 }
             }
 
             @Override
             public void onDayClick(OneDayView dayView) {
-                Context context = CalendarFragment.this.getContext();
-                if(context instanceof ScheduleActivity) {
-                    ((ScheduleActivity) CalendarFragment.this.getContext()).onDayClick(dayView);
-                } else if(context instanceof FootprintActivity){
-                    ((FootprintActivity) CalendarFragment.this.getContext()).onDayClick(dayView);
+                CalendarFragment that = CalendarFragment.this;
+                Log.d(that.getClass().getName(), "onDayClick " + dayView.get(Calendar.DAY_OF_MONTH));
+                if(that.childFragmentListener != null){
+                    that.childFragmentListener.onDayClick(dayView);
                 }
             }
         });
