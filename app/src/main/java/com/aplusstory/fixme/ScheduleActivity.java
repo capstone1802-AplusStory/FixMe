@@ -175,7 +175,7 @@ public class ScheduleActivity extends AppCompatActivity
         Log.d(this.getClass().getName(), "onDayClick, " + c.getTime().toString());
         if(this.fgm != null && !this.fgm.isDestroyed()){
             FragmentTransaction ft = this.fgm.beginTransaction();
-            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg = (Fragment) new ScheduleListFragment();
             boolean hasSch = false;
             ScheduleDataManager.ScheduleData sch = null;
             for(String s : this.monthlyList){

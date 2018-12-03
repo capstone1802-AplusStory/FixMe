@@ -9,7 +9,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -48,10 +50,11 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
             }
         });
 
-        Button addButton = (Button) findViewById(R.id.addFavButton);
+        ImageButton addButton = (ImageButton) findViewById(R.id.add_favorite_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "go to map", Toast.LENGTH_SHORT).show();
                 // start mapview -> activity_favorite
             }
         });

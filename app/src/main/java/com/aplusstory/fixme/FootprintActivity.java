@@ -138,7 +138,10 @@ public class FootprintActivity extends AppCompatActivity
                     String fragmentTag = yearlyCalendarFragment.getClass().getSimpleName();
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
-                    ft.addToBackStack(null);
+                    ft.addToBackStack(fragmentTag);
+                    yearlyCalendarFragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+//                    menuHide.findItem(R.id.ic_footprint_calendar).setVisible(false);
                     ft.commit();
 //                    ft.disallowAddToBackStack();
                 }
