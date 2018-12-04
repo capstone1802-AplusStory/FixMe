@@ -29,7 +29,7 @@ public class OneDayView extends RelativeLayout {
     /** number text field */
     private TextView dayTv;
     /** message text field*/
-    private TextView msgTv;
+//    private TextView msgTv;
     /** Value object for a day info */
     private OneDayData one;
 
@@ -58,13 +58,15 @@ public class OneDayView extends RelativeLayout {
         init(context);
     }
 
+    public void colorSet(int id){
+
+    }
     private void init(Context context)
     {
         View v = View.inflate(context, R.layout.oneday, this);
         eventDot = (LinearLayout)v.findViewById(R.id.onday_eventDots);
         dayTv = (TextView) v.findViewById(R.id.onday_dayTv);
-        msgTv = (TextView) v.findViewById(R.id.onday_msgTv);
-        dotImg = eventDot.findViewById(R.id.onedayDotImg);
+//        msgTv = (TextView) v.findViewById(R.id.onday_msgTv);
         one = new OneDayData();
         event = false;
         eventDot.setVisibility(INVISIBLE);
@@ -170,7 +172,7 @@ public class OneDayView extends RelativeLayout {
             dayTv.setTextColor(Color.BLACK);
         }
 
-        msgTv.setText((one.getMessage()==null)?"":one.getMessage());
+//        msgTv.setText((one.getMessage()==null)?"":one.getMessage());
 
     }
 }

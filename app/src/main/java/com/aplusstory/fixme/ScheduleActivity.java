@@ -128,7 +128,7 @@ public class ScheduleActivity extends AppCompatActivity
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
-                    ft.add(R.id.frame_schedule, this.schFrg);
+                    ft.replace(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);
                     this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     ft.commit();
@@ -146,6 +146,27 @@ public class ScheduleActivity extends AppCompatActivity
             ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
             if(this.dm.putData(sch)) {
                 String savedMsg = "schedule saved";
+                switch(sch.tableColor){
+                    case ScheduleDataManager.TableColor.RED:
+                        break;
+                    case ScheduleDataManager.TableColor.PINK:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOW:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOWGREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.GREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.MINT:
+                        break;
+                    case ScheduleDataManager.TableColor.SKYBLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.BLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.PURPLE:
+                        break;
+
+                }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
         }else if(arg.containsKey(ScheduleFragment.ARG_KEY_DELETE) && arg.getBoolean(ScheduleFragment.ARG_KEY_DELETE)){
@@ -203,8 +224,10 @@ public class ScheduleActivity extends AppCompatActivity
                 arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
             }
             schFrg.setArguments(arg);
-            ft.add(R.id.frame_schedule, this.schFrg);
-            ft.addToBackStack(null);
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft.commit();
         }
     }
