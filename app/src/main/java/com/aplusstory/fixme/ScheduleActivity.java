@@ -21,10 +21,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +52,9 @@ public class ScheduleActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        TextView appBarTitle = (TextView) findViewById(R.id.schedule_title);
+        appBarTitle.setText("YYYY.MM");
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
