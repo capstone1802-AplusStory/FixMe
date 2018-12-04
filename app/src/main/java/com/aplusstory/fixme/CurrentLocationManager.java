@@ -28,7 +28,7 @@ public class CurrentLocationManager extends Service implements LocationDataManag
 //    public static final long MIN_LOCA_UPDATE = 10000;
     public static final long DELAY_THREAD_LOOP = 7500;
     public static final double DISTANCE_THRESHOLD = 15.0;
-    public static final float ACCURACY_THRESHOLD = (float)DISTANCE_THRESHOLD;
+    public static final float ACCURACY_THRESHOLD = 25.0F;
 
     private static boolean isRunning = false;
 
