@@ -129,6 +129,27 @@ public class ScheduleActivity extends AppCompatActivity
             ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
             if(this.dm.putData(sch)) {
                 String savedMsg = "schedule saved";
+                switch(sch.tableColor){
+                    case ScheduleDataManager.TableColor.RED:
+                        break;
+                    case ScheduleDataManager.TableColor.PINK:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOW:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOWGREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.GREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.MINT:
+                        break;
+                    case ScheduleDataManager.TableColor.SKYBLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.BLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.PURPLE:
+                        break;
+
+                }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
         }else if(arg.containsKey(ScheduleFragment.ARG_KEY_DELETE) && arg.getBoolean(ScheduleFragment.ARG_KEY_DELETE)){

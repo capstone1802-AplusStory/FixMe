@@ -332,15 +332,15 @@ public interface ScheduleDataManager extends UserDataManager{
 
     public static class TableColor {
         public static final int WHITE = 0;
-        public static final int LIGHTGREEN = 1;
-        public static final int SKYBLUE = 2;
-        public static final int PINK = 3;
-        public static final int YELLOW = 4;
-        public static final int PURPLE = 5;
-        public static final int RED = 6;
-        public static final int CYAN = 7;
+        public static final int RED = 1;
+        public static final int PINK = 2;
+        public static final int YELLOW = 3;
+        public static final int YELLOWGREEN = 4;
+        public static final int GREEN = 5;
+        public static final int MINT = 6;
+        public static final int SKYBLUE = 7;
         public static final int BLUE = 8;
-        public static final int GREEN = 9;
+        public static final int PURPLE = 9;
         public static final int BLACK = 10;
 
         public static String getColorText(int colorCode){
@@ -359,11 +359,11 @@ public interface ScheduleDataManager extends UserDataManager{
                     return "purple";
                 case PINK:
                     return "pink";
-                case CYAN:
+                case MINT:
                     return "cyan";
                 case SKYBLUE:
                     return "skyblue";
-                case LIGHTGREEN:
+                case YELLOWGREEN:
                     return "lightGreen";
                 case WHITE:
                     return "white";

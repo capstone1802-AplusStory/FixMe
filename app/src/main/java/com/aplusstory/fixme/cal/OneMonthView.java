@@ -247,8 +247,5 @@ public class OneMonthView extends LinearLayout implements View.OnClickListener {
 //        else {odv.setEvent(true);}
         HLog.d(TAG,CLASS,"event status : " + odv.getEvent() );
         this.onClickDayListener.onClick(odv);
-
-
-
     }
 }
