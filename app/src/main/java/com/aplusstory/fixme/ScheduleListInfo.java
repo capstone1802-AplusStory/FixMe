@@ -4,7 +4,7 @@ public class ScheduleListInfo {
 
     public static int getColorIconCode(int schDataColorCode){
         switch(schDataColorCode){
-            case ScheduleDataManager.TableColor.LIGHTGREEN:
+            case ScheduleDataManager.TableColor.YELLOWGREEN:
                 return R.drawable.ic_yellowgreen_circle;
             case ScheduleDataManager.TableColor.SKYBLUE:
                 return R.drawable.ic_skyblue_circle;
@@ -16,7 +16,7 @@ public class ScheduleListInfo {
                 return R.drawable.ic_purple_circle;
             case ScheduleDataManager.TableColor.BLUE:
                 return R.drawable.ic_blue_circle;
-            case ScheduleDataManager.TableColor.CYAN:
+            case ScheduleDataManager.TableColor.MINT:
                 return R.drawable.ic_mint_circle;
             case ScheduleDataManager.TableColor.GREEN:
                 return R.drawable.ic_green_circle;

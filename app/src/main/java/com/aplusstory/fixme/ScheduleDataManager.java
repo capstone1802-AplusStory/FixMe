@@ -517,11 +517,11 @@ public interface ScheduleDataManager extends UserDataManager{
                     return "purple";
                 case PINK:
                     return "pink";
-                case CYAN:
-                    return "cyan";
+                case MINT:
+                    return "mint";
                 case SKYBLUE:
                     return "skyblue";
-                case LIGHTGREEN:
+                case YELLOWGREEN:
                     return "lightGreen";
                 case WHITE:
                     return "white";

@@ -80,54 +80,22 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
             memoView.setText(this.sch.memo);
         }
 
-        TextView repeationDetail = (TextView) returnView.findViewById(R.id.repeationDetail);
-
+//        TextView repeationDetail = (TextView) returnView.findViewById(R.id.repeationDetail);
 
         ImageButton timeButton = (ImageButton) returnView.findViewById(R.id.timeButton);
-        timeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ScheduleTimeActivity.class);
-                startActivityForResult(intent, REQUEST_RESULT);
-            }
-        });
+        timeButton.setOnClickListener(this);
 
         ImageButton alarmButton = (ImageButton) returnView.findViewById(R.id.alarmButton);
-        alarmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ScheduleAlarmIntervalActivity.class);
-                startActivityForResult(intent, REQUEST_RESULT);
-            }
-        });
+        alarmButton.setOnClickListener(this);
 
         ImageButton colorButton = (ImageButton) returnView.findViewById(R.id.colorButton);
-        colorButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ScheduleColorActivity.class);
-                startActivityForResult(intent, REQUEST_RESULT);
-            }
-        });
+        colorButton.setOnClickListener(this);
 
         ImageButton repeatButton = (ImageButton) returnView.findViewById(R.id.repeationButton);
-        repeatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ScheduleRepeationActivity.class);
-                startActivityForResult(intent, REQUEST_RESULT);
-            }
-        });
+        repeatButton.setOnClickListener(this);
 
         ImageButton locationButton = (ImageButton) returnView.findViewById(R.id.locationButton);
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(ScheduleFragment.this.getContext(), "Map to select location", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), TMapActivity.class);
-                startActivityForResult(intent, REQUEST_RESULT);
-            }
-        });
+        locationButton.setOnClickListener(this);
 
         Button applyButton = (Button) returnView.findViewById(R.id.applyButton);
         applyButton.setOnClickListener(this);
@@ -241,7 +209,54 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         FragmentManager fragmentManager = null;
         FragmentTransaction ft = null;
+        Intent intent;
+        Bundle bd;
         switch(v.getId()){
+            case R.id.timeButton:
+                intent = new Intent(getActivity(), ScheduleTimeActivity.class);
+                intent.putExtra(ScheduleTimeActivity.EXTRA_NAME_ARGUMENT, this.today.getTime());
+                startActivityForResult(intent, REQUEST_RESULT);
+                break;
+            case R.id.alarmButton:
+                intent = new Intent(getActivity(), ScheduleAlarmIntervalActivity.class);
+                if(this.sch != null && this.sch.hasAlarm){
+                    intent.putExtra(ScheduleAlarmIntervalActivity.EXTRA_NAME_ARGUMENT, this.sch.alarmInterval);
+                }
+                startActivityForResult(intent, REQUEST_RESULT);
+                break;
+            case R.id.colorButton:
+                intent = new Intent(getActivity(), ScheduleColorActivity.class);
+                startActivityForResult(intent, REQUEST_RESULT);
+                break;
+            case R.id.repeationButton:
+                intent = new Intent(getActivity(), ScheduleRepeationActivity.class);
+                if(this.sch != null && this.sch.isRepeated){
+                    bd = new Bundle();
+                    bd.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE, this.sch.repeatType);
+                    if(this.sch.repeatType == ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY){
+                        bd.putBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY, this.sch.repeatDayOfWeek);
+                    }
+                    bd.putLong(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_END, this.sch.repeatEnd);
+                    try {
+                        String repStr = ((TextView)this.getView().findViewById(R.id.repeatText)).getText().toString();
+                        bd.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, repStr);
+                    }catch(Exception e){
+                        Log.d(this.getClass().getName(), e.toString());
+                    }
+                    intent.putExtra(ScheduleRepeationActivity.EXTRA_NAME_ARGUMENT, bd);
+                }
+                startActivityForResult(intent, REQUEST_RESULT);
+                break;
+            case R.id.locationButton:
+                intent = new Intent(getActivity(), TMapActivity.class);
+                if(this.sch != null) {
+                    bd = new Bundle();
+                    bd.putDouble(MapFragment.KEY_LONGITUDE, this.sch.longitude);
+                    bd.putDouble(MapFragment.KEY_LATITUDE, this.sch.latitude);
+                    intent.putExtra(TMapActivity.EXTRA_NAME_ARGUMENT, bd);
+                }
+                startActivityForResult(intent, REQUEST_RESULT);
+                break;
             case R.id.applyButton:
 //                ImageView dotImg = (ImageView) getActivity().findViewById(R.id.onedayDotImg);
 //

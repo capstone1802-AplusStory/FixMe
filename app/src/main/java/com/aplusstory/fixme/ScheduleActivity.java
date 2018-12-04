@@ -34,7 +34,8 @@ import java.util.List;
 
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ScheduleUIManager,
-        ScheduleFragment.OnFragmentInteractionListener, MonthlyFragment.OnMonthChangeListener {
+        ScheduleFragment.OnFragmentInteractionListener, MonthlyFragment.OnMonthChangeListener,
+        ScheduleListFragment.OnFragmentInteractionListener{
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     private FragmentManager fgm = null;
@@ -176,6 +177,22 @@ public class ScheduleActivity extends AppCompatActivity
             //TODO
             String delMsg = "schedule deleted";
             Toast.makeText(this, delMsg, Toast.LENGTH_SHORT).show();
+        }else if(arg.containsKey(ScheduleListFragment.ARG_KEY_ADD) && arg.getBoolean(ScheduleListFragment.ARG_KEY_ADD)){
+            Date today;
+            if(arg.containsKey(ScheduleListFragment.ARG_KEY_TODAY)) {
+                today = new Date(arg.getLong(ScheduleListFragment.ARG_KEY_TODAY));
+            } else {
+                today = new Date();
+            }
+
+            FragmentTransaction ft = this.fgm.beginTransaction();
+            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg.setArguments(new Bundle(arg));
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft.commit();
         }
     }
 
@@ -196,6 +213,14 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     public void onChange(int year, int month) {
         this.monthlyList = this.dm.getMonthlyList(year, month);
+        TextView appBarTitle = (TextView) findViewById(R.id.schedule_title);
+        StringBuilder sb = new StringBuilder()
+        .append(year)
+        .append(this.getString(R.string.year))
+        .append(' ')
+        .append(month + 1)
+        .append(this.getString(R.string.month));
+        appBarTitle.setText(sb.toString());
     }
 
     @Override

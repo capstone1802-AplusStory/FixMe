@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,10 @@ import java.util.Date;
  * Use the {@link ScheduleListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScheduleListFragment extends Fragment {
+public class ScheduleListFragment extends Fragment implements View.OnClickListener{
     public static final String ARG_KEY_SCHEDULE = "argument_schedule";
     public static final String ARG_KEY_SCHEDULE_LIST = "argument_schedule_list";
+    public static final String ARG_KEY_ADD = "argument_add";
     public static final String ARG_KEY_DELETE = "argument_delete";
     public static final String ARG_KEY_TODAY = "argument_today";
     public static final String ARG_KEY_SCHEDULE_LOAD = "argument_load";
@@ -101,19 +103,14 @@ public class ScheduleListFragment extends Fragment {
                 scheduleArrayList.add(new ScheduleListInfo(ScheduleListInfo.getColorIconCode(sch.tableColor), sch.name));
 
             }
-        } else {
+        } else if(this.schList == null) {
             scheduleArrayList.add(new ScheduleListInfo(R.drawable.ic_red_circle_padding, "scheduleName"));
         }
         ScheduleListColorRecyclerAdapter scheduleListColorRecyclerAdapter = new ScheduleListColorRecyclerAdapter(scheduleArrayList);
         recyclerView.setAdapter(scheduleListColorRecyclerAdapter);
 
         ImageButton addScheduleButton = (ImageButton) returnView.findViewById(R.id.add_schedule_button);
-        addScheduleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //add today's schedule
-            }
-        });
+        addScheduleButton.setOnClickListener(this);
 
 
         return returnView;
@@ -136,16 +133,19 @@ public class ScheduleListFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.add_schedule_button){
+            Bundle bd = new Bundle();
+            bd.putBoolean(ARG_KEY_ADD, true);
+            bd.putLong(ARG_KEY_TODAY,this.today.getTime());
+            Log.d(this.getClass().getName(), "on add button click, data : " + this.today.toString());
+            if(this.mListener != null){
+                this.mListener.onFragmentInteraction(bd);
+            }
+        }
+    }
+
     public interface OnFragmentInteractionListener {
         // Update argument type and name
         void onFragmentInteraction(Bundle bd);
