@@ -168,24 +168,6 @@ public class CurrentLocationManager extends Service implements LocationDataManag
                         == PackageManager.PERMISSION_GRANTED;
                 boolean finePermission = that.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
-                if(passive != null && (finePermission)){
-                    Log.d(this.getClass().getName(), "passive provider request");
-                    that.lm.requestLocationUpdates(
-                            LocationManager.PASSIVE_PROVIDER
-                            , CurrentLocationManager.MIN_LOCA_UPDATE
-                            , 5
-                            , that
-                    );
-                }
-                if (gps != null && finePermission) {
-                    Log.d(this.getClass().getName(), "gps provider request");
-                    that.lm.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER
-                            , CurrentLocationManager.MIN_LOCA_UPDATE
-                            , 5
-                            , that
-                    );
-                }
                 if (net != null && coasePermission) {
                     Log.d(this.getClass().getName(), "network provider request");
                     that.lm.requestLocationUpdates(
@@ -194,7 +176,24 @@ public class CurrentLocationManager extends Service implements LocationDataManag
                             , 5
                             , that
                     );
+                }else if(passive != null && (finePermission)){
+                    Log.d(this.getClass().getName(), "passive provider request");
+                    that.lm.requestLocationUpdates(
+                            LocationManager.PASSIVE_PROVIDER
+                            , CurrentLocationManager.MIN_LOCA_UPDATE
+                            , 5
+                            , that
+                    );
+                }else if(gps != null && finePermission) {
+                    Log.d(this.getClass().getName(), "gps provider request");
+                    that.lm.requestLocationUpdates(
+                            LocationManager.GPS_PROVIDER
+                            , CurrentLocationManager.MIN_LOCA_UPDATE
+                            , 5
+                            , that
+                    );
                 }
+
             }
         }
     }
