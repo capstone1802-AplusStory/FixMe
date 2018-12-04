@@ -128,7 +128,7 @@ public class ScheduleActivity extends AppCompatActivity
             case R.id.add_schedule:
                 if(this.fgm != null && !this.fgm.isDestroyed()){
                     FragmentTransaction ft = this.fgm.beginTransaction();
-                    this.schFrg = (Fragment) new ScheduleFragment();
+                    this.schFrg = new ScheduleFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
                     ft.replace(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);
@@ -144,7 +144,6 @@ public class ScheduleActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Bundle arg) {
-        Calendar c = Calendar.getInstance();
         if(arg.containsKey(ScheduleFragment.ARG_KEY_SCHEDULE)){
             ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
             if(this.dm.putData(sch)) {
@@ -171,7 +170,6 @@ public class ScheduleActivity extends AppCompatActivity
                 }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
-            this.monthlyList = this.dm.getMonthlyList(c.get(Calendar.YEAR), c.get(Calendar.MONTH));
         }else if(arg.containsKey(ScheduleFragment.ARG_KEY_DELETE) && arg.getBoolean(ScheduleFragment.ARG_KEY_DELETE)){
             //TODO
             String delMsg = "schedule deleted";
@@ -247,12 +245,8 @@ public class ScheduleActivity extends AppCompatActivity
             FragmentTransaction ft = this.fgm.beginTransaction();
             this.schFrg = (Fragment) new ScheduleListFragment();
             boolean hasSch = false;
-            ArrayList<ScheduleDataManager.ScheduleData> schList = new ArrayList<>();
-            StringBuilder sb = new StringBuilder();
-
+            ScheduleDataManager.ScheduleData sch = null;
             for(String s : this.monthlyList){
-                ScheduleDataManager.ScheduleData sch;
-                Log.d(this.getClass().getName(), "monthly schedule " + s);
                 if((sch = this.dm.getData(s)) != null){
                     Calendar cBegin = Calendar.getInstance();
                     cBegin.setTime(new Date(sch.scheduleBegin));
@@ -260,21 +254,17 @@ public class ScheduleActivity extends AppCompatActivity
                     cEnd.setTime(new Date(sch.scheduleEnd));
                     int date = c.get(Calendar.DAY_OF_MONTH);
                     if(date >= cBegin.get(Calendar.DAY_OF_MONTH) && date <= cEnd.get(Calendar.DAY_OF_MONTH)){
-                        schList.add(sch);
-                        sb.append(sch.toString());
-                        sb.append('\n');
+                        break;
                     }
                 }
             }
-
             Bundle arg = new Bundle();
-            if(schList.size() > 0) {
-                Log.d(this.getClass().getName(), "loaded schedule json : " + sb.toString());
+            if(sch != null) {
+                Log.d(this.getClass().getName(), "loaded schedule json : \n" + sch.toString());
+                arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, sch);
+            } else{
+                arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
             }
-
-            arg.putSerializable(ScheduleListFragment.ARG_KEY_SCHEDULE_LIST, schList);
-            arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
-
             schFrg.setArguments(arg);
             String fragmentTag = this.schFrg.getClass().getSimpleName();
             ft.replace(R.id.frame_schedule, this.schFrg);

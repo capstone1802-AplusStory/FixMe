@@ -21,7 +21,7 @@ public class ScheduleListInfo {
             case ScheduleDataManager.TableColor.GREEN:
                 return R.drawable.ic_green_circle;
             case ScheduleDataManager.TableColor.RED:
-                return R.drawable.ic_red_circle;
+                return R.drawable.ic_red_circle_padding;
             default:
                 return -1;
         }

@@ -182,6 +182,11 @@ public class MapFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //이곳에 데이터 인텐트에 담아서 넘겨주고, 확정 짓는 코드 필요
+                        Bundle bd = new Bundle();
+                        bd.putDouble(KEY_LATITUDE, lat);
+                        bd.putDouble(KEY_LONGITUDE, lon);
+                        bd.putString(KEY_ADDRESS, address);
+                        MapFragment.this.mListener.onFragmentInteraction(bd);
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -211,13 +216,14 @@ public class MapFragment extends Fragment
             public void onLongPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint) {
                 lat = tMapPoint.getLatitude();
                 lon = tMapPoint.getLongitude();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 tmapdata.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String strAddress) {
                         address = strAddress;
                     }
                 });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                System.out.println(address);
                 builder.setTitle("이곳으로 지정하시겠습니까?\n"+address);
 
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -358,7 +364,6 @@ public class MapFragment extends Fragment
                         TMapInfo tmapInfo = tmapview.getDisplayTMapInfo(m_tmapPoint);
                         tmapview.setCenterPoint(tmapInfo.getTMapPoint().getLongitude(),tmapInfo.getTMapPoint().getLatitude());
                         tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel());
-                        Log.d(TAG, "으어어어"+tmapInfo.getTMapZoomLevel()+"\n"+tmapInfo.getTMapPoint());
                         showMarkerPoint();
                     }
                 });
