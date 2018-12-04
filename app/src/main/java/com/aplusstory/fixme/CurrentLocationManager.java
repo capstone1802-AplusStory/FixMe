@@ -24,10 +24,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class CurrentLocationManager extends Service implements LocationDataManager, LocationListener {
-    public static final long MIN_LOCA_UPDATE = 2 * 60 * 1000;
+    public static final long MIN_LOCA_UPDATE = 60000;
 //    public static final long MIN_LOCA_UPDATE = 10000;
-    public static final long DELAY_THREAD_LOOP = 10000;
-    public static final double DISTANCE_THRESHOLD = 5.0;
+    public static final long DELAY_THREAD_LOOP = 7500;
+    public static final double DISTANCE_THRESHOLD = 15.0;
+    public static final float ACCURACY_THRESHOLD = (float)DISTANCE_THRESHOLD;
 
     private static boolean isRunning = false;
 
@@ -105,18 +106,19 @@ public class CurrentLocationManager extends Service implements LocationDataManag
         double latitude =  location.getLatitude();
         double longtitude = location.getLongitude();
         LocationData loca = new LocationData(now, latitude, longtitude);
-        LocationData lastKnownLocation;
+//        Location lastKnownLocation;
+        float accuracy = location.getAccuracy();
 
-        if(this.priviousLocation == null
-                && (lastKnownLocation = this.fm.getCurrentLocation()) != null){
-            this.priviousLocation = lastKnownLocation;
-        }
+//        if(this.priviousLocation == null
+//                && (lastKnownLocation = this.fm.getCurrentLocation()) != null){
+//            this.priviousLocation = lastKnownLocation;
+//        }
 
         Log.d(CurrentLocationManager.class.getName(),
              "You're now on : "
                 + Double.toString(latitude)
                 + ", " + Double.toString(longtitude)
-                + ", at : "
+                + ", in radius : " + accuracy  +", at : "
                 + dStr
         );
         if(this.priviousLocation != null) {
@@ -126,15 +128,17 @@ public class CurrentLocationManager extends Service implements LocationDataManag
             );
         }
         if(this.fm != null){
-            if( this.priviousLocation == null
-            ||  location.getProvider().equals(LocationManager.NETWORK_PROVIDER)
+            if(accuracy < ACCURACY_THRESHOLD
+//            ||  location.getProvider().equals(LocationManager.NETWORK_PROVIDER)
             ){
                 this.fm.setCurrentLocation(loca);
+                this.priviousLocation = loca;
+                this.lm.removeUpdates(this);
+            }else {
+                this.hd.sendEmptyMessage(0);
             }
         }
 
-        this.lm.removeUpdates(this);
-        this.priviousLocation = loca;
     }
 
     @Override
@@ -159,20 +163,20 @@ public class CurrentLocationManager extends Service implements LocationDataManag
             if(that.lm != null){
                 LocationProvider gps = that.lm.getProvider(LocationManager.GPS_PROVIDER);
                 LocationProvider net = that.lm.getProvider(LocationManager.NETWORK_PROVIDER);
-//                LocationProvider passive = that.lm.getProvider(LocationManager.PASSIVE_PROVIDER);
+                LocationProvider passive = that.lm.getProvider(LocationManager.PASSIVE_PROVIDER);
                 boolean coasePermission = that.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
                 boolean finePermission = that.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED;
-//                if(passive != null && (finePermission)){
-//                    Log.d(this.getClass().getName(), "passive provider request");
-//                    that.lm.requestLocationUpdates(
-//                            LocationManager.PASSIVE_PROVIDER
-//                            , CurrentLocationManager.MIN_LOCA_UPDATE
-//                            , 5
-//                            , that
-//                    );
-//                }
+                if(passive != null && (finePermission)){
+                    Log.d(this.getClass().getName(), "passive provider request");
+                    that.lm.requestLocationUpdates(
+                            LocationManager.PASSIVE_PROVIDER
+                            , CurrentLocationManager.MIN_LOCA_UPDATE
+                            , 5
+                            , that
+                    );
+                }
                 if (gps != null && finePermission) {
                     Log.d(this.getClass().getName(), "gps provider request");
                     that.lm.requestLocationUpdates(

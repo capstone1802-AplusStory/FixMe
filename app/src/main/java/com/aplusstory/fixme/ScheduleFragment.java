@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +35,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     Context context;
 
     Date today = new Date();
-    SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
     private int REQUEST_RESULT = 1;
     private ScheduleDataManager.ScheduleData sch = new ScheduleDataManager.ScheduleData();
 
@@ -70,7 +69,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         View returnView = inflater.inflate(R.layout.fragment_schedule, container, false);
 
         TextView textView = (TextView) returnView.findViewById(R.id.scheduleDate);
-        textView.setText(date.format(today));
+        textView.setText(dateFormat.format(today));
 
         EditText nameView = (EditText) returnView.findViewById(R.id.scheduleName);
         if(this.sch.name != null){
@@ -82,7 +81,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         }
 
         TextView repeationDetail = (TextView) returnView.findViewById(R.id.repeationDetail);
-        repeationDetail.setText("aaa");
+
 
         ImageButton timeButton = (ImageButton) returnView.findViewById(R.id.timeButton);
         timeButton.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +141,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(this.getClass().getName(), "onActivityResult, reqCode : " + requestCode + " resCode : " + resultCode);
+        TextView tv;
+        String str;
         if(requestCode == REQUEST_RESULT) {
             if(resultCode == RESULT_OK && data != null) {
                 if(data.hasExtra(ScheduleRepeationActivity.EXTRA_NAME_ARGUMENT)){
@@ -158,13 +159,22 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                     Log.d(this.getClass().getName(), "repeatCode : " + rptCode + ", repeatEnd : " + rptEnd.toString());
+
+                    tv = (TextView) getView().findViewById(R.id.repeationDetail);
+                    if(bd.containsKey(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT)){
+                        str = bd.getString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT);
+                        tv.setText(str);
+                    }
                 }
 
                 if(data.hasExtra(ScheduleColorActivity.EXTRA_NAME_ARGUMENT)){
                     int crCode = data.getIntExtra(ScheduleColorActivity.EXTRA_NAME_ARGUMENT, ScheduleDataManager.TableColor.WHITE);
                     if(crCode > 0){
                         this.sch.tableColor = crCode;
-                        Log.d(this.getClass().getName(), "color : " + ScheduleDataManager.TableColor.getColorText(crCode));
+                        str = ScheduleDataManager.TableColor.getColorText(crCode);
+                        Log.d(this.getClass().getName(), "color : " + str);
+                        tv = (TextView) getView().findViewById(R.id.colorDetail);
+                        tv.setText(str);
                     }
                 }
 
@@ -173,7 +183,10 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     if(almintCode >= 0){
                         this.sch.hasAlarm = true;
                         this.sch.alarmInterval = almintCode;
+                        str = ScheduleDataManager.AlarmInterval.getTimeText(almintCode);
                         Log.d(this.getClass().getName(), "alarm interval : " + almintCode);
+                        tv = (TextView) getView().findViewById(R.id.alarmDetail);
+                        tv.setText(str);
                     }
                 }
 
@@ -184,6 +197,22 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     this.sch.scheduleBegin = begin.getTime();
                     this.sch.scheduleEnd = end.getTime();
                     Log.d(this.getClass().getName(), "schedule begin : " + begin.toString() + ", end : " + end.toString());
+                    str = dateFormat.format(begin) + " ~ " + dateFormat.format(end);
+                    tv = (TextView) getView().findViewById(R.id.timeDetail);
+                    tv.setText(str);
+                }
+
+                if(data.hasExtra(TMapActivity.EXTRA_NAME_ARGUMENT)){
+                    Bundle bd = data.getBundleExtra(TMapActivity.EXTRA_NAME_ARGUMENT);
+                    Double lat = bd.getDouble(MapFragment.KEY_LATITUDE);
+                    Double lon = bd.getDouble(MapFragment.KEY_LONGITUDE);
+                    String adr = bd.getString(MapFragment.KEY_ADDRESS);
+                    this.sch.latitude = lat;
+                    this.sch.longitude = lon;
+                    Log.d(this.getClass().getName(), "schedule location : " + "\naddress : " + adr + ", latitude : " + lat + ", longitude : " + lon);
+
+                    tv = (TextView) getView().findViewById(R.id.locationDetail);
+                    tv.setText(adr);
                 }
 //                Toast.makeText(getContext(), "Activity Terminated", Toast.LENGTH_SHORT).show();
             }

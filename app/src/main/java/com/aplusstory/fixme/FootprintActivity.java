@@ -36,7 +36,6 @@ public class FootprintActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fragment;
     private FragmentManager fragmentManager = null;
-
     private TodayFootPrintDataManager dm = null;
     private Menu menuHide;
     private Date today = null;
@@ -142,7 +141,6 @@ public class FootprintActivity extends AppCompatActivity
                     String fragmentTag = yearlyCalendarFragment.getClass().getSimpleName();
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
-
                     ft.addToBackStack(fragmentTag);
                     yearlyCalendarFragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 

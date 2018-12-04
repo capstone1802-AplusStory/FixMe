@@ -44,6 +44,14 @@ public class ScheduleFileManager implements FileManager {
         }
     }
 
+    private void refreshData(){
+        Map<String, ?> listSch = this.sp.getAll();
+        this.listSch = new HashMap<>();
+        for(String s : listSch.keySet()){
+            this.listSch.put(s, listSch.get(s).toString());
+        }
+    }
+
     public List<String> getScheduleList(){
         return new ArrayList<>(this.listSch.keySet());
     }
@@ -67,7 +75,8 @@ public class ScheduleFileManager implements FileManager {
         String filepath;
 
         if(this.listSch.containsKey(sch.name)){
-            filepath = this.listSch.get(sch.name);
+            return rt;
+//            filepath = this.listSch.get(sch.name);
         } else{
             filepath = context.getFilesDir() + "/" + FILENAME_SCHEDULE_PREFIX + sch.name;
         }
@@ -83,6 +92,10 @@ public class ScheduleFileManager implements FileManager {
             this.sp.edit().putString(sch.name, filepath).apply();
         } catch(IOException e){
             Log.d(this.getClass().getName(), e.toString());
+        }
+
+        if(rt){
+            this.refreshData();
         }
 
         return rt;

@@ -34,6 +34,14 @@ public class ScheduleManager implements ScheduleDataManager {
         }
     }
 
+    private void refreshData(){
+        this.schBuf = new HashMap<>();
+        this.schList = this.fm.getScheduleList();
+        for(String s : schList){
+            schBuf.put(s, this.fm.getSchedule(s));
+        }
+    }
+
     public List<String> getScheduleList(){
         ArrayList<String> rt = new ArrayList<>(this.schList.size());
         Collections.copy(rt, this.schList);
@@ -46,45 +54,52 @@ public class ScheduleManager implements ScheduleDataManager {
         Calendar cEnd = Calendar.getInstance();
 
         for(String s : this.schList){
+            Log.d(this.getClass().getName(), "schedule name : " + s);
             ScheduleData sch = this.schBuf.get(s);
-            if(sch.isRepeated){
-                Calendar cRptFin = Calendar.getInstance();
-                cRptFin.setTime(new Date(sch.repeatEnd));
-                if(cRptFin.get(Calendar.YEAR) <= year && cRptFin.get(Calendar.MONTH) <= month) {
-                    switch (sch.repeatType) {
-                        case RepeatDuration.REPEAT_DAYLY:
-                            rt.add(s);
-                            break;
-                        case RepeatDuration.REPEAT_WEEKLY:
-                            rt.add(s);
-                            break;
-                        case RepeatDuration.REPEAT_MONTHLY:
-                            rt.add(s);
-                            break;
-                        case RepeatDuration.REPEAT_YEARLY:
-                            cBegin.setTime(new Date(sch.scheduleBegin));
-                            cEnd.setTime(new Date(sch.scheduleEnd));
-                            if(cBegin.get(Calendar.MONTH) == month
-                            || cEnd.get(Calendar.MONTH) == month) {
+            if(sch != null) {
+                Log.d(this.getClass().getName(), "schedule : \n" + sch.toString());
+                if (sch.isRepeated) {
+                    Log.d(this.getClass().getName(), "schedule repeats");
+                    Calendar cRptFin = Calendar.getInstance();
+                    cRptFin.setTime(new Date(sch.repeatEnd));
+                    if (cRptFin.get(Calendar.YEAR) <= year && cRptFin.get(Calendar.MONTH) <= month) {
+                        switch (sch.repeatType) {
+                            case RepeatDuration.REPEAT_DAYLY:
                                 rt.add(s);
-                            }
-                            break;
-                        default:
-                            //something wrong
+                                break;
+                            case RepeatDuration.REPEAT_WEEKLY:
+                                rt.add(s);
+                                break;
+                            case RepeatDuration.REPEAT_MONTHLY:
+                                rt.add(s);
+                                break;
+                            case RepeatDuration.REPEAT_YEARLY:
+                                cBegin.setTime(new Date(sch.scheduleBegin));
+                                cEnd.setTime(new Date(sch.scheduleEnd));
+                                if (cBegin.get(Calendar.MONTH) == month
+                                        || cEnd.get(Calendar.MONTH) == month) {
+                                    Log.d(this.getClass().getName(), "schedule of this monthly");
+                                    rt.add(s);
+                                }
+                                break;
+                            default:
+                                //something wrong
+                        }
                     }
-                }
-            } else{
-                cBegin.setTime(new Date(sch.scheduleBegin));
-                cEnd.setTime(new Date(sch.scheduleEnd));
-                if((cBegin.get(Calendar.YEAR)   == year
-                ||  cEnd.get(Calendar.YEAR)     == year)
-                && (cBegin.get(Calendar.MONTH)  == month
-                ||  cEnd.get(Calendar.MONTH)    == month)){
-                    rt.add(s);
+                } else {
+                    cBegin.setTime(new Date(sch.scheduleBegin));
+                    cEnd.setTime(new Date(sch.scheduleEnd));
+                    if (cBegin.get(Calendar.YEAR) <= year && cEnd.get(Calendar.YEAR) >= year
+                            && cBegin.get(Calendar.MONTH) <= month && cEnd.get(Calendar.MONTH) >= month) {
+                        rt.add(s);
+                        Log.d(this.getClass().getName(), "monthly name : " + s);
+                    }
                 }
             }
         }
-
+        if(rt.size() == 0){
+            Log.d(this.getClass().getName(), "empty list?!");
+        }
         return rt;
     }
 
@@ -126,7 +141,11 @@ public class ScheduleManager implements ScheduleDataManager {
         }
 
         if(this.fm != null && !this.schList.contains(sch.name)){
-            return this.fm.putSchedule(sch);
+            boolean rt = this.fm.putSchedule(sch);
+            if(rt){
+                this.refreshData();
+            }
+            return rt;
         } else {
             return false;
         }

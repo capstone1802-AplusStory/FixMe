@@ -46,9 +46,11 @@ public class ScheduleListColorRecyclerAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int i) {
         ScheduleColorRecyclerViewHolder scheduleColorRecyclerViewHolder = (ScheduleColorRecyclerViewHolder) viewHolder;
-
-        scheduleColorRecyclerViewHolder.scheduleImageView.setImageResource(scheduleListInfoArrayList.get(i).scheduleColor);
-        scheduleColorRecyclerViewHolder.scheduleTextView.setText(scheduleListInfoArrayList.get(i).scheduleName);
+        ScheduleListInfo info = scheduleListInfoArrayList.get(i);
+        if(info.scheduleColor > 0) {
+            scheduleColorRecyclerViewHolder.scheduleImageView.setImageResource(info.scheduleColor);
+        }
+        scheduleColorRecyclerViewHolder.scheduleTextView.setText(info.scheduleName);
         scheduleColorRecyclerViewHolder.scheduleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
