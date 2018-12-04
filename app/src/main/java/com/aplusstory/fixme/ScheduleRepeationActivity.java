@@ -190,6 +190,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 this.datePickerDialog.show();
                 break;
             case R.id.noneButton:
+
                 str = "없음";
                 this.textViewRD.setText(str);
                 if(this.arg.containsKey(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE)){

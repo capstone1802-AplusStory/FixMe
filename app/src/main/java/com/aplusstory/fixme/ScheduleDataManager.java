@@ -489,11 +489,11 @@ public interface ScheduleDataManager extends UserDataManager{
                 case PINK:
                     return "pink";
                 case MINT:
-                    return "cyan";
+                    return "mint";
                 case SKYBLUE:
                     return "skyblue";
                 case YELLOWGREEN:
-                    return "lightGreen";
+                    return "yellowgreen";
                 case WHITE:
                     return "white";
                 default:
@@ -517,12 +517,12 @@ public interface ScheduleDataManager extends UserDataManager{
                     return "purple";
                 case PINK:
                     return "pink";
-                case CYAN:
-                    return "cyan";
+                case MINT:
+                    return "mint";
                 case SKYBLUE:
                     return "skyblue";
-                case LIGHTGREEN:
-                    return "lightGreen";
+                case YELLOWGREEN:
+                    return "yellowgreen";
                 case WHITE:
                     return "white";
                 default:
