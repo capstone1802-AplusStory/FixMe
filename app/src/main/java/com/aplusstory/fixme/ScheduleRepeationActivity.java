@@ -24,10 +24,9 @@ import java.util.Calendar;
 public class ScheduleRepeationActivity extends AppCompatActivity
         implements ScheduleRepeatWeeklyFragment.OnFragmentInteractionListener
         , View.OnClickListener
-    ,DatePickerDialog.OnDateSetListener
+        ,DatePickerDialog.OnDateSetListener
 {
     public static final String EXTRA_NAME_ARGUMENT = "repeat_argument";
-    public static final String ARGUMENT_KEY_REPEAT_TEXT = "repeat_text";
     public static final String ARGUMENT_KEY_REPEAT_CODE = ScheduleDataManager.ScheduleData.KEY_REPEAT_TYPE_CODE;
     public static final String ARGUMENT_KEY_REPEAT_WEEKLY = ScheduleDataManager.ScheduleData.KEY_REPEAT_DAY_OF_WEEK;
     public static final String ARGUMENT_KEY_REPEAT_END = ScheduleDataManager.ScheduleData.KEY_REPEAT_END;
@@ -37,7 +36,8 @@ public class ScheduleRepeationActivity extends AppCompatActivity
     private Fragment weeklyFragment = null;
     private FragmentManager fragmentManager = null;
     private DatePickerDialog datePickerDialog = null;
-//    String dates = "none";
+    private Button noneButton, dailyButton, weeklyButton, monthlyButton, yearlyButton;
+    //    String dates = "none";
     private Bundle arg = null;
 
     @Override
@@ -72,19 +72,19 @@ public class ScheduleRepeationActivity extends AppCompatActivity
             this.fragmentManager = this.getSupportFragmentManager();
         }
 
-        Button noneButton = (Button) findViewById(R.id.noneButton);
+        noneButton = (Button) findViewById(R.id.noneButton);
         noneButton.setOnClickListener(this);
 
-        Button dailyButton = (Button) findViewById(R.id.dailyButton);
+        dailyButton = (Button) findViewById(R.id.dailyButton);
         dailyButton.setOnClickListener(this);
 
-        Button weeklyButton = (Button) findViewById(R.id.weeklyButton);
+        weeklyButton = (Button) findViewById(R.id.weeklyButton);
         weeklyButton.setOnClickListener(this);
 
-        Button monthlyButton = (Button) findViewById(R.id.monthlyButton);
+        monthlyButton = (Button) findViewById(R.id.monthlyButton);
         monthlyButton.setOnClickListener(this);
 
-        Button yearlyButton = (Button) findViewById(R.id.yearlyButton);
+        yearlyButton = (Button) findViewById(R.id.yearlyButton);
         yearlyButton.setOnClickListener(this);
     }
 
@@ -105,10 +105,10 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 //            Bundle bundle = new Bundle();
 //            bundle.putParcelable("scheduleData", scheduleData);
 //            scheduleFragment.setArguments(bundle);
-            Intent intent = new Intent();
-            intent.putExtra(ScheduleRepeationActivity.EXTRA_NAME_ARGUMENT, this.arg);
-            setResult(RESULT_OK, intent);
-            finish();
+                Intent intent = new Intent();
+                intent.putExtra(ScheduleRepeationActivity.EXTRA_NAME_ARGUMENT, this.arg);
+                setResult(RESULT_OK, intent);
+                finish();
 //            break;
             default:
                 Log.d(this.getClass().getName(), "not confirmed");
@@ -165,17 +165,14 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 
             }
             if(cond) {
-                String str = text.toString();
-                this.textViewRD.setText(str);
+                this.textViewRD.setText(text.toString());
                 this.arg.putBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY, checkDay);
-                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
             }
         }
     }
 
     @Override
     public void onClick(View v) {
-        String str;
         switch(v.getId()){
 //            case R.id.repeatDay:
 //                break;
@@ -190,13 +187,16 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 this.datePickerDialog.show();
                 break;
             case R.id.noneButton:
+                noneButton.setSelected(true);
+                dailyButton.setSelected(false);
+                weeklyButton.setSelected(false);
+                monthlyButton.setSelected(false);
+                yearlyButton.setSelected(false);
 
-                str = "없음";
-                this.textViewRD.setText(str);
+                this.textViewRD.setText("없음");
                 if(this.arg.containsKey(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE)){
                     this.arg.remove(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE);
                 }
-                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -204,11 +204,15 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 }
                 break;
             case R.id.dailyButton:
-                str = "매일";
-                this.textViewRD.setText(str);
+                noneButton.setSelected(false);
+                dailyButton.setSelected(true);
+                weeklyButton.setSelected(false);
+                monthlyButton.setSelected(false);
+                yearlyButton.setSelected(false);
+
+                this.textViewRD.setText("매일");
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_DAYLY);
-                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -216,6 +220,12 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 }
                 break;
             case R.id.weeklyButton:
+                noneButton.setSelected(false);
+                dailyButton.setSelected(false);
+                weeklyButton.setSelected(true);
+                monthlyButton.setSelected(false);
+                yearlyButton.setSelected(false);
+
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed()){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     if(this.weeklyFragment == null) {
@@ -229,11 +239,15 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 }
                 break;
             case R.id.monthlyButton:
-                str = "매달";
-                this.textViewRD.setText(str);
+                noneButton.setSelected(false);
+                dailyButton.setSelected(false);
+                weeklyButton.setSelected(false);
+                monthlyButton.setSelected(true);
+                yearlyButton.setSelected(false);
+
+                this.textViewRD.setText("매달");
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY);
-                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -241,11 +255,15 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 }
                 break;
             case R.id.yearlyButton:
-                str = "매년";
-                this.textViewRD.setText(str);
+                noneButton.setSelected(false);
+                dailyButton.setSelected(false);
+                weeklyButton.setSelected(false);
+                monthlyButton.setSelected(false);
+                yearlyButton.setSelected(true);
+
+                this.textViewRD.setText("매년");
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_YEARLY);
-                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
