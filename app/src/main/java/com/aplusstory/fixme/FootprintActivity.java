@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import com.skt.Tmap.TMapData;
 
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class FootprintActivity extends AppCompatActivity
     private TodayFootPrintDataManager dm = null;
     private Menu menuHide;
     private Date today = null;
+
+
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +184,16 @@ public class FootprintActivity extends AppCompatActivity
     @Override
     public String getName(LocationDataManager.LocationData location) {
         //TODO : if there's favorite with the location, get its name; otherwise, get address of it.
-        return null;
+        Double lat = location.latitude;
+        Double lon = location.longitude;
+        TMapData tmapData = new TMapData();
+        tmapData.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
+            @Override
+            public void onConvertToGPSToAddress(String strAddress) {
+                address = strAddress;
+            }
+        });
+        return address;
     }
 
     @Override

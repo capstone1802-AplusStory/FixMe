@@ -216,13 +216,14 @@ public class MapFragment extends Fragment
             public void onLongPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint) {
                 lat = tMapPoint.getLatitude();
                 lon = tMapPoint.getLongitude();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 tmapdata.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String strAddress) {
                         address = strAddress;
                     }
                 });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                System.out.println(address);
                 builder.setTitle("이곳으로 지정하시겠습니까?\n"+address);
 
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
