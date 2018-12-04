@@ -21,11 +21,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
 
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +53,9 @@ public class ScheduleActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        TextView appBarTitle = (TextView) findViewById(R.id.schedule_title);
+        appBarTitle.setText("YYYY.MM");
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -143,6 +148,27 @@ public class ScheduleActivity extends AppCompatActivity
             ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
             if(this.dm.putData(sch)) {
                 String savedMsg = "schedule saved";
+                switch(sch.tableColor){
+                    case ScheduleDataManager.TableColor.RED:
+                        break;
+                    case ScheduleDataManager.TableColor.PINK:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOW:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOWGREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.GREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.MINT:
+                        break;
+                    case ScheduleDataManager.TableColor.SKYBLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.BLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.PURPLE:
+                        break;
+
+                }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
             this.monthlyList = this.dm.getMonthlyList(c.get(Calendar.YEAR), c.get(Calendar.MONTH));

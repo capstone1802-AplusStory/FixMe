@@ -2,6 +2,10 @@ package com.aplusstory.fixme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -27,6 +32,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public static final String ARG_KEY_TODAY = "argument_today";
 
     private Bundle arg = null;
+    Context context;
 
     Date today = new Date();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
@@ -237,6 +243,10 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         FragmentTransaction ft = null;
         switch(v.getId()){
             case R.id.applyButton:
+//                ImageView dotImg = (ImageView) getActivity().findViewById(R.id.onedayDotImg);
+//
+//                dotImg.getBackground().setColorFilter(Color.parseColor("#fe97a4"), PorterDuff.Mode.SRC_OVER);
+
                 fragmentManager = this.getActivity().getSupportFragmentManager();
                 ft =  fragmentManager.beginTransaction().hide(this);
                 EditText nameView = this.getView().findViewById(R.id.scheduleName);
@@ -248,6 +258,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 if(this.mListener != null){
                     this.mListener.onFragmentInteraction(this.arg);
                 }
+
                 break;
             case R.id.deleteButton:
                 fragmentManager = this.getActivity().getSupportFragmentManager();

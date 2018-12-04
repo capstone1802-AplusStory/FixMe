@@ -17,6 +17,8 @@ import com.aplusstory.fixme.cal.OneDayView;
 import java.time.Month;
 import java.util.Calendar;
 
+import static android.support.constraint.Constraints.TAG;
+
 
 public class CalendarFragment extends Fragment {
     public static final String ARG_PARAM_CALENDER = "calendar";
@@ -71,7 +73,6 @@ public class CalendarFragment extends Fragment {
         if(getArguments()!=null && getArguments().containsKey(ARG_PARAM1) && getArguments().containsKey(ARG_PARAM2)){
             mf = MonthlyFragment.newInstance(getArguments().getInt(ARG_PARAM1),getArguments().getInt(ARG_PARAM2));
         }
-
         mf.setOnMonthChangeListener(new MonthlyFragment.OnMonthChangeListener() {
             @Override
             public void onChange(int year, int month) {
