@@ -67,6 +67,7 @@
         <activity android:name=".ScheduleActivity" />
         <activity android:name=".FootprintActivity"/>
         <activity android:name=".SettingsActivity"/>
+        <activity android:name=".SettingsFavoritesActivity"/>
     </application>
 
 </manifest>
