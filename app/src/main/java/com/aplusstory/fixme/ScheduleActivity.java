@@ -168,7 +168,6 @@ public class ScheduleActivity extends AppCompatActivity
                         break;
                     case ScheduleDataManager.TableColor.PURPLE:
                         break;
-
                 }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
@@ -183,6 +182,23 @@ public class ScheduleActivity extends AppCompatActivity
                 today = new Date(arg.getLong(ScheduleListFragment.ARG_KEY_TODAY));
             } else {
                 today = new Date();
+            }
+            Log.d(this.getClass().getName(), "add schedule, date : " + today.toString());
+
+            FragmentTransaction ft = this.fgm.beginTransaction();
+            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg.setArguments(new Bundle(arg));
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft.commit();
+        }else if(arg.containsKey(ScheduleFragment.ARG_KEY_EDIT)){
+            ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_EDIT);
+            if(sch != null){
+                Log.d(this.getClass().getName(), "edit schedule, schedule data : " + sch.toString());
+            }else {
+                Log.d(this.getClass().getName(), "null?!");
             }
 
             FragmentTransaction ft = this.fgm.beginTransaction();

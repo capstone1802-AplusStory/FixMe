@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,13 +29,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public static final String ARG_KEY_SCHEDULE = "argument_schedule";
+    public static final String ARG_KEY_EDIT = "argument_edit";
     public static final String ARG_KEY_DELETE = "argument_delete";
     public static final String ARG_KEY_TODAY = "argument_today";
 
     private Bundle arg = null;
     Context context;
 
-    Date today = new Date();
+    Date today;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
     private int REQUEST_RESULT = 1;
     private ScheduleDataManager.ScheduleData sch = new ScheduleDataManager.ScheduleData();
@@ -54,11 +56,24 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
             if(this.arg.containsKey(ARG_KEY_SCHEDULE)){
                 this.sch = (ScheduleDataManager.ScheduleData) this.arg.getSerializable(ARG_KEY_SCHEDULE);
                 this.today = new Date(sch.scheduleBegin);
-            } else if(this.arg.containsKey(ARG_KEY_TODAY)){
-                this.today = new Date(this.arg.getLong(ARG_KEY_TODAY));
+            } else if (this.arg.containsKey(ARG_KEY_EDIT)){
+                this.sch = (ScheduleDataManager.ScheduleData) this.arg.getSerializable(ARG_KEY_EDIT);
+                this.today = new Date(sch.scheduleBegin);
+            } else {
+                if(this.arg.containsKey(ARG_KEY_TODAY)){
+                    this.today = new Date(this.arg.getLong(ARG_KEY_TODAY));
+                } else {
+                    this.today = new Date(System.currentTimeMillis());
+                }
+
+                this.sch.scheduleBegin = today.getTime();
+                this.sch.scheduleEnd = today.getTime();
             }
         } else{
             this.arg = new Bundle();
+            this.today = new Date(System.currentTimeMillis());
+            this.sch.scheduleBegin = today.getTime();
+            this.sch.scheduleEnd = today.getTime();
         }
     }
 
@@ -67,6 +82,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View returnView = inflater.inflate(R.layout.fragment_schedule, container, false);
+        String str;
 
         TextView textView = (TextView) returnView.findViewById(R.id.scheduleDate);
         textView.setText(dateFormat.format(today));
@@ -79,8 +95,28 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         if(this.sch.memo != null){
             memoView.setText(this.sch.memo);
         }
+        TextView timeView = (TextView) returnView.findViewById(R.id.timeDetail);
+        str = this.dateFormat.format(this.sch.scheduleBegin)
+            + " ~ "
+            + this.dateFormat.format(this.sch.scheduleEnd);
+        timeView.setText(str);
 
-//        TextView repeationDetail = (TextView) returnView.findViewById(R.id.repeationDetail);
+        TextView locationView = (TextView) returnView.findViewById(R.id.locationDetail);
+        if(this.sch.locationAddress != null){
+            locationView.setText(this.sch.locationAddress);
+            locationView.setText(str);
+        }
+
+
+        TextView alarmView = (TextView) returnView.findViewById(R.id.alarmDetail);
+        if(this.sch.isRepeated){
+            str = ScheduleDataManager.AlarmInterval.getTimeText(this.sch.alarmInterval);
+            alarmView.setText(str);
+        }
+
+        TextView colorView = (TextView) returnView.findViewById(R.id.colorDetail);
+        str = ScheduleDataManager.TableColor.getColorText(this.sch.tableColor);
+        colorView.setText(str);
 
         ImageButton timeButton = (ImageButton) returnView.findViewById(R.id.timeButton);
         timeButton.setOnClickListener(this);
@@ -175,6 +211,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     Double lat = bd.getDouble(MapFragment.KEY_LATITUDE);
                     Double lon = bd.getDouble(MapFragment.KEY_LONGITUDE);
                     String adr = bd.getString(MapFragment.KEY_ADDRESS);
+                    this.sch.hasLocation = true;
                     this.sch.latitude = lat;
                     this.sch.longitude = lon;
                     Log.d(this.getClass().getName(), "schedule location : " + "\naddress : " + adr + ", latitude : " + lat + ", longitude : " + lon);
@@ -249,7 +286,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.locationButton:
                 intent = new Intent(getActivity(), TMapActivity.class);
-                if(this.sch != null) {
+                if(this.sch != null && this.sch.hasLocation) {
                     bd = new Bundle();
                     bd.putDouble(MapFragment.KEY_LONGITUDE, this.sch.longitude);
                     bd.putDouble(MapFragment.KEY_LATITUDE, this.sch.latitude);
@@ -263,14 +300,16 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 //                dotImg.getBackground().setColorFilter(Color.parseColor("#fe97a4"), PorterDuff.Mode.SRC_OVER);
 
                 fragmentManager = this.getActivity().getSupportFragmentManager();
-                ft =  fragmentManager.beginTransaction().hide(this);
                 EditText nameView = this.getView().findViewById(R.id.scheduleName);
                 this.sch.name = nameView.getText().toString();;
                 EditText memoView = this.getView().findViewById(R.id.memoText);
                 this.sch.memo = memoView.getText().toString();
                 this.arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, this.sch);
                 Log.d(this.getClass().getName(), "result schedule json : \n" + this.sch.toString());
-                if(this.mListener != null){
+                if(this.sch.name == null || this.sch.name.length() == 0){
+                    Toast.makeText(this.getActivity(), "please put schedule name", Toast.LENGTH_SHORT).show();
+                }else if(this.mListener != null){
+                    ft =  fragmentManager.beginTransaction().hide(this);
                     this.mListener.onFragmentInteraction(this.arg);
                 }
 

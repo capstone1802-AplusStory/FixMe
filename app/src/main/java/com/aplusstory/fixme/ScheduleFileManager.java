@@ -75,14 +75,13 @@ public class ScheduleFileManager implements FileManager {
         String filepath;
 
         if(this.listSch.containsKey(sch.name)){
-            return rt;
-//            filepath = this.listSch.get(sch.name);
+            filepath = this.listSch.get(sch.name);
         } else{
             filepath = context.getFilesDir() + "/" + FILENAME_SCHEDULE_PREFIX + sch.name;
         }
 
         try{
-            fw = new FileWriter(filepath);
+            fw = new FileWriter(filepath, false);
 //            fw = new OutputStreamWriter(new FileOutputStream(filepath), StandardCharsets.UTF_16);
             String toWrite = sch.toString();
             Log.d(this.getClass().getName(), "data to write : \n" + toWrite);

@@ -140,7 +140,7 @@ public class ScheduleManager implements ScheduleDataManager {
             }
         }
 
-        if(this.fm != null && !this.schList.contains(sch.name)){
+        if(this.fm != null){
             boolean rt = this.fm.putSchedule(sch);
             if(rt){
                 this.refreshData();

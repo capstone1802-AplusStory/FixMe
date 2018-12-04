@@ -56,7 +56,7 @@ public interface ScheduleDataManager extends UserDataManager{
         String memo = null;
         boolean hasAlarm = false;
         int alarmInterval = -1;
-        int tableColor = 0;
+        int tableColor = -1;
 
         public ScheduleData(){
 

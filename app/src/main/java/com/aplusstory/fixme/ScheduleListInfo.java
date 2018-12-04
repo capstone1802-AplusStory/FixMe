@@ -27,11 +27,13 @@ public class ScheduleListInfo {
         }
     }
 
-    public int scheduleColor;
+    public int scheduleColorID;
     public String scheduleName;
+    public ScheduleDataManager.ScheduleData scheduleData;
 
-    public ScheduleListInfo(int scheduleColor, String scheduleName) {
-        this.scheduleColor = scheduleColor;
+    public ScheduleListInfo(int scheduleColor, String scheduleName, ScheduleDataManager.ScheduleData scheduleData) {
+        this.scheduleColorID = scheduleColor;
         this.scheduleName = scheduleName;
+        this.scheduleData = scheduleData;
     }
 }

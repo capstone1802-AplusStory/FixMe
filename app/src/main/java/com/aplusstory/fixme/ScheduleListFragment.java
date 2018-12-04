@@ -100,11 +100,11 @@ public class ScheduleListFragment extends Fragment implements View.OnClickListen
         ArrayList<ScheduleListInfo> scheduleArrayList = new ArrayList<>();
         if(this.schList != null && this.schList.size() > 0) {
             for(ScheduleDataManager.ScheduleData sch : this.schList){
-                scheduleArrayList.add(new ScheduleListInfo(ScheduleListInfo.getColorIconCode(sch.tableColor), sch.name));
+                scheduleArrayList.add(new ScheduleListInfo(ScheduleListInfo.getColorIconCode(sch.tableColor), sch.name, sch));
 
             }
         } else if(this.schList == null) {
-            scheduleArrayList.add(new ScheduleListInfo(R.drawable.ic_red_circle_padding, "scheduleName"));
+            scheduleArrayList.add(new ScheduleListInfo(R.drawable.ic_red_circle_padding, "scheduleName", null));
         }
         ScheduleListColorRecyclerAdapter scheduleListColorRecyclerAdapter = new ScheduleListColorRecyclerAdapter(scheduleArrayList);
         recyclerView.setAdapter(scheduleListColorRecyclerAdapter);
