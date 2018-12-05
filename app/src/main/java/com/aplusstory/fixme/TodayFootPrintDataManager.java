@@ -161,13 +161,23 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
             }
         }
 
+        long now = System.currentTimeMillis();
+        if(now - this.today.getTimeInMillis() > 24 * 60 * 60 * 1000){
+            Calendar c = (Calendar) this.today.clone();
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 59);
+            now = c.getTimeInMillis();
+        }
+
+
         if(bufPath != null){
             path = new LocationDataManager.PathData(bufPath);
             pathDistance = path.distance();
             Log.d(this.getClass().getName(), "path ends on : " + pathEnd.toString());
             Log.d(this.getClass().getName(), "path length " + path.distance());
             if(pathDistance >= PATH_THRESHOLD) {
-                data = new FootPrintData(tBegin, System.currentTimeMillis(), path);
+                data = new FootPrintData(tBegin, now, path);
                 Log.d(this.getClass().getName(), "footprint data : " + data.toString());
                 if(this.namer != null){
                     data.name = this.namer.getName(path);
@@ -182,7 +192,7 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
         }
 
         if(bufPath == null && lastLoca != null){
-            data = new FootPrintData(lastLoca.datetime, System.currentTimeMillis(), lastLoca);
+            data = new FootPrintData(lastLoca.datetime, now, lastLoca);
             if(this.namer != null){
                 data.name = this.namer.getName(lastLoca);
             }
