@@ -226,6 +226,8 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
 
+                this.textViewRD.setText("매주");
+
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed()){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     if(this.weeklyFragment == null) {
