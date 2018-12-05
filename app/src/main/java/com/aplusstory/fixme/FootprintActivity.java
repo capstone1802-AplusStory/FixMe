@@ -120,8 +120,8 @@ public class FootprintActivity extends AppCompatActivity
                     Log.d(FootprintActivity.this.getClass().getName(), s);
                 }
             });
-            this.tmapAPI.setSKTMapAuthentication(this.getString(R.string.tmap_api_key));
         }
+        this.tmapAPI.setSKTMapAuthentication(this.getString(R.string.tmap_api_key));
 
         fragment = new PieChartFragment();
         Bundle bd = new Bundle();

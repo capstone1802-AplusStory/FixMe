@@ -119,6 +119,7 @@ public class PieChartFragment extends Fragment {
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
+
         if(this.arg != null && this.arg.containsKey(FootprintDataManager.KEY_DATA)){
             ArrayList<Integer> colorArr = new ArrayList<>();
             for(int i = 0; i < yValues.size(); i++){
@@ -191,7 +192,7 @@ public class PieChartFragment extends Fragment {
                 FootprintDataManager.FootPrintData ftd = (FootprintDataManager.FootPrintData)argList.get(i);
                 chartInfoArrayList.add(
                         new ChartInfo(
-                                String.valueOf(dataSet.getEntryForIndex(i).getValue())
+                                String.valueOf(dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F)
                                 , dataSet.getEntryForIndex(i).getLabel()
                                 , df.format(new Date(ftd.dtBigin)) + "~" + df.format(new Date(ftd.dtEnd))
                         )
