@@ -179,7 +179,14 @@ public class FullAlarmActivity extends AppCompatActivity {
         });
 
         Button bt = findViewById(R.id.dummy_button);
+        bt.setText("Confirm");
         bt.setOnTouchListener(mDelayHideTouchListener);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullAlarmActivity.this.finish();
+            }
+        });
 
     }
 
