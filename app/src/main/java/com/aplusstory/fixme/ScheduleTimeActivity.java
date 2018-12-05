@@ -102,7 +102,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
             TextView textView = (TextView)findViewById(R.id.startTime);
             textView.setText(String.format("%02d", hourOfDay)+":"+String.format("%02d", minute));
             ScheduleTimeActivity.this.cStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            ScheduleTimeActivity.this.cStart.set(Calendar.MINUTE, hourOfDay);
+            ScheduleTimeActivity.this.cStart.set(Calendar.MINUTE, minute);
         }
     };
 
@@ -123,7 +123,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
             TextView textView = (TextView)findViewById(R.id.endTime);
             textView.setText(String.format("%02d", hourOfDay)+":" + String.format("%02d", minute));
             ScheduleTimeActivity.this.cEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            ScheduleTimeActivity.this.cEnd.set(Calendar.MINUTE, hourOfDay);
+            ScheduleTimeActivity.this.cEnd.set(Calendar.MINUTE, minute);
         }
     };
 

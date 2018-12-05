@@ -196,8 +196,6 @@ public interface ScheduleDataManager extends UserDataManager{
 
             if(this.scheduleBegin > this.scheduleEnd){
                 rt = false;
-            } else if(this.repeatType < RepeatDuration.REPEAT_DAYLY || this.repeatType > RepeatDuration.REPEAT_YEARLY ){
-                rt = false;
             } else if(this.name == null || this.name.length() == 0){
                 rt = false;
             } else{

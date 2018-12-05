@@ -95,6 +95,8 @@ public class ScheduleManager implements ScheduleDataManager {
                         Log.d(this.getClass().getName(), "monthly name : " + s);
                     }
                 }
+            }else {
+                Log.d(this.getClass().getName(), "null schedule");
             }
         }
         if(rt.size() == 0){
@@ -138,6 +140,8 @@ public class ScheduleManager implements ScheduleDataManager {
             } else if(alm == null){
                 Log.d(this.getClass().getName(), "no alarm manager");
             }
+        }else {
+            Log.d(this.getClass().getName(), "no alarm");
         }
 
         if(this.fm != null){
