@@ -25,16 +25,21 @@ import javax.xml.parsers.ParserConfigurationException;
 public class FootprintRoutineActivity extends AppCompatActivity implements FootprintFragment.OnFragmentInteractionListener{
 
     Toolbar toolbar;
-    TextView arrivalTextview = (TextView) findViewById(R.id.arrivalText);
-    TextView departureTextview = (TextView) findViewById(R.id.departureText);
-    TextView totalLapse = (TextView) findViewById(R.id.totalLapse);
-    TextView whenToWhen = (TextView) findViewById(R.id.when_to_when);
+    TextView arrivalTextview;
+    TextView departureTextview;
+    TextView totalLapse;
+    TextView whenToWhen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent locaIntent = getIntent();
         setContentView(R.layout.activity_footprint_routine);
         FootprintFragment footprintFragment = new FootprintFragment();
+
+        arrivalTextview = (TextView) findViewById(R.id.arrivalText);
+        departureTextview = (TextView) findViewById(R.id.departureText);
+        totalLapse = (TextView) findViewById(R.id.totalLapse);
+        whenToWhen = (TextView) findViewById(R.id.when_to_when);
 
         if(locaIntent != null){
             Bundle moveBundle = new Bundle();
