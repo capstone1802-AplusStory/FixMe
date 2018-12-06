@@ -195,6 +195,7 @@ public class PieChartFragment extends Fragment {
                                 String.valueOf(dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F)
                                 , dataSet.getEntryForIndex(i).getLabel()
                                 , df.format(new Date(ftd.dtBigin)) + "~" + df.format(new Date(ftd.dtEnd))
+                                , ftd
                         )
                 );
             }
