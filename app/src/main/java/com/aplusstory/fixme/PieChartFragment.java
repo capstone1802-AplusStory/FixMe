@@ -1,16 +1,20 @@
 package com.aplusstory.fixme;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -54,7 +58,11 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
         fragment.setArguments(arg);
         return fragment;
     }
-
+    GestureDetector gestureDetector = new GestureDetector(getContext(),new GestureDetector.SimpleOnGestureListener() {@Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return true;
+    }
+    });
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -233,7 +241,7 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<ChartInfo> chartInfoArrayList = new ArrayList<>();
+        final ArrayList<ChartInfo> chartInfoArrayList = new ArrayList<>();
         DateFormat df = new SimpleDateFormat("HH:mm");
 
         if(this.arg != null && this.arg.containsKey(FootprintDataManager.KEY_DATA) && argList != null){
@@ -292,6 +300,40 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
         }
         toggleButton.setOnClickListener(this);
 
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                //손으로 터치한 곳의 좌표를 토대로 해당 Item의 View를 가져옴
+                View childView = rv.findChildViewUnder(e.getX(),e.getY());
+
+                if(childView != null && gestureDetector.onTouchEvent(e)){
+
+                    int currentPosition = rv.getChildAdapterPosition(childView);
+
+
+                    ChartInfo currentChartInfo = chartInfoArrayList.get(currentPosition);
+
+                    if(currentChartInfo.footPrintData.locaDataType!=LocationDataManager.PathData.class) {
+                        Intent intent = new Intent(getActivity(), FootprintRoutineActivity.class);
+                        intent.putExtra("MovementData", currentChartInfo.footPrintData.locaData);
+                    }
+
+                    return true;
+                }
+                return false;
+
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean b) {
+
+            }
+        });
         return returnView;
     }
 
