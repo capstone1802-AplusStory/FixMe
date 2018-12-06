@@ -103,5 +103,8 @@
     <string name="fri">금</string>
     <string name="sat">토</string>
 
+    <string name="button_footprint_to_timechart">시간순 보기</string>
+    <string name="button_footprint_to_ratiochart">비율순 보기</string>
+
     <string name="tmap_api_key">426c8d5b-45a1-49af-8e3d-05f5f36d3b9e</string>
 </resources>

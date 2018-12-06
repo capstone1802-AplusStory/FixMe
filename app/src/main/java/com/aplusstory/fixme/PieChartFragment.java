@@ -5,12 +5,15 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -25,13 +28,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 
-public class PieChartFragment extends Fragment {
+public class PieChartFragment extends Fragment implements View.OnClickListener{
     public static final String KEY_DATE = "today";
+    public static final String KEY_TYPE = "chart_type";
+    public static final int TYPE_TIME = 0;
+    public static final int TYPE_RATIO = 1;
 
     private Bundle arg = null;
+    private int sortType = 0;
     private OnFragmentInteractionListener mListener;
     PieChart pieChart;
     RecyclerView recyclerView;
@@ -51,6 +59,9 @@ public class PieChartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.arg = this.getArguments();
+        if(this.arg != null) {
+            this.sortType = this.arg.getInt(KEY_TYPE, 0);
+        }
     }
 
     @Override
@@ -83,21 +94,46 @@ public class PieChartFragment extends Fragment {
 
         ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
         ArrayList<?> argList = null;
+        FootprintDataManager.FootPrintData ftd = null;
+
 
         if(this.arg != null && this.arg.containsKey(FootprintDataManager.KEY_DATA)){
             Serializable arg = this.arg.getSerializable(FootprintDataManager.KEY_DATA);
             if(arg instanceof ArrayList<?>){
-                argList = (ArrayList<?>)arg;
+                argList = (ArrayList<?>)((ArrayList) arg).clone();
+                if(this.sortType == TYPE_RATIO) {
+                    argList.sort(new Comparator<Object>() {
+                        @Override
+                        public int compare(Object o1, Object o2) {
+                            if (o1 instanceof FootprintDataManager.FootPrintData && o2 instanceof FootprintDataManager.FootPrintData) {
+                                return Double.compare(
+                                        ((FootprintDataManager.FootPrintData) o1).getInterval(),
+                                        ((FootprintDataManager.FootPrintData) o2).getInterval()
+                                );
+                            } else if (o1 instanceof FootprintDataManager.FootPrintData) {
+                                return 1;
+                            } else if (o2 instanceof FootprintDataManager.FootPrintData) {
+                                return -1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    });
+                }
                 int cnt = 0;
                 for(Object obj : argList){
                     if(obj instanceof FootprintDataManager.FootPrintData){
-                        FootprintDataManager.FootPrintData ftd = (FootprintDataManager.FootPrintData)obj;
+                        ftd = (FootprintDataManager.FootPrintData)obj;
                         Log.d(this.getClass().getName(), "footprint data : " + ftd.toString());
-                        String s = ftd.name;
-                        if(s == null){
-                            s = "location " + cnt++;
-                        }
-                        yValues.add(new PieEntry(ftd.getInterval(), s));
+//                        if(this.sortType == TYPE_TIME) {
+                            String s = ftd.name;
+                            if (s == null) {
+                                s = "location " + cnt++;
+                            }
+                            yValues.add(new PieEntry(ftd.getInterval(), s));
+//                        }else if(this.sortType == TYPE_RATIO){
+//
+//                        }
                     }
                 }
             }
@@ -112,7 +148,20 @@ public class PieChartFragment extends Fragment {
             yValues.add(new PieEntry(4, "이동"));
             yValues.add(new PieEntry(12, "집"));
         }
-
+//        if(this.sortType == TYPE_RATIO){
+//            yValues.sort(new Comparator<PieEntry>() {
+//                @Override
+//                public int compare(PieEntry o1, PieEntry o2) {
+//                    if(o1.getValue() > o2.getValue()){
+//                        return 1;
+//                    } else if(o1.getValue() == o2.getValue()){
+//                        return 0;
+//                    }else /*if(o1.getValue() < o2.getValue())*/{
+//                        return -1;
+//                    }
+//                }
+//            });
+//        }
         pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
 
         PieDataSet dataSet = new PieDataSet(yValues, "Locations");
@@ -189,12 +238,34 @@ public class PieChartFragment extends Fragment {
 
         if(this.arg != null && this.arg.containsKey(FootprintDataManager.KEY_DATA) && argList != null){
             for(int i = 0; i < dataSet.getEntryCount(); i++){
-                FootprintDataManager.FootPrintData ftd = (FootprintDataManager.FootPrintData)argList.get(i);
+                ftd = (FootprintDataManager.FootPrintData)argList.get(i);
+                String timeDateStr = "";
+                if(this.sortType == TYPE_TIME){
+                    ftd = (FootprintDataManager.FootPrintData)argList.get(i);
+                    timeDateStr = df.format(new Date(ftd.dtBigin)) + "~" + df.format(new Date(ftd.dtEnd));
+                }else if(this.sortType == TYPE_RATIO){
+                    StringBuilder sb = new StringBuilder();
+//                    long interval = (long)dataSet.getEntryForIndex(i).getValue();
+                    long interval = ftd.getInterval();
+                    Log.d(this.getClass().getName(), "interval : " + interval);
+                    if(interval / (60 * 60000) > 0){
+                        sb.append(interval / (60 * 60000))
+                        .append(this.getContext().getString(R.string.hour_period))
+                        .append((interval % (60 * 60000)) / 60000)
+                        .append(this.getContext().getString(R.string.minute));
+                    }else if(interval / 60000 > 0){
+                        sb.append(interval / 60000)
+                        .append(this.getContext().getString(R.string.minute));
+                    }else {
+                        sb.append(this.getContext().getString(R.string.less_then_a_minute));
+                    }
+                    timeDateStr = sb.toString();
+                }
                 chartInfoArrayList.add(
                         new ChartInfo(
                                 String.valueOf(dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F)
                                 , dataSet.getEntryForIndex(i).getLabel()
-                                , df.format(new Date(ftd.dtBigin)) + "~" + df.format(new Date(ftd.dtEnd))
+                                , timeDateStr
                                 , ftd
                         )
                 );
@@ -213,14 +284,15 @@ public class PieChartFragment extends Fragment {
         ChartRecyclerAdapter chartRecyclerAdapter = new ChartRecyclerAdapter(chartInfoArrayList);
         recyclerView.setAdapter(chartRecyclerAdapter);
 
-        return returnView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        Button toggleButton = (Button) returnView.findViewById(R.id.ChartTypeToggle);
+        if(this.sortType == TYPE_TIME){
+            toggleButton.setText(R.string.button_footprint_to_ratiochart);
+        } else if(this.sortType == TYPE_RATIO){
+            toggleButton.setText(R.string.button_footprint_to_timechart);
         }
+        toggleButton.setOnClickListener(this);
+
+        return returnView;
     }
 
     @Override
@@ -239,6 +311,37 @@ public class PieChartFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.ChartTypeToggle:
+                FragmentManager fm = this.getActivity().getSupportFragmentManager();
+                if(fm != null){
+                    Fragment fg = new PieChartFragment();
+                    Bundle bd;
+                    if(this.arg != null) {
+                        bd = new Bundle(this.arg);
+                    }else {
+                        bd = new Bundle();
+                        bd.putLong(KEY_DATE, System.currentTimeMillis());
+                    }
+                    if(this.sortType == TYPE_TIME) {
+                        bd.putInt(KEY_TYPE, TYPE_RATIO);
+                    }else if(this.sortType == TYPE_RATIO){
+                        bd.putInt(KEY_TYPE, TYPE_TIME);
+                    }
+                    fg.setArguments(bd);
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.replace(R.id.footprint_frame, fg);
+                    ft.addToBackStack(ft.getClass().getSimpleName());
+                    fg.getFragmentManager().popBackStack(ft.getClass().getSimpleName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    ft.commit();
+                }
+                break;
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
