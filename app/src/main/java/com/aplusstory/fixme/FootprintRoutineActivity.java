@@ -58,27 +58,27 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
             } catch (SAXException e) {
                 e.printStackTrace();
             }
-            String startTime = String.format("%d min, %d sec",
+            String startTime = String.format("%d :%d ",
                     TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin),
                     TimeUnit.MILLISECONDS.toSeconds(moveIntent.dtBegin) -
                             TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin))
             );
-            String endTime = String.format("%d min, %d sec",
-                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtEnd),
-                    TimeUnit.MILLISECONDS.toSeconds(moveIntent.dtEnd) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtEnd))
+            String endTime = String.format("%d :%d ",
+                    TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd),
+                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtEnd) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd))
             );
-            whenToWhen.setText(startTime + "출발 ~ "+ moveIntent.dtEnd + "도착");
+            whenToWhen.setText(startTime + "출발 ~ "+ endTime + "도착");
 
 
             long lapseTime = moveIntent.locaArr[locNum-1].datetime - moveIntent.locaArr[0].datetime;
 
-            String lapseTimeString = String.format("%d min, %d sec",
-                    TimeUnit.MILLISECONDS.toMinutes(lapseTime),
-                    TimeUnit.MILLISECONDS.toSeconds(lapseTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(lapseTime))
+            String lapseTimeString = String.format("소요시간  : %d 시간 %d 분",
+                    TimeUnit.MILLISECONDS.toHours(lapseTime),
+                    TimeUnit.MILLISECONDS.toMinutes(lapseTime) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lapseTime))
             );
-
+            totalLapse.setText(lapseTimeString);
 
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar2);
