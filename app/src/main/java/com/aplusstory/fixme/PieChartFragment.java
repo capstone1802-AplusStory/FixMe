@@ -305,17 +305,15 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 //손으로 터치한 곳의 좌표를 토대로 해당 Item의 View를 가져옴
                 View childView = rv.findChildViewUnder(e.getX(),e.getY());
-
                 if(childView != null && gestureDetector.onTouchEvent(e)){
-
                     int currentPosition = rv.getChildAdapterPosition(childView);
-
 
                     ChartInfo currentChartInfo = chartInfoArrayList.get(currentPosition);
 
-                    if(currentChartInfo.footPrintData.locaDataType!=LocationDataManager.PathData.class) {
+                    if(currentChartInfo.footPrintData.locaDataType == LocationDataManager.PathData.class) {
                         Intent intent = new Intent(getActivity(), FootprintRoutineActivity.class);
                         intent.putExtra("MovementData", currentChartInfo.footPrintData.locaData);
+                        PieChartFragment.this.getActivity().startActivity(intent);
                     }
 
                     return true;
