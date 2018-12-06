@@ -155,6 +155,18 @@ public class ScheduleManager implements ScheduleDataManager {
         }
     }
 
+    public boolean removeData(String name){
+        boolean rt = false;
+        if(this.fm != null){
+            rt = fm.deleteData(name);
+            if(rt){
+                this.refreshData();
+            }
+        }
+
+        return rt;
+    }
+
     @Override
     public void setFileManager(FileManager f) {
         if(f instanceof ScheduleFileManager){

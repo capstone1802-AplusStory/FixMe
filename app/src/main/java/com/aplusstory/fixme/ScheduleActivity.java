@@ -173,9 +173,16 @@ public class ScheduleActivity extends AppCompatActivity
             }
             this.monthlyList = this.dm.getMonthlyList(c.get(Calendar.YEAR), c.get(Calendar.MONTH));
         }else if(arg.containsKey(ScheduleFragment.ARG_KEY_DELETE) && arg.getBoolean(ScheduleFragment.ARG_KEY_DELETE)){
-            //TODO
-            String delMsg = "schedule deleted";
-            Toast.makeText(this, delMsg, Toast.LENGTH_SHORT).show();
+            boolean cond = false;
+
+            String name = arg.getString(ScheduleFragment.ARG_KEY_NAME, null);
+            if(name != null) {
+                cond = this.dm.removeData(name);
+            }
+            if(cond) {
+                String delMsg = "schedule deleted";
+                Toast.makeText(this, delMsg, Toast.LENGTH_SHORT).show();
+            }
         }else if(arg.containsKey(ScheduleListFragment.ARG_KEY_ADD) && arg.getBoolean(ScheduleListFragment.ARG_KEY_ADD)){
             Date today;
             if(arg.containsKey(ScheduleListFragment.ARG_KEY_TODAY)) {

@@ -30,6 +30,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public static final String ARG_KEY_SCHEDULE = "argument_schedule";
+    public static final String ARG_KEY_NAME = "argument_schedule_name";
     public static final String ARG_KEY_EDIT = "argument_edit";
     public static final String ARG_KEY_DELETE = "argument_delete";
     public static final String ARG_KEY_TODAY = "argument_today";
@@ -380,8 +381,12 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.deleteButton:
                 fragmentManager = this.getActivity().getSupportFragmentManager();
-                ft =  fragmentManager.beginTransaction().hide(this);
+
                 this.arg.putBoolean(ScheduleFragment.ARG_KEY_DELETE, true);
+                if(this.sch.name != null) {
+                    this.arg.putString(ScheduleFragment.ARG_KEY_NAME, this.sch.name);
+                    ft =  fragmentManager.beginTransaction().hide(this);
+                }
                 if(this.mListener != null){
                     this.mListener.onFragmentInteraction(this.arg);
                 }
