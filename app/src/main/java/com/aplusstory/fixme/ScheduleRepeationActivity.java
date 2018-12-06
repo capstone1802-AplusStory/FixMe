@@ -27,6 +27,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
     ,DatePickerDialog.OnDateSetListener
 {
     public static final String EXTRA_NAME_ARGUMENT = "repeat_argument";
+    public static final String ARGUMENT_KEY_REPEAT_TEXT = "repeat_text";
     public static final String ARGUMENT_KEY_REPEAT_CODE = ScheduleDataManager.ScheduleData.KEY_REPEAT_TYPE_CODE;
     public static final String ARGUMENT_KEY_REPEAT_WEEKLY = ScheduleDataManager.ScheduleData.KEY_REPEAT_DAY_OF_WEEK;
     public static final String ARGUMENT_KEY_REPEAT_END = ScheduleDataManager.ScheduleData.KEY_REPEAT_END;
@@ -36,10 +37,9 @@ public class ScheduleRepeationActivity extends AppCompatActivity
     private Fragment weeklyFragment = null;
     private FragmentManager fragmentManager = null;
     private DatePickerDialog datePickerDialog = null;
-    private Button noneButton, dailyButton, weeklyButton, monthlyButton, yearlyButton;
 //    String dates = "none";
     private Bundle arg = null;
-
+    private Button noneButton, dailyButton, weeklyButton, monthlyButton, yearlyButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,14 +165,17 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 
             }
             if(cond) {
-                this.textViewRD.setText(text.toString());
+                String str = text.toString();
+                this.textViewRD.setText(str);
                 this.arg.putBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY, checkDay);
+                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
             }
         }
     }
 
     @Override
     public void onClick(View v) {
+        String str;
         switch(v.getId()){
 //            case R.id.repeatDay:
 //                break;
@@ -192,11 +195,13 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 weeklyButton.setSelected(false);
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
+                str = "없음";
+                this.textViewRD.setText(str);
 
-                this.textViewRD.setText("없음");
                 if(this.arg.containsKey(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE)){
                     this.arg.remove(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE);
                 }
+                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -210,9 +215,12 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
 
-                this.textViewRD.setText("매일");
+                str = "매일";
+                this.textViewRD.setText(str);
+
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_DAYLY);
+                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -225,7 +233,6 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 weeklyButton.setSelected(true);
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
-
                 this.textViewRD.setText("매주");
 
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed()){
@@ -247,9 +254,12 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(true);
                 yearlyButton.setSelected(false);
 
-                this.textViewRD.setText("매달");
+                str = "매달";
+                this.textViewRD.setText(str);
+
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY);
+                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);
@@ -257,15 +267,19 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 }
                 break;
             case R.id.yearlyButton:
+
                 noneButton.setSelected(false);
                 dailyButton.setSelected(false);
                 weeklyButton.setSelected(false);
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(true);
 
-                this.textViewRD.setText("매년");
+                str = "매년";
+                this.textViewRD.setText(str);
+
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
                         ScheduleDataManager.RepeatDuration.REPEAT_YEARLY);
+                this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
                 if(this.fragmentManager != null && !this.fragmentManager.isDestroyed() && this.weeklyFragment != null){
                     FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
                     final FragmentTransaction remove = fragmentTransaction.hide(this.weeklyFragment);

@@ -1,6 +1,7 @@
 package com.aplusstory.fixme;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,10 @@ import static com.skt.Tmap.MapUtils.mApiKey;
  */
 public class MapFragment extends Fragment
         implements TMapGpsManager.onLocationChangedCallback, View.OnClickListener {
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_ADDRESS = "address";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -177,6 +182,11 @@ public class MapFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //이곳에 데이터 인텐트에 담아서 넘겨주고, 확정 짓는 코드 필요
+                        Bundle bd = new Bundle();
+                        bd.putDouble(KEY_LATITUDE, lat);
+                        bd.putDouble(KEY_LONGITUDE, lon);
+                        bd.putString(KEY_ADDRESS, address);
+                        MapFragment.this.mListener.onFragmentInteraction(bd);
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -206,19 +216,24 @@ public class MapFragment extends Fragment
             public void onLongPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint) {
                 lat = tMapPoint.getLatitude();
                 lon = tMapPoint.getLongitude();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 tmapdata.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String strAddress) {
                         address = strAddress;
                     }
                 });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                System.out.println(address);
                 builder.setTitle("이곳으로 지정하시겠습니까?\n"+address);
 
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //이곳에 데이터 인텐트에 담아서 넘겨주고, 확정 짓는 코드 필요
+                        Bundle bd = new Bundle();
+                        bd.putDouble(KEY_LATITUDE, lat);
+                        bd.putDouble(KEY_LONGITUDE, lon);
+                        bd.putString(KEY_ADDRESS, address);
+                        MapFragment.this.mListener.onFragmentInteraction(bd);
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -237,12 +252,6 @@ public class MapFragment extends Fragment
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -262,20 +271,10 @@ public class MapFragment extends Fragment
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Bundle bd);
     }
+
     //핀 찍을 data
     public void addPoint(String name, double latitude, double longitude, String address) {
         // 강남 //
@@ -365,7 +364,6 @@ public class MapFragment extends Fragment
                         TMapInfo tmapInfo = tmapview.getDisplayTMapInfo(m_tmapPoint);
                         tmapview.setCenterPoint(tmapInfo.getTMapPoint().getLongitude(),tmapInfo.getTMapPoint().getLatitude());
                         tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel());
-                        Log.d(TAG, "으어어어"+tmapInfo.getTMapZoomLevel()+"\n"+tmapInfo.getTMapPoint());
                         showMarkerPoint();
                     }
                 });

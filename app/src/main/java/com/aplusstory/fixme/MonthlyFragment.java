@@ -102,10 +102,10 @@ public class MonthlyFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        if(context instanceof OnMonthChangeListener){
-            HLog.d(TAG, CLASS, "listener set, listener : " + context.getClass().getName());
-            this.listener = (OnMonthChangeListener) context;
-        }
+//        if(context instanceof OnMonthChangeListener){
+//            HLog.d(TAG, CLASS, "listener set, listener : " + context.getClass().getName());
+//            this.listener = (OnMonthChangeListener) context;
+//        }
         adapter = new MonthlySlidePagerAdapter(context);
         super.onAttach(context);
     }

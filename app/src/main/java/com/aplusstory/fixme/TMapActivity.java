@@ -1,6 +1,7 @@
 package com.aplusstory.fixme;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,11 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class TMapActivity extends AppCompatActivity implements com.aplusstory.fixme.MapFragment.OnFragmentInteractionListener {
+    public static final String EXTRA_NAME_ARGUMENT = "location_result";
+
     FrameLayout fragmentFrame;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,13 @@ public class TMapActivity extends AppCompatActivity implements com.aplusstory.fi
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentInteraction(Bundle bd) {
+        if(bd != null){
+            Bundle arg = new Bundle(bd);
+            Intent it = new Intent();
+            it.putExtra(EXTRA_NAME_ARGUMENT, bd);
+            this.setResult(RESULT_OK, it);
+            this.finish();
+        }
     }
 }

@@ -61,11 +61,11 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
         textViewST = (TextView) findViewById(R.id.startTime);
         textViewST.setText(String.format("%02d", hour)+":"+String.format("%02d", minute));
         textViewSD = (TextView) findViewById(R.id.startDate);
-        textViewSD.setText(year+"년 "+month+"월 "+day+"일");
+        textViewSD.setText(year + "년 " + (month + 1) + "월 " + day + "일");
         textViewET = (TextView) findViewById(R.id.endTime);
-        textViewET.setText(String.format("%02d", hour)+":"+String.format("%02d", minute));
+        textViewET.setText(String.format("%02d", hour) + ":"+String.format("%02d", minute));
         textViewED = (TextView) findViewById(R.id.endDate);
-        textViewED.setText(year+"년 "+month+"월 "+day+"일");
+        textViewED.setText(year + "년 " + (month + 1) + "월 " + day + "일");
 
         textViewST.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +110,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             TextView textView = (TextView)findViewById(R.id.startDate);
-            textView.setText(year+"년 "+monthOfYear+"월 "+dayOfMonth+"일");
+            textView.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
             ScheduleTimeActivity.this.cStart.set(Calendar.MONTH, monthOfYear);
             ScheduleTimeActivity.this.cStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         }
@@ -121,7 +121,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             TextView textView = (TextView)findViewById(R.id.endTime);
-            textView.setText(String.format("%02d", hourOfDay)+":"+String.format("%02d", minute));
+            textView.setText(String.format("%02d", hourOfDay)+":" + String.format("%02d", minute));
             ScheduleTimeActivity.this.cEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
             ScheduleTimeActivity.this.cEnd.set(Calendar.MINUTE, hourOfDay);
         }
@@ -133,7 +133,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             TextView textView = (TextView)findViewById(R.id.endDate);
-            textView.setText(year+"년 "+monthOfYear+"월 "+dayOfMonth+"일");
+            textView.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
             ScheduleTimeActivity.this.cEnd.set(Calendar.MONTH, monthOfYear);
             ScheduleTimeActivity.this.cEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         }
