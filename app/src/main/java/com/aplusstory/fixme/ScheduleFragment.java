@@ -2,6 +2,7 @@ package com.aplusstory.fixme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -342,11 +343,18 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.locationButton:
                 intent = new Intent(getActivity(), TMapActivity.class);
+                bd = new Bundle();
                 if(this.sch != null && this.sch.hasLocation) {
-                    bd = new Bundle();
                     bd.putDouble(MapFragment.KEY_LONGITUDE, this.sch.longitude);
                     bd.putDouble(MapFragment.KEY_LATITUDE, this.sch.latitude);
                     intent.putExtra(TMapActivity.EXTRA_NAME_ARGUMENT, bd);
+                }else {
+                    LocationDataManager.LocationData loca = LocationFileManager.getCurrentLocation(this.getContext());
+                    if(loca != null){
+                        bd.putDouble(MapFragment.KEY_LATITUDE, loca.latitude);
+                        bd.putDouble(MapFragment.KEY_LONGITUDE, loca.longitude);
+                        intent.putExtra(TMapActivity.EXTRA_NAME_ARGUMENT, bd);
+                    }
                 }
                 startActivityForResult(intent, REQUEST_RESULT);
                 break;

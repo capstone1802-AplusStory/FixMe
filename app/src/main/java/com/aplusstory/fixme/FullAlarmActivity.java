@@ -154,7 +154,7 @@ public class FullAlarmActivity extends AppCompatActivity {
                     .append(remainTimeMillisec / (60 * 60000))
                     .append(this.getString(R.string.hour_period))
                     .append(' ')
-                    .append(remainTimeMillisec / 60000)
+                    .append((remainTimeMillisec % 60 * 60000) / 60000)
                     .append(this.getString(R.string.minute))
                     .append(' ')
                     .append(this.getString(R.string.remaining));
