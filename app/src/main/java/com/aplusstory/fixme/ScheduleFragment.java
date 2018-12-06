@@ -331,7 +331,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     }
                     bd.putLong(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_END, this.sch.repeatEnd);
                     try {
-                        String repStr = ((TextView)this.getView().findViewById(R.id.repeatText)).getText().toString();
+                        String repStr = ((TextView)this.getView().findViewById(R.id.repeationDetail)).getText().toString();
                         bd.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, repStr);
                     }catch(Exception e){
                         Log.d(this.getClass().getName(), e.toString());
