@@ -104,7 +104,61 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         TextView locationView = (TextView) returnView.findViewById(R.id.locationDetail);
         if(this.sch.locationAddress != null){
             locationView.setText(this.sch.locationAddress);
-            locationView.setText(str);
+        }
+
+        TextView repeatView = (TextView) returnView.findViewById(R.id.repeationDetail);
+        if(this.sch.isRepeated){
+            switch(this.sch.repeatType){
+                case ScheduleDataManager.RepeatDuration.REPEAT_DAYLY:
+                    repeatView.setText(R.string.repeat_type_daily);
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY:
+                    StringBuilder sb = new StringBuilder(this.getContext().getString(R.string.repeat_type_weekly));
+                    boolean cond = false;
+                    if(this.sch.repeatDayOfWeek[0]) {
+                        sb.append(' ');
+                        for (int i = 1; i < 8; i++) {
+                            if (this.sch.repeatDayOfWeek[i]) {
+                                cond = true;
+                                switch(i){
+                                    case 1:
+                                        sb.append(this.getContext().getString(R.string.sun));
+                                        break;
+                                    case 2:
+                                        sb.append(this.getContext().getString(R.string.mon));
+                                        break;
+                                    case 3:
+                                        sb.append(this.getContext().getString(R.string.tue));
+                                        break;
+                                    case 4:
+                                        sb.append(this.getContext().getString(R.string.wed));
+                                        break;
+                                    case 5:
+                                        sb.append(this.getContext().getString(R.string.thu));
+                                        break;
+                                    case 6:
+                                        sb.append(this.getContext().getString(R.string.fri));
+                                        break;
+                                    case 7:
+                                        sb.append(this.getContext().getString(R.string.sat));
+                                        break;
+                                }
+                            }
+                        }
+                        repeatView.setText(sb.toString());
+                    }
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY:
+                    repeatView.setText(R.string.repeat_type_monthly);
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_YEARLY:
+                    repeatView.setText(R.string.repeat_type_yearly);
+                    break;
+                default:
+                    //something wrong
+            }
+        }else {
+            repeatView.setText(R.string.repeat_type_none);
         }
 
 
@@ -158,6 +212,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     this.sch.repeatEnd = rptEnd.getTime();
                     if(this.sch.repeatType == ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY){
                         boolean[] rptDoW = bd.getBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY);
+                        this.sch.repeatDayOfWeek[0] = true;
                         for(int i = 0; i < rptDoW.length; i++){
                             this.sch.repeatDayOfWeek[i + 1] = rptDoW[i];
                         }
@@ -214,6 +269,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     this.sch.hasLocation = true;
                     this.sch.latitude = lat;
                     this.sch.longitude = lon;
+                    this.sch.locationAddress = adr;
                     Log.d(this.getClass().getName(), "schedule location : " + "\naddress : " + adr + ", latitude : " + lat + ", longitude : " + lon);
 
                     tv = (TextView) getView().findViewById(R.id.locationDetail);

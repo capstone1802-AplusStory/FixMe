@@ -167,6 +167,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
             if(cond) {
                 String str = text.toString();
                 this.textViewRD.setText(str);
+                this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE, ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY);
                 this.arg.putBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY, checkDay);
                 this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
             }

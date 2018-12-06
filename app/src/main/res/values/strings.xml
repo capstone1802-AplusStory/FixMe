@@ -88,5 +88,20 @@
 
     <string name="meter">미터</string>
 
+
+    <string name="repeat_type_none">없음</string>
+    <string name="repeat_type_daily">매일</string>
+    <string name="repeat_type_weekly">매주</string>
+    <string name="repeat_type_monthly">매달</string>
+    <string name="repeat_type_yearly">매년</string>
+
+    <string name="sun">일</string>
+    <string name="mon">월</string>
+    <string name="tue">화</string>
+    <string name="wed">수</string>
+    <string name="thu">목</string>
+    <string name="fri">금</string>
+    <string name="sat">토</string>
+
     <string name="tmap_api_key">426c8d5b-45a1-49af-8e3d-05f5f36d3b9e</string>
 </resources>

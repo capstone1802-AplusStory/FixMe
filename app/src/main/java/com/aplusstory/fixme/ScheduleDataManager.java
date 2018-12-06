@@ -98,7 +98,7 @@ public interface ScheduleDataManager extends UserDataManager{
                 sch.isRepeated = json.getBoolean(KEY_REPEATED);
                 if(sch.isRepeated) {
                     sch.repeatType = json.getInt(KEY_REPEAT_TYPE_CODE);
-                    if (sch.isRepeated && sch.repeatType == RepeatDuration.REPEAT_DAYLY) {
+                    if (sch.isRepeated && sch.repeatType == RepeatDuration.REPEAT_WEEKLY) {
                         sch.repeatDayOfWeek[0] = true;
                         JSONArray arr = json.getJSONArray(KEY_REPEAT_DAY_OF_WEEK);
                         for (int i = 0; i < arr.length(); i++) {
@@ -116,11 +116,13 @@ public interface ScheduleDataManager extends UserDataManager{
                 if(json.has(KEY_LOCATION)){
                     sch.hasLocation = true;
                     LocationDataManager.LocationData loca =
-                    LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION));
+                    LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION), new SimpleDateFormat(DATE_FORMAT_GMT));
                     if(loca != null) {
                         sch.latitude = loca.latitude;
                         sch.longitude = loca.longitude;
-                        sch.locationAddress = json.getString(KEY_LOCATION_TAG);
+                        if(json.has(KEY_LOCATION_TAG)) {
+                            sch.locationAddress = json.getString(KEY_LOCATION_TAG);
+                        }
                     }
                 }
 
