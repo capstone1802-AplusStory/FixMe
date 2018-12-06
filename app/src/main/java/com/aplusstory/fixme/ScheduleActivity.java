@@ -199,6 +199,7 @@ public class ScheduleActivity extends AppCompatActivity
                 Log.d(this.getClass().getName(), "null?!");
             }
 
+
             FragmentTransaction ft = this.fgm.beginTransaction();
             this.schFrg = (Fragment) new ScheduleFragment();
             this.schFrg.setArguments(new Bundle(arg));
