@@ -97,7 +97,7 @@ public class FootprintFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_footprint, null);
         mContext = this.getContext();
 
-        Bundle moveBundle = new Bundle();
+        Bundle moveBundle;
 
 
 
