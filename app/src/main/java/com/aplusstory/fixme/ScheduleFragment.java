@@ -301,7 +301,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 
                 fragmentManager = this.getActivity().getSupportFragmentManager();
                 EditText nameView = this.getView().findViewById(R.id.scheduleName);
-                this.sch.name = nameView.getText().toString();;
+                this.sch.name = nameView.getText().toString();
                 EditText memoView = this.getView().findViewById(R.id.memoText);
                 this.sch.memo = memoView.getText().toString();
                 this.arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, this.sch);

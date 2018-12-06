@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoriteListActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ArrayList<String> favlist;

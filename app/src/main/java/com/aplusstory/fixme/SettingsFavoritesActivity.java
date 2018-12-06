@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
     ArrayList<String> favlist;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
+    private int REQUEST_RESULT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +55,27 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "go to map", Toast.LENGTH_SHORT).show();
+                Intent intent;
+
+                intent = new Intent(getApplication(), TMapActivity.class);
+                startActivityForResult(intent,REQUEST_RESULT);
+
                 // start mapview -> activity_favorite
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if(resultCode == RESULT_OK && data != null) {
+                if(data.hasExtra(TMapActivity.EXTRA_NAME_ARGUMENT)){
+                    Bundle bd = data.getBundleExtra(TMapActivity.EXTRA_NAME_ARGUMENT);
+                    String adr = bd.getString(MapFragment.KEY_ADDRESS);
+                    arrayAdapter.add(adr);
+                }
+            }
+        }
     }
 
 
