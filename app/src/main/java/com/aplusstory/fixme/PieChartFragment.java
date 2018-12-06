@@ -312,12 +312,12 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
 
                     if(currentChartInfo.footPrintData.locaDataType == LocationDataManager.PathData.class) {
                         Intent intent = new Intent(getActivity(), FootprintRoutineActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("MovementData",currentChartInfo.footPrintData.locaData);
-                        intent.putExtra("MovementData", bundle.getSerializable("Movementkey"));
-                        FootprintRoutineActivity footprintRoutineActivity = new FootprintRoutineActivity();
-                        footprintRoutineActivity.startActivity(intent);
-//                        PieChartFragment.this.getActivity().startActivity(intent);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("MovementData",currentChartInfo.footPrintData.locaData);
+                        intent.putExtra("MovementData", currentChartInfo.footPrintData.locaData);
+//                        FootprintRoutineActivity footprintRoutineActivity = new FootprintRoutineActivity();
+//                        footprintRoutineActivity.startActivity(intent);
+                        PieChartFragment.this.getActivity().startActivity(intent);
                     }
 
                     return true;
