@@ -392,6 +392,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
         }
+
         if(fragmentManager != null && ft != null){
             ft.commit();
             fragmentManager.popBackStack();
