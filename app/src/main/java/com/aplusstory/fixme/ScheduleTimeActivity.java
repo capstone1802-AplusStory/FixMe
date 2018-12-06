@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class ScheduleTimeActivity extends AppCompatActivity  {
     public static final String  EXTRA_NAME_ARGUMENT = "schedule_time";
@@ -41,9 +42,16 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-
         Calendar calendar = Calendar.getInstance();
+        Intent it = this.getIntent();
+        long extra = -1;
+        if(it != null && it.hasExtra(EXTRA_NAME_ARGUMENT)){
+            extra = it.getLongExtra(EXTRA_NAME_ARGUMENT, -1);
+            if(extra > 0){
+                calendar.setTime(new Date(extra));
+            }
+        }
+
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         int year = calendar.get(Calendar.YEAR);
@@ -102,7 +110,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
             TextView textView = (TextView)findViewById(R.id.startTime);
             textView.setText(String.format("%02d", hourOfDay)+":"+String.format("%02d", minute));
             ScheduleTimeActivity.this.cStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            ScheduleTimeActivity.this.cStart.set(Calendar.MINUTE, hourOfDay);
+            ScheduleTimeActivity.this.cStart.set(Calendar.MINUTE, minute);
         }
     };
 
@@ -123,7 +131,7 @@ public class ScheduleTimeActivity extends AppCompatActivity  {
             TextView textView = (TextView)findViewById(R.id.endTime);
             textView.setText(String.format("%02d", hourOfDay)+":" + String.format("%02d", minute));
             ScheduleTimeActivity.this.cEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            ScheduleTimeActivity.this.cEnd.set(Calendar.MINUTE, hourOfDay);
+            ScheduleTimeActivity.this.cEnd.set(Calendar.MINUTE, minute);
         }
     };
 

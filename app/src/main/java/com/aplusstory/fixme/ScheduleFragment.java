@@ -2,6 +2,7 @@ package com.aplusstory.fixme;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -29,6 +30,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ScheduleFragment extends Fragment implements View.OnClickListener{
     public static final String ARG_KEY_SCHEDULE = "argument_schedule";
+    public static final String ARG_KEY_NAME = "argument_schedule_name";
     public static final String ARG_KEY_EDIT = "argument_edit";
     public static final String ARG_KEY_DELETE = "argument_delete";
     public static final String ARG_KEY_TODAY = "argument_today";
@@ -104,7 +106,61 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
         TextView locationView = (TextView) returnView.findViewById(R.id.locationDetail);
         if(this.sch.locationAddress != null){
             locationView.setText(this.sch.locationAddress);
-            locationView.setText(str);
+        }
+
+        TextView repeatView = (TextView) returnView.findViewById(R.id.repeationDetail);
+        if(this.sch.isRepeated){
+            switch(this.sch.repeatType){
+                case ScheduleDataManager.RepeatDuration.REPEAT_DAYLY:
+                    repeatView.setText(R.string.repeat_type_daily);
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY:
+                    StringBuilder sb = new StringBuilder(this.getContext().getString(R.string.repeat_type_weekly));
+                    boolean cond = false;
+                    if(this.sch.repeatDayOfWeek[0]) {
+                        sb.append(' ');
+                        for (int i = 1; i < 8; i++) {
+                            if (this.sch.repeatDayOfWeek[i]) {
+                                cond = true;
+                                switch(i){
+                                    case 1:
+                                        sb.append(this.getContext().getString(R.string.sun));
+                                        break;
+                                    case 2:
+                                        sb.append(this.getContext().getString(R.string.mon));
+                                        break;
+                                    case 3:
+                                        sb.append(this.getContext().getString(R.string.tue));
+                                        break;
+                                    case 4:
+                                        sb.append(this.getContext().getString(R.string.wed));
+                                        break;
+                                    case 5:
+                                        sb.append(this.getContext().getString(R.string.thu));
+                                        break;
+                                    case 6:
+                                        sb.append(this.getContext().getString(R.string.fri));
+                                        break;
+                                    case 7:
+                                        sb.append(this.getContext().getString(R.string.sat));
+                                        break;
+                                }
+                            }
+                        }
+                        repeatView.setText(sb.toString());
+                    }
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY:
+                    repeatView.setText(R.string.repeat_type_monthly);
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_YEARLY:
+                    repeatView.setText(R.string.repeat_type_yearly);
+                    break;
+                default:
+                    //something wrong
+            }
+        }else {
+            repeatView.setText(R.string.repeat_type_none);
         }
 
 
@@ -158,6 +214,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     this.sch.repeatEnd = rptEnd.getTime();
                     if(this.sch.repeatType == ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY){
                         boolean[] rptDoW = bd.getBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY);
+                        this.sch.repeatDayOfWeek[0] = true;
                         for(int i = 0; i < rptDoW.length; i++){
                             this.sch.repeatDayOfWeek[i + 1] = rptDoW[i];
                         }
@@ -214,6 +271,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     this.sch.hasLocation = true;
                     this.sch.latitude = lat;
                     this.sch.longitude = lon;
+                    this.sch.locationAddress = adr;
                     Log.d(this.getClass().getName(), "schedule location : " + "\naddress : " + adr + ", latitude : " + lat + ", longitude : " + lon);
 
                     tv = (TextView) getView().findViewById(R.id.locationDetail);
@@ -275,7 +333,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                     }
                     bd.putLong(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_END, this.sch.repeatEnd);
                     try {
-                        String repStr = ((TextView)this.getView().findViewById(R.id.repeatText)).getText().toString();
+                        String repStr = ((TextView)this.getView().findViewById(R.id.repeationDetail)).getText().toString();
                         bd.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, repStr);
                     }catch(Exception e){
                         Log.d(this.getClass().getName(), e.toString());
@@ -286,11 +344,18 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.locationButton:
                 intent = new Intent(getActivity(), TMapActivity.class);
+                bd = new Bundle();
                 if(this.sch != null && this.sch.hasLocation) {
-                    bd = new Bundle();
                     bd.putDouble(MapFragment.KEY_LONGITUDE, this.sch.longitude);
                     bd.putDouble(MapFragment.KEY_LATITUDE, this.sch.latitude);
                     intent.putExtra(TMapActivity.EXTRA_NAME_ARGUMENT, bd);
+                }else {
+                    LocationDataManager.LocationData loca = LocationFileManager.getCurrentLocation(this.getContext());
+                    if(loca != null){
+                        bd.putDouble(MapFragment.KEY_LATITUDE, loca.latitude);
+                        bd.putDouble(MapFragment.KEY_LONGITUDE, loca.longitude);
+                        intent.putExtra(TMapActivity.EXTRA_NAME_ARGUMENT, bd);
+                    }
                 }
                 startActivityForResult(intent, REQUEST_RESULT);
                 break;
@@ -301,7 +366,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
 
                 fragmentManager = this.getActivity().getSupportFragmentManager();
                 EditText nameView = this.getView().findViewById(R.id.scheduleName);
-                this.sch.name = nameView.getText().toString();;
+                this.sch.name = nameView.getText().toString();
                 EditText memoView = this.getView().findViewById(R.id.memoText);
                 this.sch.memo = memoView.getText().toString();
                 this.arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, this.sch);
@@ -316,13 +381,18 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.deleteButton:
                 fragmentManager = this.getActivity().getSupportFragmentManager();
-                ft =  fragmentManager.beginTransaction().hide(this);
+
                 this.arg.putBoolean(ScheduleFragment.ARG_KEY_DELETE, true);
+                if(this.sch.name != null) {
+                    this.arg.putString(ScheduleFragment.ARG_KEY_NAME, this.sch.name);
+                    ft =  fragmentManager.beginTransaction().hide(this);
+                }
                 if(this.mListener != null){
                     this.mListener.onFragmentInteraction(this.arg);
                 }
                 break;
         }
+
         if(fragmentManager != null && ft != null){
             ft.commit();
             fragmentManager.popBackStack();

@@ -3,6 +3,7 @@ package com.aplusstory.fixme;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ public class SwitchListviewAdapter extends ArrayAdapter<String> implements Setti
         View v = convertView;
         SwitchListviewAdapter that = SwitchListviewAdapter.this;
 
+
         if(v == null) {
             LayoutInflater viewInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = viewInflater.inflate(R.layout.switch_list, null);
@@ -57,6 +59,7 @@ public class SwitchListviewAdapter extends ArrayAdapter<String> implements Setti
             default:
                 //something wrong
         }
+
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

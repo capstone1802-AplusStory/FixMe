@@ -28,6 +28,7 @@ import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static android.support.constraint.Constraints.TAG;
@@ -96,6 +97,10 @@ public class FootprintFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_footprint, null);
         mContext = this.getContext();
 
+        Bundle moveBundle;
+
+
+
         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.FootprintFragment);
         tmapview = new TMapView(getActivity());
 
@@ -118,15 +123,29 @@ public class FootprintFragment extends Fragment {
         tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
 
         tmapview.setSightVisible(true);
-        addPathPoint(37.5050881, 126.957101); // SKT타워
-        addPathPoint(37.505536, 126.9567); // N서울타워
-        addPathPoint(37.5044113, 126.950567); // N서울타워
-        addPathPoint(37.4888071, 126.9635373); // N서울타워
-        addPathPoint(37.4863095, 126.98870369); // N서울타워
-        addPathPoint(37.500318, 127.003479); // 1N서울타워
-        addPathPoint(37.5154864, 127.03752039); // N서울타워
-        addPathPoint(37.521885, 127.062315); // N서울타워
-        addPathPoint(37.5389565, 127.07112789); // 경복궁
+
+
+        if(getArguments()!=null){
+            moveBundle = getArguments();
+
+            LocationDataManager.PathData moveData = (LocationDataManager.PathData) moveBundle.getSerializable("MovementData");
+            int locNum = moveData.locaArr.length;
+            for(int i = 0 ;i < locNum; i++){
+                addPathPoint(moveData.locaArr[i].latitude,moveData.locaArr[i].longitude);
+            }
+
+        }
+
+//
+//        addPathPoint(37.5050881, 126.957101); // SKT타워
+//        addPathPoint(37.505536, 126.9567); // N서울타워
+//        addPathPoint(37.5044113, 126.950567); // N서울타워
+//        addPathPoint(37.4888071, 126.9635373); // N서울타워
+//        addPathPoint(37.4863095, 126.98870369); // N서울타워
+//        addPathPoint(37.500318, 127.003479); // 1N서울타워
+//        addPathPoint(37.5154864, 127.03752039); // N서울타워
+//        addPathPoint(37.521885, 127.062315); // N서울타워
+//        addPathPoint(37.5389565, 127.07112789); // 경복궁
 
         TMapPolyLine tMapPolyLine = new TMapPolyLine();
         tMapPolyLine.setLineColor(Color.BLUE);

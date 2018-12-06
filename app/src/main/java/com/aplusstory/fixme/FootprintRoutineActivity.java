@@ -7,19 +7,102 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.skt.Tmap.TMapData;
+
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class FootprintRoutineActivity extends AppCompatActivity implements FootprintFragment.OnFragmentInteractionListener{
 
     Toolbar toolbar;
-
+    TextView arrivalTextview;
+    TextView departureTextview;
+    TextView totalLapse;
+    TextView whenToWhen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent locaIntent = getIntent();
         setContentView(R.layout.activity_footprint_routine);
+        FootprintFragment footprintFragment = new FootprintFragment();
 
+        arrivalTextview = (TextView) findViewById(R.id.arrivalText);
+        departureTextview = (TextView) findViewById(R.id.departureText);
+        totalLapse = (TextView) findViewById(R.id.totalLapse);
+        whenToWhen = (TextView) findViewById(R.id.when_to_when);
+
+        if(locaIntent != null){
+            Bundle moveBundle = new Bundle();
+            moveBundle.putSerializable("MovementData",locaIntent.getSerializableExtra("MovementData"));
+            footprintFragment.setArguments(moveBundle);
+
+
+            LocationDataManager.PathData moveIntent = (LocationDataManager.PathData) locaIntent.getSerializableExtra("MovementData");
+
+            int locNum = moveIntent.locaArr.length;
+            TMapData tMapData = new TMapData();
+
+            try {
+                tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude, moveIntent.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                    @Override
+                    public void onConvertToGPSToAddress(String s) {
+                         if(s != null){
+                             departureTextview.setText(s);
+                         }else {
+                             departureTextview.setText("출발");
+                         }
+                    }
+                });
+                tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                    @Override
+                    public void onConvertToGPSToAddress(String s) {
+                        if(s != null) {
+                            arrivalTextview.setText(s);
+                        }else {
+                            arrivalTextview.setText("도착");
+                        }
+                    }
+                });
+
+
+            } catch (Exception e){
+                Log.d(this.getClass().getName(), e.toString());
+                e.printStackTrace();
+            }
+            String startTime = String.format("%d :%d ",
+                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin),
+                    TimeUnit.MILLISECONDS.toSeconds(moveIntent.dtBegin) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin))
+            );
+            String endTime = String.format("%d :%d ",
+                    TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd),
+                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtEnd) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd))
+            );
+            whenToWhen.setText(startTime + "출발 ~ "+ endTime + "도착");
+
+
+            long lapseTime = moveIntent.locaArr[locNum-1].datetime - moveIntent.locaArr[0].datetime;
+
+            String lapseTimeString = String.format("소요시간  : %d 시간 %d 분",
+                    TimeUnit.MILLISECONDS.toHours(lapseTime),
+                    TimeUnit.MILLISECONDS.toMinutes(lapseTime) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lapseTime))
+            );
+            totalLapse.setText(lapseTimeString);
+
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
@@ -27,20 +110,19 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.footPrintContainer,new FootprintFragment());
+        fragmentTransaction.add(R.id.footPrintContainer,footprintFragment);
         fragmentTransaction.commit();
 
-        final TextView departureTextview = (TextView) findViewById(R.id.departureText);
-        departureTextview.setText("중앙대학교");
 
-        final TextView arrivalTextview = (TextView) findViewById(R.id.arrivalText);
-        arrivalTextview.setText("스타시티 건대");
-
-        TextView whenToWhen = (TextView) findViewById(R.id.when_to_when);
-        whenToWhen.setText("17:30 출발 ~ 18:30 도착");
-
-        TextView totalLapse = (TextView) findViewById(R.id.totalLapse);
-        totalLapse.setText("소요시간: 1시간 00분");
+//        departureTextview.setText("중앙대학교");
+//
+//        arrivalTextview.setText("스타시티 건대");
+//
+//        TextView whenToWhen = (TextView) findViewById(R.id.when_to_when);
+//        whenToWhen.setText("17:30 출발 ~ 18:30 도착");
+//
+//        TextView totalLapse = (TextView) findViewById(R.id.totalLapse);
+//        totalLapse.setText("소요시간: 1시간 00분");
 
         Button departButton = (Button) findViewById(R.id.departButton);
         departButton.setText(String.valueOf(departureTextview.getText()));

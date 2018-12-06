@@ -137,4 +137,25 @@ public class ScheduleFileManager implements FileManager {
             return false;
         }
     }
+
+    public boolean deleteData(String schName){
+        String path = this.listSch.get(schName);
+        Log.d(this.getClass().getName(), "file to delete : " + path);
+        File file = null;
+        if(path != null) {
+            file = new File(path);
+        }
+
+        boolean rt = false;
+
+        if(file != null && file.exists() && file.isFile()){
+            rt = file.delete();
+            if(rt && this.sp != null){
+                this.sp.edit().remove(schName).apply();
+                this.refreshData();
+            }
+        }
+
+        return rt;
+    }
 }

@@ -95,6 +95,8 @@ public class ScheduleManager implements ScheduleDataManager {
                         Log.d(this.getClass().getName(), "monthly name : " + s);
                     }
                 }
+            }else {
+                Log.d(this.getClass().getName(), "null schedule");
             }
         }
         if(rt.size() == 0){
@@ -138,6 +140,8 @@ public class ScheduleManager implements ScheduleDataManager {
             } else if(alm == null){
                 Log.d(this.getClass().getName(), "no alarm manager");
             }
+        }else {
+            Log.d(this.getClass().getName(), "no alarm");
         }
 
         if(this.fm != null){
@@ -149,6 +153,18 @@ public class ScheduleManager implements ScheduleDataManager {
         } else {
             return false;
         }
+    }
+
+    public boolean removeData(String name){
+        boolean rt = false;
+        if(this.fm != null){
+            rt = fm.deleteData(name);
+            if(rt){
+                this.refreshData();
+            }
+        }
+
+        return rt;
     }
 
     @Override
