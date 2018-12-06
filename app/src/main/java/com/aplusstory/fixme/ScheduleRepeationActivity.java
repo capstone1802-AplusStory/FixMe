@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class ScheduleRepeationActivity extends AppCompatActivity
         implements ScheduleRepeatWeeklyFragment.OnFragmentInteractionListener
@@ -55,18 +56,42 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        Intent it = this.getIntent();
+        Bundle bd = null;
+        int code = -1;
+        long endDataTime = -1;
+        String str = null;
+
+        if(it != null && it.hasExtra(EXTRA_NAME_ARGUMENT)){
+            bd = it.getBundleExtra(EXTRA_NAME_ARGUMENT);
+            if(bd != null){
+                code = bd.getInt(ARGUMENT_KEY_REPEAT_CODE, -1);
+                endDataTime = bd.getLong(ARGUMENT_KEY_REPEAT_END, -1);
+                str = bd.getString(ARGUMENT_KEY_REPEAT_TEXT, null);
+            }
+        }
+
+
+
 
         Calendar calendar = Calendar.getInstance();
+        if(endDataTime > 0){
+            calendar.setTimeInMillis(endDataTime);
+        }
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DATE);
 
         this.datePickerDialog = new DatePickerDialog(this, this, year, month, day);
         textViewRD = (TextView) findViewById(R.id.repeatDay);
-        textViewRD.setText("없음");
+        if(code >= 0 && str != null){
+            textViewRD.setText(str);
+        }else {
+            textViewRD.setText(R.string.repeat_type_none);
+        }
 
         textViewED = (TextView) findViewById(R.id.endRDate);
-        textViewED.setText(year+"년 "+(month + 1)+"월 "+day+"일");
+        textViewED.setText(year + "년 " + (month + 1) + "월 " + day + "일");
         textViewED.setOnClickListener(this);
         if(this.fragmentManager == null){
             this.fragmentManager = this.getSupportFragmentManager();
@@ -86,6 +111,29 @@ public class ScheduleRepeationActivity extends AppCompatActivity
 
         yearlyButton = (Button) findViewById(R.id.yearlyButton);
         yearlyButton.setOnClickListener(this);
+
+        Button selectedButton = noneButton;
+
+        if(code >= 0){
+            switch (code){
+                case ScheduleDataManager.RepeatDuration.REPEAT_DAYLY:
+                    selectedButton = dailyButton;
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY:
+                    selectedButton = weeklyButton;
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY:
+                    selectedButton = monthlyButton;
+                    break;
+                case ScheduleDataManager.RepeatDuration.REPEAT_YEARLY:
+                    selectedButton = yearlyButton;
+                    break;
+                default:
+                    //...?
+            }
+        }
+
+        selectedButton.setSelected(true);
     }
 
     @Override
@@ -130,43 +178,46 @@ public class ScheduleRepeationActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Bundle arg) {
         if(arg.containsKey(ScheduleRepeatWeeklyFragment.ARG_PARAM_CHECK_DAY)){
-            StringBuilder text = new StringBuilder("매주 ");
+            StringBuilder text = new StringBuilder(this.getString(R.string.repeat_type_weekly));
             boolean[] checkDay = arg.getBooleanArray(ScheduleRepeatWeeklyFragment.ARG_PARAM_CHECK_DAY);
             boolean cond = false;
-            for(int i = 0; i <checkDay.length; i++){
-                if(checkDay[i]){
-                    cond = true;
-                    switch (i) {
-                        case 0:
-                            text.append("일");
-                            break;
-                        case 1:
-                            text.append("월");
-                            break;
-                        case 2:
-                            text.append("화");
-                            break;
-                        case 3:
-                            text.append("수");
-                            break;
-                        case 4:
-                            text.append("목");
-                            break;
-                        case 5:
-                            text.append("금");
-                            break;
-                        case 6:
-                            text.append("토");
-                            break;
-                        default:
-                            //something wrong
+
+            if(checkDay != null) {
+                for (int i = 0; i < checkDay.length; i++) {
+                    if (checkDay[i]) {
+                        cond = true;
+                        switch (i) {
+                            case 0:
+                                text.append(this.getString(R.string.sun));
+                                break;
+                            case 1:
+                                text.append(this.getString(R.string.mon));
+                                break;
+                            case 2:
+                                text.append(this.getString(R.string.tue));
+                                break;
+                            case 3:
+                                text.append(this.getString(R.string.wed));
+                                break;
+                            case 4:
+                                text.append(this.getString(R.string.thu));
+                                break;
+                            case 5:
+                                text.append(this.getString(R.string.fri));
+                                break;
+                            case 6:
+                                text.append(this.getString(R.string.sat));
+                                break;
+                            default:
+                                //something wrong
+                        }
                     }
                 }
-
             }
             if(cond) {
                 String str = text.toString();
                 this.textViewRD.setText(str);
+                this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE, ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY);
                 this.arg.putBooleanArray(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_WEEKLY, checkDay);
                 this.arg.putString(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_TEXT, str);
             }
@@ -195,7 +246,8 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 weeklyButton.setSelected(false);
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
-                str = "없음";
+
+                str = this.getString(R.string.repeat_type_none);
                 this.textViewRD.setText(str);
 
                 if(this.arg.containsKey(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE)){
@@ -215,7 +267,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(false);
 
-                str = "매일";
+                str = this.getString(R.string.repeat_type_daily);
                 this.textViewRD.setText(str);
 
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
@@ -252,7 +304,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(true);
                 yearlyButton.setSelected(false);
 
-                str = "매달";
+                str = this.getString(R.string.repeat_type_monthly);
                 this.textViewRD.setText(str);
 
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,
@@ -272,7 +324,7 @@ public class ScheduleRepeationActivity extends AppCompatActivity
                 monthlyButton.setSelected(false);
                 yearlyButton.setSelected(true);
 
-                str = "매년";
+                str = this.getString(R.string.repeat_type_yearly);
                 this.textViewRD.setText(str);
 
                 this.arg.putInt(ScheduleRepeationActivity.ARGUMENT_KEY_REPEAT_CODE,

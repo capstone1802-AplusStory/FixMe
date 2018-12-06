@@ -35,7 +35,7 @@ public class AlarmPeriodActivity extends AppCompatActivity implements SettingsUI
         spinner = (Spinner) findViewById(R.id.periodSpinner);
 
 
-        final String[] item = {"선택하세요", "5분마다", "10분마다", "30분마다", "1시간마다", "3시간마다"};
+        final String[] item = {"선택하세요", "5분마다", "10분마다", "30분마다", "1시간마다", "3시간마다", "test"};
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

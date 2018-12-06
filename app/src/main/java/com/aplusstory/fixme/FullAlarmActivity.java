@@ -1,12 +1,16 @@
 package com.aplusstory.fixme;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -82,10 +86,14 @@ public class FullAlarmActivity extends AppCompatActivity {
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (AUTO_HIDE) {
                 delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }else{
+                hide();
             }
             return false;
         }
     };
+
+    private ScheduleDataManager.ScheduleData sch = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +107,68 @@ public class FullAlarmActivity extends AppCompatActivity {
 
         Date today = new Date();
         SimpleDateFormat time = new SimpleDateFormat("a hh:mm");
+        Intent it = this.getIntent();
+        if(it.hasExtra(ScheduleAlarmManager.KEY_SCHEDULE)){
+            Bundle bd = it.getBundleExtra(ScheduleAlarmManager.KEY_SCHEDULE);
+            if(bd.containsKey(ScheduleAlarmManager.KEY_SCHEDULE)) {
+                this.sch = (ScheduleDataManager.ScheduleData) bd.getSerializable(ScheduleAlarmManager.KEY_SCHEDULE);
+            }
+        }
+        long remainTimeMillisec = -1;
+        double remainDistance = -1.0;
 
+        SharedPreferences spCrnLoca = this.getSharedPreferences(LocationFileManager.FILENAME_CURRENT_LOCATION,0);
+        long now = System.currentTimeMillis();
+        double lat = Double.parseDouble(spCrnLoca.getString(LocationDataManager.LocationData.KEY_LATITUDE, "0.0"));
+        double longt = Double.parseDouble(spCrnLoca.getString(LocationDataManager.LocationData.KEY_LONGITUDE, "0.0"));
+        LocationDataManager.LocationData currentLoca = new LocationDataManager.LocationData(now, lat, longt);
+
+        if(this.sch != null){
+            remainTimeMillisec = this.sch.scheduleBegin - System.currentTimeMillis();
+            Log.d(this.getClass().getName(),"remaining time milisec :" + remainTimeMillisec);
+            LocationDataManager.LocationData schLoca = new LocationDataManager.LocationData(today.getTime(), this.sch.latitude, this.sch.longitude);
+            remainDistance = currentLoca.distanceTo(schLoca);
+        }
+        TextView scheduleNameText = (TextView)findViewById(R.id.schedule_name) ;
+        if(this.sch != null){
+            scheduleNameText.setText(this.sch.name);
+        }
         TextView currentTime = (TextView) findViewById(R.id.current_time);
         currentTime.setText(time.format(today));
-
+        TextView remainTime = (TextView) findViewById(R.id.remaining_time);
+        if(remainTimeMillisec > 0 && remainTimeMillisec < 60000){
+            StringBuilder sb = new StringBuilder()
+                    .append(this.getString(R.string.less_then_a_minute))
+                    .append(' ')
+                    .append(this.getString(R.string.remaining));
+            remainTime.setText(sb.toString());
+        }else if(remainTimeMillisec >= 60000 && remainTimeMillisec < 60 * 60000){
+            StringBuilder sb = new StringBuilder()
+                    .append(remainTimeMillisec / 60000)
+                    .append(this.getString(R.string.minute))
+                    .append(' ')
+                    .append(this.getString(R.string.remaining));
+            remainTime.setText(sb.toString());
+        }else if(remainTimeMillisec >= 60 * 60000){
+            StringBuilder sb = new StringBuilder()
+                    .append(remainTimeMillisec / (60 * 60000))
+                    .append(this.getString(R.string.hour_period))
+                    .append(' ')
+                    .append((remainTimeMillisec % 60 * 60000) / 60000)
+                    .append(this.getString(R.string.minute))
+                    .append(' ')
+                    .append(this.getString(R.string.remaining));
+            remainTime.setText(sb.toString());
+        }else if(remainTimeMillisec <= 0){
+            Log.d(this.getClass().getName(), "schedule timed out or something wrong");
+            remainTime.setText(R.string.timesup);
+        }
+        TextView remainDistanceText = (TextView)findViewById(R.id.last_distance);
+        if(this.sch != null && this.sch.hasLocation && currentLoca != null && remainDistance >= 0.0){
+            remainDistanceText.setText(String.format("%dm", (long)remainDistance) + " " + this.getString(R.string.remaining));
+        }else {
+            remainDistanceText.setText("");
+        }
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +178,16 @@ public class FullAlarmActivity extends AppCompatActivity {
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        Button bt = findViewById(R.id.dummy_button);
+        bt.setText("Confirm");
+        bt.setOnTouchListener(mDelayHideTouchListener);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullAlarmActivity.this.finish();
+            }
+        });
+
     }
 
     @Override

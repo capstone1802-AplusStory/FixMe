@@ -27,6 +27,12 @@ public class ScheduleAlarmIntervalActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_alarm);
 
+        Intent it = this.getIntent();
+        int extra = 0;
+        if(it != null && it.hasExtra(EXTRA_NAME_ARGUMENT)){
+            extra = it.getIntExtra(EXTRA_NAME_ARGUMENT, -1);
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,7 +48,9 @@ public class ScheduleAlarmIntervalActivity extends AppCompatActivity implements 
 
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(this);
-
+        if(extra >= 0) {
+            spinner.setSelection(extra + 1);
+        }
     }
 
 

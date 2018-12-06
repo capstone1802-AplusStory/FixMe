@@ -116,6 +116,20 @@ public class MapFragment extends Fragment
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Bundle bd  = this.getArguments();
+        if(bd != null){
+            if(bd.containsKey(KEY_LATITUDE) && bd.containsKey(KEY_LONGITUDE)) {
+                double lat = bd.getDouble(KEY_LATITUDE, -1);
+                double lon = bd.getDouble(KEY_LONGITUDE, -1);
+                if(lat > 0.0 && lon > 0.0) {
+                    this.lat = lat;
+                    this.lon = lon;
+                    Log.d(this.getClass().getName(), "onCreate, lat : " + this.lat + "lon : " + lon);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -137,6 +151,10 @@ public class MapFragment extends Fragment
         linearLayout.addView(tmapview);
         tmapview.setSKTMapApiKey(mApiKey);
 
+        if(this.lat != null && this.lon != null) {
+            tmapview.setLocationPoint(this.lon, this.lat);
+            tmapview.setCenterPoint(this.lon, this.lat);
+        }
 
         /* 현재 보는 방향 */
         tmapview.setCompassMode(true);
