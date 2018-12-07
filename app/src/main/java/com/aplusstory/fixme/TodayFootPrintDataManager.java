@@ -181,7 +181,7 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
             Log.d(this.getClass().getName(), "path ends on : " + pathEndLoca.toString());
             Log.d(this.getClass().getName(), "path length " + path.distance());
             if(pathDistance >= PATH_THRESHOLD) {
-                pathData = new FootPrintData(pathData.dtEnd, now, path);
+                pathData = new FootPrintData(pointData.dtEnd, now, path);
                 Log.d(this.getClass().getName(), "footprint data : " + pathData.toString());
                 if(this.namer != null){
                     pathData.name = this.namer.getName(path);
