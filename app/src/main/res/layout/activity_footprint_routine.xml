@@ -150,7 +150,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/rounded_rectangle"
                         android:backgroundTint="#095e96"
-                        android:text="Button"
+                        android:text="출발"
                         android:textColor="#FFFFFF" />
 
                     <Button
@@ -161,7 +161,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/rounded_rectangle"
                         android:backgroundTint="#095e96"
-                        android:text="Button"
+                        android:text="도착"
                         android:textColor="#FFFFFF" />
 
                 </LinearLayout>
