@@ -65,7 +65,8 @@
                 <TextView
                     android:id="@+id/departureText"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="3"
                     android:gravity="center"
                     android:paddingLeft="10dp"
@@ -85,7 +86,8 @@
                 <TextView
                     android:id="@+id/arrivalText"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="3"
                     android:gravity="center"
                     android:paddingLeft="10dp"

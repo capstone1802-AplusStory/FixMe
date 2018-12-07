@@ -38,12 +38,16 @@ public class FavoriteActivity extends AppCompatActivity {
         }
 
         TextView favoriteAddress = (TextView) findViewById(R.id.favoriteAddress);
-        favoriteAddress.setText("address of location"); //get address from map api?
+        try {
+            favoriteAddress.setText(intent.getStringExtra("address"));
+        } catch (NullPointerException e) {
+            favoriteAddress.setText("");
+        }
 
         final ImageView starImage = (ImageView) findViewById(R.id.starImage);
 
         final Button favoriteButton = (Button) findViewById(R.id.favoriteButton);
-        favoriteButton.setText("즐겨찾기 등록");
+        favoriteButton.setText("즐겨찾기 해제");
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
