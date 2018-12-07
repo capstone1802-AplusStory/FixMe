@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,24 +44,40 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 
         if(locaIntent != null){
             Bundle moveBundle = new Bundle();
-            moveBundle.putSerializable("moveBundle",locaIntent.getSerializableExtra("MovementData"));
+            moveBundle.putSerializable("MovementData",locaIntent.getSerializableExtra("MovementData"));
             footprintFragment.setArguments(moveBundle);
 
-            LocationDataManager.PathData moveIntent = (LocationDataManager.PathData) locaIntent.getSerializableExtra("MovdementData");
+
+            LocationDataManager.PathData moveIntent = (LocationDataManager.PathData) locaIntent.getSerializableExtra("MovementData");
 
             int locNum = moveIntent.locaArr.length;
             TMapData tMapData = new TMapData();
 
             try {
-                String startingPoint = tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude,moveIntent.locaArr[0].longitude);
-                String endPoint = tMapData.convertGpsToAddress(moveIntent.locaArr[locNum-1].latitude,moveIntent.locaArr[locNum-1].longitude);
-                departureTextview.setText(startingPoint);
-                arrivalTextview.setText(endPoint);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
+                tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude, moveIntent.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                    @Override
+                    public void onConvertToGPSToAddress(String s) {
+                         if(s != null){
+                             departureTextview.setText(s);
+                         }else {
+                             departureTextview.setText("출발");
+                         }
+                    }
+                });
+                tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                    @Override
+                    public void onConvertToGPSToAddress(String s) {
+                        if(s != null) {
+                            arrivalTextview.setText(s);
+                        }else {
+                            arrivalTextview.setText("도착");
+                        }
+                    }
+                });
+
+
+            } catch (Exception e){
+                Log.d(this.getClass().getName(), e.toString());
                 e.printStackTrace();
             }
             String startTime = String.format("%d :%d ",
