@@ -81,14 +81,14 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                 e.printStackTrace();
             }
             String startTime = String.format("%d :%d ",
-                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin),
-                    TimeUnit.MILLISECONDS.toSeconds(moveIntent.dtBegin) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtBegin))
+                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime),
+                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[0].datetime) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime))
             );
             String endTime = String.format("%d :%d ",
-                    TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd),
-                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.dtEnd) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.dtEnd))
+                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime),
+                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[locNum-1].datetime) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime))
             );
             whenToWhen.setText(startTime + "출발 ~ "+ endTime + "도착");
 
