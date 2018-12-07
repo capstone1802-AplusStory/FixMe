@@ -127,11 +127,12 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
                         this.dataArr.add(pointData);
                         pointData = null;
                         this.dataArr.add(pathData);
-                        lastLoca = null;
+                        lastLoca = loca;
                     } else {
                         Log.d(this.getClass().getName(), "path too short");
                     }
                     bufPath = null;
+                    tBegin = loca.datetime;
                     tEnd = loca.datetime;
                 }else if(loca.distanceTo(pathEndLoca) >= DISTANCE_THRESHOLD){
                     bufPath.add(loca);
