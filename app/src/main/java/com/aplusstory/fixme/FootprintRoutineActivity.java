@@ -101,7 +101,11 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 
             long lapseTime = moveIntent.locaArr[locNum-1].datetime - moveIntent.locaArr[0].datetime;
 
-            String lapseTimeString = dateFormat.format(new Date(lapseTime));
+            String lapseTimeString = String.format("소요시간  : %d 시간 %d 분",
+                    TimeUnit.MILLISECONDS.toHours(lapseTime),
+                    TimeUnit.MILLISECONDS.toMinutes(lapseTime) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lapseTime))
+            );
             totalLapse.setText(lapseTimeString);
 
         }
