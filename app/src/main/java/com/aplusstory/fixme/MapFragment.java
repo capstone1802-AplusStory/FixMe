@@ -379,6 +379,7 @@ public class MapFragment extends Fragment
 //                        addPoint("ㅁㄴㅇㄹ",37.570841, 126.985302,"ㅁㄴㅇㄹ"); // SKT타워
 //                        addPoint("ㅁㄴㅇㄹ",37.551135, 126.988205,"ㅁㄴㅇㄹ"); // N서울타워
 //                        addPoint("ㅁㄴㅇㄹ",37.579567, 126.976998,"ㅁㄴㅇㄹ"); // 경복궁
+                        addPoint("중대 제2공학관",37.503838,126.957054,"대한민국 서울특별시 동작구 흑석동 215-1");
                         TMapInfo tmapInfo = tmapview.getDisplayTMapInfo(m_tmapPoint);
                         tmapview.setCenterPoint(tmapInfo.getTMapPoint().getLongitude(),tmapInfo.getTMapPoint().getLatitude());
                         tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel());
