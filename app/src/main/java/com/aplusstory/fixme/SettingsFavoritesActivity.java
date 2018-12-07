@@ -47,6 +47,8 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
                 intent.putExtra("nickname", String.valueOf(listView.getItemAtPosition(position)));
+                intent.putExtra("location", "중앙대학교");
+                intent.putExtra("address", "서울특별시 동작구 흑석로 84");
                 startActivity(intent);
             }
         });
