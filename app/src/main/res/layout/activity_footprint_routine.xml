@@ -71,7 +71,6 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="TextView"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -92,7 +91,6 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="TextView"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>

@@ -58,6 +58,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                 tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude, moveIntent.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String s) {
+                        Log.d(FootprintRoutineActivity.class.toString(), "address : " + s);
                          if(s != null){
                              departureTextview.setText(s);
                          }else {
@@ -70,6 +71,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                 tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String s) {
+                        Log.d(FootprintRoutineActivity.class.toString(), "address : " + s);
                         if(s != null) {
                             arrivalTextview.setText(s);
                         }else {
