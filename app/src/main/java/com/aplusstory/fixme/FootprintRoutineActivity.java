@@ -63,6 +63,8 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                          }else {
                              departureTextview.setText("출발");
                          }
+//                        Button departButton = (Button) findViewById(R.id.departButton);
+//                        departButton.setText(String.valueOf(departureTextview.getText()));
                     }
                 });
                 tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
@@ -73,6 +75,8 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                         }else {
                             arrivalTextview.setText("도착");
                         }
+//                        Button arriveButton = (Button) findViewById(R.id.arrivalButton);
+//                        arriveButton.setText(String.valueOf(arrivalTextview.getText()));
                     }
                 });
 
@@ -131,7 +135,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 //        totalLapse.setText("소요시간: 1시간 00분");
 
         Button departButton = (Button) findViewById(R.id.departButton);
-        departButton.setText(String.valueOf(departureTextview.getText()));
+//        departButton.setText(String.valueOf(departureTextview.getText()));
         departButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +146,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
         });
 
         Button arriveButton = (Button) findViewById(R.id.arrivalButton);
-        arriveButton.setText(String.valueOf(arrivalTextview.getText()));
+//        arriveButton.setText(String.valueOf(arrivalTextview.getText()));
         arriveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
