@@ -42,7 +42,8 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
         departureTextview = (TextView) findViewById(R.id.departureText);
         totalLapse = (TextView) findViewById(R.id.totalLapse);
         whenToWhen = (TextView) findViewById(R.id.when_to_when);
-
+        final String[] startAddress = new String[1];
+        final String[] arriveAddress = new String[1];
         if(locaIntent != null){
             Bundle moveBundle = new Bundle();
             moveBundle.putSerializable("MovementData",locaIntent.getSerializableExtra("MovementData"));
@@ -58,11 +59,12 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                 tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude, moveIntent.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String s) {
-                         if(s != null){
-                             departureTextview.setText(s);
-                         }else {
-                             departureTextview.setText("출발");
-                         }
+//                         if(s != null){
+//                             departureTextview.setText(s);
+//                         }else {
+//                             departureTextview.setText("출발");
+//                         }
+                        startAddress[0] = s;
                     }
                 });
                 tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
@@ -73,6 +75,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                         }else {
                             arrivalTextview.setText("도착");
                         }
+                        arriveAddress[0] = s;
                     }
                 });
 
@@ -107,7 +110,8 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                             TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lapseTime))
             );
             totalLapse.setText(lapseTimeString);
-
+            departureTextview.setText(startAddress[0]);
+            arrivalTextview.setText(arriveAddress[0]);
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
