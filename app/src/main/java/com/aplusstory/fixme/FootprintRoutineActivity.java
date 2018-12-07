@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -80,26 +81,27 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
                 Log.d(this.getClass().getName(), e.toString());
                 e.printStackTrace();
             }
-            String startTime = String.format("%d :%d ",
-                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime),
-                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[0].datetime) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime))
-            );
-            String endTime = String.format("%d :%d ",
-                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime),
-                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[locNum-1].datetime) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime))
-            );
+//            String startTime = String.format("%d :%d ",
+//                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime),
+//                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[0].datetime) -
+//                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[0].datetime))
+//            );
+//            String endTime = String.format("%d :%d ",
+//                    TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime),
+//                    TimeUnit.MILLISECONDS.toMinutes(moveIntent.locaArr[locNum-1].datetime) -
+//                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(moveIntent.locaArr[locNum-1].datetime))
+//            );
+//
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            String startTime = dateFormat.format(new Date(moveIntent.locaArr[0].datetime));
+            String endTime = dateFormat.format(new Date(moveIntent.locaArr[locNum-1].datetime));
+
             whenToWhen.setText(startTime + "출발 ~ "+ endTime + "도착");
 
 
             long lapseTime = moveIntent.locaArr[locNum-1].datetime - moveIntent.locaArr[0].datetime;
 
-            String lapseTimeString = String.format("소요시간  : %d 시간 %d 분",
-                    TimeUnit.MILLISECONDS.toHours(lapseTime),
-                    TimeUnit.MILLISECONDS.toMinutes(lapseTime) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lapseTime))
-            );
+            String lapseTimeString = dateFormat.format(new Date(lapseTime));
             totalLapse.setText(lapseTimeString);
 
         }
