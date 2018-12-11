@@ -21,17 +21,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aplusstory.fixme.cal.OneDayView;
 
+import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class ScheduleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ScheduleUIManager,
-        ScheduleFragment.OnFragmentInteractionListener, MonthlyFragment.OnMonthChangeListener {
+        ScheduleFragment.OnFragmentInteractionListener, MonthlyFragment.OnMonthChangeListener,
+        ScheduleListFragment.OnFragmentInteractionListener{
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     private FragmentManager fgm = null;
@@ -50,6 +54,9 @@ public class ScheduleActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_full_menu);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        TextView appBarTitle = (TextView) findViewById(R.id.schedule_title);
+        appBarTitle.setText("YYYY.MM");
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -123,7 +130,7 @@ public class ScheduleActivity extends AppCompatActivity
                     FragmentTransaction ft = this.fgm.beginTransaction();
                     this.schFrg = (Fragment) new ScheduleFragment();
                     String fragmentTag = this.schFrg.getClass().getSimpleName();
-                    ft.add(R.id.frame_schedule, this.schFrg);
+                    ft.replace(R.id.frame_schedule, this.schFrg);
                     ft.addToBackStack(fragmentTag);
                     this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     ft.commit();
@@ -137,16 +144,79 @@ public class ScheduleActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Bundle arg) {
+        Calendar c = Calendar.getInstance();
         if(arg.containsKey(ScheduleFragment.ARG_KEY_SCHEDULE)){
             ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_SCHEDULE);
             if(this.dm.putData(sch)) {
                 String savedMsg = "schedule saved";
+                switch(sch.tableColor){
+                    case ScheduleDataManager.TableColor.RED:
+                        break;
+                    case ScheduleDataManager.TableColor.PINK:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOW:
+                        break;
+                    case ScheduleDataManager.TableColor.YELLOWGREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.GREEN:
+                        break;
+                    case ScheduleDataManager.TableColor.MINT:
+                        break;
+                    case ScheduleDataManager.TableColor.SKYBLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.BLUE:
+                        break;
+                    case ScheduleDataManager.TableColor.PURPLE:
+                        break;
+                }
                 Toast.makeText(this, savedMsg, Toast.LENGTH_SHORT).show();
             }
+            this.monthlyList = this.dm.getMonthlyList(c.get(Calendar.YEAR), c.get(Calendar.MONTH));
         }else if(arg.containsKey(ScheduleFragment.ARG_KEY_DELETE) && arg.getBoolean(ScheduleFragment.ARG_KEY_DELETE)){
-            //TODO
-            String delMsg = "schedule deleted";
-            Toast.makeText(this, delMsg, Toast.LENGTH_SHORT).show();
+            boolean cond = false;
+
+            String name = arg.getString(ScheduleFragment.ARG_KEY_NAME, null);
+            if(name != null) {
+                cond = this.dm.removeData(name);
+            }
+            if(cond) {
+                String delMsg = "schedule deleted";
+                Toast.makeText(this, delMsg, Toast.LENGTH_SHORT).show();
+            }
+        }else if(arg.containsKey(ScheduleListFragment.ARG_KEY_ADD) && arg.getBoolean(ScheduleListFragment.ARG_KEY_ADD)){
+            Date today;
+            if(arg.containsKey(ScheduleListFragment.ARG_KEY_TODAY)) {
+                today = new Date(arg.getLong(ScheduleListFragment.ARG_KEY_TODAY));
+            } else {
+                today = new Date();
+            }
+            Log.d(this.getClass().getName(), "add schedule, date : " + today.toString());
+
+            FragmentTransaction ft = this.fgm.beginTransaction();
+            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg.setArguments(new Bundle(arg));
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft.commit();
+        }else if(arg.containsKey(ScheduleFragment.ARG_KEY_EDIT)){
+            ScheduleDataManager.ScheduleData sch = (ScheduleDataManager.ScheduleData)arg.getSerializable(ScheduleFragment.ARG_KEY_EDIT);
+            if(sch != null){
+                Log.d(this.getClass().getName(), "edit schedule, schedule data : " + sch.toString());
+            }else {
+                Log.d(this.getClass().getName(), "null?!");
+            }
+
+
+            FragmentTransaction ft = this.fgm.beginTransaction();
+            this.schFrg = (Fragment) new ScheduleFragment();
+            this.schFrg.setArguments(new Bundle(arg));
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            ft.commit();
         }
     }
 
@@ -167,6 +237,14 @@ public class ScheduleActivity extends AppCompatActivity
     @Override
     public void onChange(int year, int month) {
         this.monthlyList = this.dm.getMonthlyList(year, month);
+        TextView appBarTitle = (TextView) findViewById(R.id.schedule_title);
+        StringBuilder sb = new StringBuilder()
+        .append(year)
+        .append(this.getString(R.string.year))
+        .append(' ')
+        .append(month + 1)
+        .append(this.getString(R.string.month));
+        appBarTitle.setText(sb.toString());
     }
 
     @Override
@@ -177,8 +255,12 @@ public class ScheduleActivity extends AppCompatActivity
             FragmentTransaction ft = this.fgm.beginTransaction();
             this.schFrg = (Fragment) new ScheduleListFragment();
             boolean hasSch = false;
-            ScheduleDataManager.ScheduleData sch = null;
+            ArrayList<ScheduleDataManager.ScheduleData> schList = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+
             for(String s : this.monthlyList){
+                ScheduleDataManager.ScheduleData sch;
+                Log.d(this.getClass().getName(), "monthly schedule " + s);
                 if((sch = this.dm.getData(s)) != null){
                     Calendar cBegin = Calendar.getInstance();
                     cBegin.setTime(new Date(sch.scheduleBegin));
@@ -186,20 +268,26 @@ public class ScheduleActivity extends AppCompatActivity
                     cEnd.setTime(new Date(sch.scheduleEnd));
                     int date = c.get(Calendar.DAY_OF_MONTH);
                     if(date >= cBegin.get(Calendar.DAY_OF_MONTH) && date <= cEnd.get(Calendar.DAY_OF_MONTH)){
-                        break;
+                        schList.add(sch);
+                        sb.append(sch.toString());
+                        sb.append('\n');
                     }
                 }
             }
+
             Bundle arg = new Bundle();
-            if(sch != null) {
-                Log.d(this.getClass().getName(), "loaded schedule json : \n" + sch.toString());
-                arg.putSerializable(ScheduleFragment.ARG_KEY_SCHEDULE, sch);
-            } else{
-                arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
+            if(schList.size() > 0) {
+                Log.d(this.getClass().getName(), "loaded schedule json : " + sb.toString());
             }
+
+            arg.putSerializable(ScheduleListFragment.ARG_KEY_SCHEDULE_LIST, schList);
+            arg.putLong(ScheduleFragment.ARG_KEY_TODAY, c.getTimeInMillis());
+
             schFrg.setArguments(arg);
-            ft.add(R.id.frame_schedule, this.schFrg);
-            ft.addToBackStack(null);
+            String fragmentTag = this.schFrg.getClass().getSimpleName();
+            ft.replace(R.id.frame_schedule, this.schFrg);
+            ft.addToBackStack(fragmentTag);
+            this.schFrg.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft.commit();
         }
     }

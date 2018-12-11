@@ -31,9 +31,9 @@ public class ScheduleColorActivity extends AppCompatActivity{
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_red_circle_padding, ScheduleDataManager.TableColor.RED));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_pink_circle, ScheduleDataManager.TableColor.PINK));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_yellow_circle, ScheduleDataManager.TableColor.YELLOW));
-        colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_yellowgreen_circle, ScheduleDataManager.TableColor.LIGHTGREEN));
+        colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_yellowgreen_circle, ScheduleDataManager.TableColor.YELLOWGREEN));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_green_circle, ScheduleDataManager.TableColor.GREEN));
-        colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_mint_circle, ScheduleDataManager.TableColor.CYAN));
+        colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_mint_circle, ScheduleDataManager.TableColor.MINT));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_skyblue_circle, ScheduleDataManager.TableColor.SKYBLUE));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_blue_circle, ScheduleDataManager.TableColor.BLUE));
         colorInfoArrayList.add(new SettingsColorInfo(R.drawable.ic_purple_circle, ScheduleDataManager.TableColor.PURPLE));

@@ -10,6 +10,8 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
+
     <TextView
         android:id="@+id/chart_date"
         android:layout_width="match_parent"
@@ -27,6 +29,18 @@
             android:layout_height="290dp">
 
         </com.github.mikephil.charting.charts.PieChart>
+
+    <Button
+        android:id="@+id/ChartTypeToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/rounded_rectangle"
+        android:backgroundTint="#095e96"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chart_recycler"

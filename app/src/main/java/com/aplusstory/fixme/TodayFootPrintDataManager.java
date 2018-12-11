@@ -18,7 +18,8 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
     }
 
     public static final double DISTANCE_THRESHOLD = CurrentLocationManager.DISTANCE_THRESHOLD;
-    public static final long INTERVAL_THRESHOLD = 10 * 60 * 1000;
+    public static final double PATH_THRESHOLD = CurrentLocationManager.DISTANCE_THRESHOLD * 2;
+    public static final long INTERVAL_THRESHOLD = 5 * 60 * 1000;
 
     private LocationFileManager fm = null;
     private Context context;
@@ -64,12 +65,13 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
 
         LocationDataManager.LocationData[] arr = this.fm.getLocationList(this.today.getTime()).locaArr;
         LocationDataManager.LocationData lastLoca = null;
-        LocationDataManager.LocationData pathBegin = null;
-        LocationDataManager.LocationData pathEnd = null;
+        LocationDataManager.LocationData pathBeginLoca = null;
+        LocationDataManager.LocationData pathEndLoca = null;
         ArrayList<LocationDataManager.LocationData> bufPath = null;
         LocationDataManager.PathData path = null;
-        FootPrintData data = null;
-
+        FootPrintData pointData = null;
+        FootPrintData pathData = null;
+        double pathDistance = -1.0;
         long tBegin = 0, tEnd = 0;
 
         for(LocationDataManager.LocationData loca : arr){
@@ -84,18 +86,23 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
                             + ", distance : " + lastLoca.distanceTo(loca));
                 if(loca.distanceTo(lastLoca) > DISTANCE_THRESHOLD){
                     tEnd = loca.datetime;
-                    data = new FootPrintData(tBegin, tEnd, lastLoca);
-                    if(this.namer != null){
-                        data.name = this.namer.getName(lastLoca);
+                    if(pointData == null) {
+                        pointData = new FootPrintData(tBegin, tEnd, lastLoca);
+                        if(this.namer != null){
+                            pointData.name = this.namer.getName(lastLoca);
+                        }
+                    }else {
+                        pointData.dtEnd = tEnd;
                     }
-                    this.dataArr.add(data);
-                    Log.d(this.getClass().getName(), "footprint data : " + data.toString());
+
+                    Log.d(this.getClass().getName(), "footprint data : " + pointData.toString());
+
                     bufPath = new ArrayList<>();
-                    tBegin = tEnd;
                     bufPath.add(loca);
-                    pathBegin = loca;
-                    pathEnd =loca;
-                    Log.d(this.getClass().getName(), "path begin on : " + pathBegin.toString());
+                    pathBeginLoca = loca;
+                    pathEndLoca =loca;
+
+                    Log.d(this.getClass().getName(), "path begin on : " + pathBeginLoca.toString());
                 } else {
                     tEnd = loca.datetime;
                     Log.d(this.getClass().getName(), "nearby location");
@@ -103,38 +110,38 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
             } else {
                 Log.d(this.getClass().getName(),
                         "path location : " + loca.toString()
-                                +   ", distance : " + pathEnd.distanceTo(loca));
-                if(loca.datetime - pathEnd.datetime >= INTERVAL_THRESHOLD
-                        && loca.distanceTo(pathEnd) <= DISTANCE_THRESHOLD){
-                    tEnd = pathEnd.datetime;
-                    Log.d(this.getClass().getName(), "path ends on : " + pathEnd.toString());
+                                +   ", distance : " + pathEndLoca.distanceTo(loca));
+                if(loca.datetime - pathEndLoca.datetime >= INTERVAL_THRESHOLD
+                        && loca.distanceTo(pathEndLoca) <= DISTANCE_THRESHOLD){
+
+                    Log.d(this.getClass().getName(), "path ends on : " + pathEndLoca.toString());
                     path = new LocationDataManager.PathData(bufPath);
-                    double pathDistance = path.distance();
+                    pathDistance = path.distance();
                     Log.d(this.getClass().getName(), "path length " + path.distance());
-                    if(pathDistance >= DISTANCE_THRESHOLD) {
-                        data = new FootPrintData(tBegin, tEnd, path);
-                        Log.d(this.getClass().getName(), "footprint data : " + data.toString());
+                    if(pathDistance >= PATH_THRESHOLD) {
+                        pathData = new FootPrintData(pointData.dtEnd, loca.datetime, path);
+                        Log.d(this.getClass().getName(), "footprint data : " + pathData.toString());
                         if(this.namer != null){
-                            data.name = this.namer.getName(path);
+                            pathData.name = this.namer.getName(path);
                         }
-                        this.dataArr.add(data);
-                        lastLoca = null;
+                        this.dataArr.add(pointData);
+                        pointData = null;
+                        this.dataArr.add(pathData);
+                        lastLoca = loca;
                     } else {
                         Log.d(this.getClass().getName(), "path too short");
-                        tEnd = lastLoca.datetime;
                     }
                     bufPath = null;
-                    tBegin = tEnd;
-                }else if(loca.distanceTo(pathEnd) >= DISTANCE_THRESHOLD){
-                    bufPath.add(loca);
+                    tBegin = loca.datetime;
                     tEnd = loca.datetime;
+                }else if(loca.distanceTo(pathEndLoca) >= DISTANCE_THRESHOLD){
+                    bufPath.add(loca);
 //                    Log.d(this.getClass().getName(),
 //                            "path location : " + loca.toString()
 //                            +   ", distance : " +pathEnd.distanceTo(loca));
-                    pathEnd = loca;
+                    pathEndLoca = loca;
 
                 }else{
-                    tEnd = loca.datetime;
                     Log.d(this.getClass().getName(), "nearby location");
                 }
 
@@ -159,21 +166,47 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
             }
         }
 
+        long now = System.currentTimeMillis();
+        if(now - this.today.getTimeInMillis() > 24 * 60 * 60 * 1000){
+            Calendar c = (Calendar) this.today.clone();
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 59);
+            now = c.getTimeInMillis();
+        }
+
+
         if(bufPath != null){
             path = new LocationDataManager.PathData(bufPath);
-            data = new FootPrintData(tBegin, tEnd, path);
-            if(this.namer != null){
-                data.name = this.namer.getName(path);
+            pathDistance = path.distance();
+            Log.d(this.getClass().getName(), "path ends on : " + pathEndLoca.toString());
+            Log.d(this.getClass().getName(), "path length " + path.distance());
+            if(pathDistance >= PATH_THRESHOLD) {
+                pathData = new FootPrintData(pointData.dtEnd, now, path);
+                Log.d(this.getClass().getName(), "footprint data : " + pathData.toString());
+                if(this.namer != null){
+                    pathData.name = this.namer.getName(path);
+                }
+                this.dataArr.add(pointData);
+                pointData = null;
+                this.dataArr.add(pathData);
+                lastLoca = null;
+            } else {
+                Log.d(this.getClass().getName(), "path too short");
+                tEnd = lastLoca.datetime;
+                bufPath = null;
             }
-            this.dataArr.add(data);
-            Log.d(this.getClass().getName(), "footprint data : " + data.toString());
-        } else if(lastLoca != null){
-            data = new FootPrintData(lastLoca.datetime, System.currentTimeMillis(), lastLoca);
-            if(this.namer != null){
-                data.name = this.namer.getName(lastLoca);
+        }
+
+        if(bufPath == null && (lastLoca != null || pointData != null)){
+            if(lastLoca != null && pointData == null) {
+                pointData = new FootPrintData(lastLoca.datetime, now, lastLoca);
+                if (this.namer != null) {
+                    pointData.name = this.namer.getName(lastLoca);
+                }
             }
-            this.dataArr.add(data);
-            Log.d(this.getClass().getName(), "footprint data : " + data.toString());
+            this.dataArr.add(pointData);
+            Log.d(this.getClass().getName(), "footprint data : " + pointData.toString());
         }
     }
 

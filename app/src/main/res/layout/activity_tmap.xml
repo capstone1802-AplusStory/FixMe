@@ -4,11 +4,16 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <fragment
-        android:id="@+id/mapfragment"
-        android:name="com.aplusstory.fixme.MapFragment"
+
+    <FrameLayout
+        android:id="@+id/map_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+    <!--<fragment-->
+        <!--android:id="@+id/mapfragment"-->
+        <!--android:name="com.aplusstory.fixme.MapFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 
 </LinearLayout>

@@ -46,10 +46,21 @@ public class ChartRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ColorRecyclerViewHolder colorRecyclerViewHolder = (ColorRecyclerViewHolder) viewHolder;
+        ChartInfo info = this.chartInfoArrayList.get(i);
+        String percentText = info.percentData + "%";
+        String locationText;
+        if(info.locationName.length() > 10){
+            StringBuilder sb = new StringBuilder(info.locationName);
+            locationText = sb.substring(0, 10) + "...";
+        } else {
+            locationText = info.locationName;
+        }
 
-        colorRecyclerViewHolder.percentText.setText(chartInfoArrayList.get(i).percentData+"%");
-        colorRecyclerViewHolder.locationText.setText(chartInfoArrayList.get(i).locationName);
-        colorRecyclerViewHolder.timeText.setText(chartInfoArrayList.get(i).timeData);
+        String timeText = info.timeData;
+
+        colorRecyclerViewHolder.percentText.setText(percentText);
+        colorRecyclerViewHolder.locationText.setText(locationText);
+        colorRecyclerViewHolder.timeText.setText(timeText);
 
         GradientDrawable textViewBackGround = (GradientDrawable)colorRecyclerViewHolder.percentText.getBackground();
 

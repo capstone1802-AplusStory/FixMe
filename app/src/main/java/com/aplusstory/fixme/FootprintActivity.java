@@ -13,15 +13,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import com.skt.Tmap.TMapData;
 
 import java.util.List;
 
 import com.aplusstory.fixme.cal.OneDayView;
+import com.skt.Tmap.TMapTapi;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,10 +39,13 @@ public class FootprintActivity extends AppCompatActivity
     Toolbar toolbar;
     Fragment fragment;
     private FragmentManager fragmentManager = null;
-
     private TodayFootPrintDataManager dm = null;
     private Menu menuHide;
     private Date today = null;
+    private TMapTapi tmapAPI = null;
+    boolean auth = false;
+
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +105,35 @@ public class FootprintActivity extends AppCompatActivity
             this.dm.setNamer(this);
         }
 
+        if(this.tmapAPI == null){
+            this.tmapAPI =  new TMapTapi(this);
+            this.tmapAPI.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback() {
+                @Override
+                public void SKTMapApikeySucceed() {
+                    synchronized (FootprintActivity.this){
+                        FootprintActivity.this.auth = true;
+                    }
+                }
+
+                @Override
+                public void SKTMapApikeyFailed(String s) {
+                    Log.d(FootprintActivity.this.getClass().getName(), s);
+                }
+            });
+        }
+        this.tmapAPI.setSKTMapAuthentication(this.getString(R.string.tmap_api_key));
+
         fragment = new PieChartFragment();
         Bundle bd = new Bundle();
         ArrayList<FootprintDataManager.FootPrintData> dataArr = this.dm.getData();
         bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
         bd.putLong(PieChartFragment.KEY_DATE, today.getTime());
         fragment.setArguments(bd);
+        String fragmentTag = fragment.getClass().getSimpleName();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.footprint_frame, fragment);
+        fragmentTransaction.replace(R.id.footprint_frame, fragment);
+        fragmentTransaction.addToBackStack(fragmentTag);
+        fragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.commit();
     }
 
@@ -139,7 +166,6 @@ public class FootprintActivity extends AppCompatActivity
                     String fragmentTag = yearlyCalendarFragment.getClass().getSimpleName();
                     FragmentTransaction ft = this.fragmentManager.beginTransaction();
                     ft.replace(R.id.footprint_frame, yearlyCalendarFragment);
-
                     ft.addToBackStack(fragmentTag);
                     yearlyCalendarFragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
@@ -179,7 +205,38 @@ public class FootprintActivity extends AppCompatActivity
     @Override
     public String getName(LocationDataManager.LocationData location) {
         //TODO : if there's favorite with the location, get its name; otherwise, get address of it.
-        return null;
+        Double lat = location.latitude;
+        Double lon = location.longitude;
+        String address = null;
+        this.address = null;
+        TMapData tmapData = new TMapData();
+
+        tmapData.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
+            @Override
+            public void onConvertToGPSToAddress(String strAddress) {
+                Log.d(this.getClass().getName(), "location address : " + strAddress);
+                synchronized (FootprintActivity.this) {
+                   FootprintActivity.this.address = strAddress;
+                }
+            }
+        });
+
+        long timeout = System.currentTimeMillis();
+        while(this.address == null && System.currentTimeMillis() - timeout < 5000){
+            try {
+                Thread.sleep(500);
+            }catch (InterruptedException e){
+                Log.d(this.getClass().getName(), e.getMessage());
+                break;
+            }
+        }
+//        try{
+//            address = tmapData.convertGpsToAddress(lat, lon);
+//        }catch(Exception e){
+//            Log.d(this.getClass().getName(), e.toString());
+//        }
+        Log.d(this.getClass().getName(), "location name : " + this.address);
+        return this.address;
     }
 
     @Override
@@ -217,8 +274,11 @@ public class FootprintActivity extends AppCompatActivity
         bd.putSerializable(FootprintDataManager.KEY_DATA, dataArr);
         bd.putLong(PieChartFragment.KEY_DATE, date.getTime());
         fragment.setArguments(bd);
+        String fragmentTag = "mainChart";
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.footprint_frame, fragment);
+        fragmentTransaction.addToBackStack(fragmentTag);
+        fragment.getFragmentManager().popBackStack(fragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentTransaction.commit();
     }
 }

@@ -1,5 +1,6 @@
 package com.aplusstory.fixme;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.jetbrains.annotations.Nullable;
@@ -7,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.CharArrayReader;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,7 +38,7 @@ public interface ScheduleDataManager extends UserDataManager{
         public static final String KEY_ALARM_INTERVAL_CODE = "alarm_interval";
         public static final String KEY_TABLE_COLOR_CODE = "table_color";
 
-        public static final String DATE_FORMAT_GMT = "yyyy-MM-dd HH:mm:ss";
+        public static final String DATE_FORMAT_GMT = "yyyy-MM-ddHH:mm:ss";
 
         String name = null;
         boolean isRepeated = false;
@@ -54,7 +56,7 @@ public interface ScheduleDataManager extends UserDataManager{
         String memo = null;
         boolean hasAlarm = false;
         int alarmInterval = -1;
-        int tableColor = 0;
+        int tableColor = -1;
 
         public ScheduleData(){
 
@@ -89,14 +91,14 @@ public interface ScheduleDataManager extends UserDataManager{
         @Nullable
         public static ScheduleData parseJSON(JSONObject json){
             ScheduleData sch = new ScheduleData();
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US);
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT);
 
             try{
                 sch.name = json.getString(KEY_NAME);
                 sch.isRepeated = json.getBoolean(KEY_REPEATED);
                 if(sch.isRepeated) {
                     sch.repeatType = json.getInt(KEY_REPEAT_TYPE_CODE);
-                    if (sch.isRepeated && sch.repeatType == RepeatDuration.REPEAT_DAYLY) {
+                    if (sch.isRepeated && sch.repeatType == RepeatDuration.REPEAT_WEEKLY) {
                         sch.repeatDayOfWeek[0] = true;
                         JSONArray arr = json.getJSONArray(KEY_REPEAT_DAY_OF_WEEK);
                         for (int i = 0; i < arr.length(); i++) {
@@ -105,33 +107,36 @@ public interface ScheduleDataManager extends UserDataManager{
                     }
                     try {
                         sch.repeatEnd = df.parse(json.getString(KEY_REPEAT_END)).getTime();
-                    }catch(ParseException e){
+                    } catch (ParseException e) {
                         Log.d(ScheduleData.class.getName(), e.toString());
                     }
-                    sch.scheduleBegin = df.parse(json.getString(KEY_DATE_SCHEDULE_BEGIN)).getTime();
-                    sch.scheduleEnd = df.parse(json.getString(KEY_DATE_SCHEDULE_END)).getTime();
-                    if(json.has(KEY_LOCATION)){
-                        sch.hasLocation = true;
-                        LocationDataManager.LocationData loca =
-                        LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION));
-                        if(loca != null) {
-                            sch.latitude = loca.latitude;
-                            sch.longitude = loca.longitude;
+                }
+                sch.scheduleBegin = df.parse(json.getString(KEY_DATE_SCHEDULE_BEGIN)).getTime();
+                sch.scheduleEnd = df.parse(json.getString(KEY_DATE_SCHEDULE_END)).getTime();
+                if(json.has(KEY_LOCATION)){
+                    sch.hasLocation = true;
+                    LocationDataManager.LocationData loca =
+                    LocationDataManager.LocationData.parseJSON(json.getJSONObject(KEY_LOCATION), new SimpleDateFormat(DATE_FORMAT_GMT));
+                    if(loca != null) {
+                        sch.latitude = loca.latitude;
+                        sch.longitude = loca.longitude;
+                        if(json.has(KEY_LOCATION_TAG)) {
                             sch.locationAddress = json.getString(KEY_LOCATION_TAG);
                         }
                     }
-
-                    sch.memo = json.getString(KEY_MEMO);
-                    if(json.has(KEY_ALARM_INTERVAL_CODE)) {
-                        sch.hasAlarm = true;
-                        sch.alarmInterval = json.getInt(KEY_ALARM_INTERVAL_CODE);
-                    }
-                    sch.tableColor = json.getInt(KEY_TABLE_COLOR_CODE);
                 }
+
+                sch.memo = json.getString(KEY_MEMO);
+                if(json.has(KEY_ALARM_INTERVAL_CODE)) {
+                    sch.hasAlarm = true;
+                    sch.alarmInterval = json.getInt(KEY_ALARM_INTERVAL_CODE);
+                }
+                sch.tableColor = json.getInt(KEY_TABLE_COLOR_CODE);
             } catch(Exception e){
                 Log.d(ScheduleData.class.getName(), e.toString());
                 sch = null;
             }
+
 
             return sch;
         }
@@ -139,7 +144,7 @@ public interface ScheduleDataManager extends UserDataManager{
         @Nullable
         public JSONObject JSONify(){
             JSONObject json = new JSONObject();
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US);
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT);
 
             try {
                 json.put(KEY_NAME, this.name);
@@ -160,8 +165,8 @@ public interface ScheduleDataManager extends UserDataManager{
                     }
                     json.put(KEY_REPEAT_END, df.format(new Date(this.repeatEnd)));
                 }
-                json.put(KEY_DATE_SCHEDULE_BEGIN, df.format(new Date(this.scheduleBegin)));
-                json.put(KEY_DATE_SCHEDULE_END, df.format(new Date(this.scheduleEnd)));
+                json.put(KEY_DATE_SCHEDULE_BEGIN, df.format(this.scheduleBegin));
+                json.put(KEY_DATE_SCHEDULE_END, df.format(this.scheduleEnd));
                 if(this.hasLocation){
                     LocationDataManager.LocationData loca;
                     loca = new LocationDataManager.LocationData(
@@ -192,8 +197,6 @@ public interface ScheduleDataManager extends UserDataManager{
             boolean rt = false;
 
             if(this.scheduleBegin > this.scheduleEnd){
-                rt = false;
-            } else if(this.repeatType < RepeatDuration.REPEAT_DAYLY || this.repeatType > RepeatDuration.REPEAT_YEARLY ){
                 rt = false;
             } else if(this.name == null || this.name.length() == 0){
                 rt = false;
@@ -321,6 +324,44 @@ public interface ScheduleDataManager extends UserDataManager{
                     return -1;
             }
         }
+
+        public static String getTimeText(int alarmTimeCode){
+            switch (alarmTimeCode){
+                case INTERVAL_AMINUTE:
+                    return "1분 전";
+                case INTERVAL_FIVEMINUTE:
+                    return "5분 전";
+                case INTERVAL_TENMINUTE:
+                    return "10분 전";
+                case INTERVAL_THIRTYMINUTE:
+                    return "30분 전";
+                case INTERVAL_ANHOUR:
+                    return "1시간 전";
+                case INTERVAL_SIXHOUR:
+                    return "6시간 전";
+                default:
+                    return "";
+            }
+        }
+
+        public static String getTimeText(Context context, int alarmTimeCode){
+            switch (alarmTimeCode){
+                case INTERVAL_AMINUTE:
+                    return "1분 전";
+                case INTERVAL_FIVEMINUTE:
+                    return "5분 전";
+                case INTERVAL_TENMINUTE:
+                    return "10분 전";
+                case INTERVAL_THIRTYMINUTE:
+                    return "30분 전";
+                case INTERVAL_ANHOUR:
+                    return "1시간 전";
+                case INTERVAL_SIXHOUR:
+                    return "6시간 전";
+                default:
+                    return "";
+            }
+        }
     }
 
     public static class RepeatDuration {
@@ -328,19 +369,107 @@ public interface ScheduleDataManager extends UserDataManager{
         public static final int REPEAT_WEEKLY = 1;
         public static final int REPEAT_MONTHLY = 2;
         public static final int REPEAT_YEARLY = 3;
+
+        public static String getRepeatitionText(int repeatCode, boolean[] weeklyArr){
+            StringBuilder sb = new StringBuilder();
+            switch(repeatCode){
+                case REPEAT_DAYLY:
+                    sb.append("Every Day");
+                    break;
+                case REPEAT_WEEKLY:
+                    String tmpStr = null;
+                    boolean cond = false;
+                    if(weeklyArr != null && weeklyArr.length == 8) {
+                        for(int i = 0; i < 8; i++){
+                            switch (i){
+                                case 0:
+                                    tmpStr = "Every";
+                                    break;
+                                case 1:
+                                    tmpStr ="Sun";
+                                    break;
+                                case 2:
+                                    tmpStr = "Mon";
+                                    break;
+                                case 3:
+                                    tmpStr = "Tue";
+                                    break;
+                                case 4:
+                                    tmpStr = "Wed";
+                                    break;
+                                case 5:
+                                    tmpStr = "Thu";
+                                    break;
+                                case 6:
+                                    tmpStr = "Fri";
+                                    break;
+                                case 7:
+                                    tmpStr = "Sat";
+                                    break;
+                            }
+                            if(weeklyArr[i]){
+                                sb.append(tmpStr);
+                            } else if(i == 0){
+                                break;
+                            } else{
+                                cond = true;
+                            }
+                        }
+                    }
+
+                    if(!cond){
+
+                    }
+                    break;
+                case REPEAT_MONTHLY:
+                    sb.append("Every Month");
+                    break;
+                case REPEAT_YEARLY:
+                    sb.append("Every Year");
+                    break;
+                default:
+                    sb.append("None");
+            }
+
+
+            return sb.toString();
+        }
+
+        public static String getRepeatitionText(Context context, int repeatCode, boolean[] weeklyArr){
+            StringBuilder sb = new StringBuilder();
+            switch(repeatCode){
+                case REPEAT_DAYLY:
+                    sb.append("");
+                    break;
+                case REPEAT_WEEKLY:
+                    sb.append("");
+                    break;
+                case REPEAT_MONTHLY:
+                    sb.append("");
+                    break;
+                case REPEAT_YEARLY:
+                    sb.append("");
+                    break;
+                default:
+                    sb.append("");
+            }
+
+
+            return sb.toString();
+        }
     }
 
     public static class TableColor {
         public static final int WHITE = 0;
-        public static final int LIGHTGREEN = 1;
-        public static final int SKYBLUE = 2;
-        public static final int PINK = 3;
-        public static final int YELLOW = 4;
-        public static final int PURPLE = 5;
-        public static final int RED = 6;
-        public static final int CYAN = 7;
+        public static final int RED = 1;
+        public static final int PINK = 2;
+        public static final int YELLOW = 3;
+        public static final int YELLOWGREEN = 4;
+        public static final int GREEN = 5;
+        public static final int MINT = 6;
+        public static final int SKYBLUE = 7;
         public static final int BLUE = 8;
-        public static final int GREEN = 9;
+        public static final int PURPLE = 9;
         public static final int BLACK = 10;
 
         public static String getColorText(int colorCode){
@@ -359,11 +488,40 @@ public interface ScheduleDataManager extends UserDataManager{
                     return "purple";
                 case PINK:
                     return "pink";
-                case CYAN:
-                    return "cyan";
+                case MINT:
+                    return "mint";
                 case SKYBLUE:
                     return "skyblue";
-                case LIGHTGREEN:
+                case YELLOWGREEN:
+                    return "yellowgreen";
+                case WHITE:
+                    return "white";
+                default:
+                    return "";
+            }
+        }
+
+        public static String getColorText(Context context, int colorCode){
+            switch (colorCode){
+                case BLACK:
+                    return "black";
+                case RED:
+                    return "red";
+                case BLUE:
+                    return "blue";
+                case GREEN:
+                    return "green";
+                case YELLOW:
+                    return "yellow";
+                case PURPLE:
+                    return "purple";
+                case PINK:
+                    return "pink";
+                case MINT:
+                    return "mint";
+                case SKYBLUE:
+                    return "skyblue";
+                case YELLOWGREEN:
                     return "lightGreen";
                 case WHITE:
                     return "white";

@@ -150,6 +150,19 @@ public class LocationFileManager implements FileManager {
         return sb.toString();
     }
 
+    public static LocationDataManager.LocationData getCurrentLocation(Context context){
+        LocationDataManager.LocationData rt = null;
+        SharedPreferences sp = context.getSharedPreferences(FILENAME_CURRENT_LOCATION, 0);
+        if(sp != null) {
+            rt = new LocationDataManager.LocationData(
+                    sp.getString(LocationDataManager.LocationData.KEY_DATETIME, "-1")
+                    , Double.parseDouble(sp.getString(LocationDataManager.LocationData.KEY_LATITUDE, "0.0"))
+                    , Double.parseDouble(sp.getString(LocationDataManager.LocationData.KEY_LONGITUDE, "0.0"))
+            );
+        }
+            return rt;
+    }
+
     public LocationDataManager.LocationData getCurrentLocation(){
         LocationDataManager.LocationData rt = null;
         if(this.sp != null){

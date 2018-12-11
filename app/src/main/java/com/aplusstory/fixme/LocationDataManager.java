@@ -1,5 +1,7 @@
 package com.aplusstory.fixme;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,7 +35,12 @@ public interface LocationDataManager {
 
         @Nullable
         public static LocationData parseJSON(JSONObject json){
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US);
+            return LocationData.parseJSON(json, new SimpleDateFormat(DATE_FORMAT_GMT, Locale.US));
+        }
+
+        @Nullable
+        public static LocationData parseJSON(JSONObject json, DateFormat dateFormat){
+            DateFormat df = dateFormat;
             Date date = null;
             long datetime = -1;
             double latitude = 0.0;
@@ -46,9 +53,8 @@ public interface LocationDataManager {
                longtitude = json.getDouble(KEY_LONGITUDE);
                date = df.parse(dateTimeStr);
                datetime = date.getTime();
-            } catch(JSONException e){
-                return null;
-            } catch (ParseException e){
+            } catch(Exception e){
+                Log.d(LocationData.class.getName(), e.toString());
                 return null;
             }
             return new LocationData(datetime, latitude, longtitude);

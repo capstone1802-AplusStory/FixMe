@@ -1,6 +1,7 @@
 package com.aplusstory.fixme;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,15 +9,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class TMapActivity extends AppCompatActivity implements com.aplusstory.fixme.MapFragment.OnFragmentInteractionListener {
+    public static final String EXTRA_NAME_ARGUMENT = "location_result";
+
     FrameLayout fragmentFrame;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +30,33 @@ public class TMapActivity extends AppCompatActivity implements com.aplusstory.fi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmap);
 
-
+        Intent it = this.getIntent();
+        Bundle bd = null;
+        if(it != null && it.hasExtra(EXTRA_NAME_ARGUMENT)){
+            bd = it.getBundleExtra(EXTRA_NAME_ARGUMENT);
+        }
 
 //        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment);
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.mapfragment, mapFragment);
-//        fragmentTransaction.commit();
+        MapFragment mapFragment = new MapFragment();
+        if(bd != null) {
+            mapFragment.setArguments(new Bundle(bd));
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.map_layout, mapFragment);
+        fragmentTransaction.commit();
 
 
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentInteraction(Bundle bd) {
+        if(bd != null){
+            Bundle arg = new Bundle(bd);
+            Intent it = new Intent();
+            it.putExtra(EXTRA_NAME_ARGUMENT, bd);
+            this.setResult(RESULT_OK, it);
+            this.finish();
+        }
     }
 }

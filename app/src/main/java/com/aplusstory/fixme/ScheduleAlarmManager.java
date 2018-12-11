@@ -28,7 +28,7 @@ public class ScheduleAlarmManager extends Service {
 //    public static final String KEY_WEEK_REPEATON = "weekly_repeation";
 //    public static final String KEY_REPEATION_END = "repeation_end";
 
-    public static final double RANGE_ALARM = 25.0;
+    public static final double RANGE_ALARM = 50.0;
     public static final Class ALARM_ACTIVITY = FullAlarmActivity.class;//set the alarm activity here
 
 
@@ -42,10 +42,12 @@ public class ScheduleAlarmManager extends Service {
             Log.d(this.getClass().getName(), "no schedule");
         }
 
-        if(sch != null){
+        if(sch != null && sch.hasLocation){
             loca = new LocationDataManager.LocationData(sch.scheduleBegin, sch.latitude, sch.longitude);
         } else if(intent.hasExtra(KEY_LOCATON)){
             loca = (LocationDataManager.LocationData)intent.getBundleExtra(KEY_LOCATON).getSerializable(KEY_LOCATON);
+        } else if(sch != null && !sch.hasLocation){
+            loca = null;
         }
 
         SharedPreferences spCrnLoca = this.getSharedPreferences(LocationFileManager.FILENAME_CURRENT_LOCATION,0);
@@ -66,7 +68,22 @@ public class ScheduleAlarmManager extends Service {
                         c.add(Calendar.DATE, +1);
                         break;
                     case ScheduleDataManager.RepeatDuration.REPEAT_WEEKLY:
-                        c.add(Calendar.WEEK_OF_MONTH, +1);
+                        int delta = 7;
+                        int today = c.get(Calendar.DAY_OF_WEEK);
+                        int i = today;
+
+                        do{
+                            if(sch.repeatDayOfWeek[i + 1]){
+                                delta = (i - today) % 7;
+                                break;
+                            }
+                            i++;
+                            if(i > 7){
+                                i = 0;
+                            }
+                        }while(i == today);
+
+                        c.add(Calendar.DAY_OF_MONTH, +delta);
                         break;
                     case ScheduleDataManager.RepeatDuration.REPEAT_MONTHLY:
                         c.add(Calendar.MONTH, +1);
@@ -92,10 +109,18 @@ public class ScheduleAlarmManager extends Service {
                     + "\n schedule location : "
                     + loca.toString());
             Intent it = new Intent(this, ALARM_ACTIVITY);
+            if(sch != null){
+                Bundle bd = new Bundle();
+                bd.putSerializable(KEY_SCHEDULE, sch);
+                it.putExtra(KEY_SCHEDULE, bd);
+            }
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(it);
         } else {
             Log.d(this.getClass().getName(), "no location");
+        }
+        if(sch != null){
+            Log.d(this.getClass().getName(), "alarm schedule : " + sch.toString());
         }
 
         return START_NOT_STICKY;

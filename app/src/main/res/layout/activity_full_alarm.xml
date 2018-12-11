@@ -32,7 +32,7 @@
             android:textSize="50sp" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/remaining_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

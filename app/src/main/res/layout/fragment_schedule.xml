@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="시간을 설정해주세요"
                 android:textSize="18sp" />
 
             <ImageButton
@@ -89,7 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="장소를 지정해주세요"
+                android:maxLength="13"
                 android:textSize="18sp" />
 
             <ImageButton
@@ -123,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="반복주기를 설정해주세요"
                 android:textSize="18sp" />
 
             <ImageButton
@@ -156,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="알람시기를 설정해주세요"
                 android:textSize="18sp" />
 
             <ImageButton
@@ -190,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="색상을 선택해주세요"
                 android:textSize="18sp" />
 
             <ImageButton
@@ -229,6 +230,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:ems="10"
+        android:maxLines="1"
         android:inputType="textMultiLine" />
 
     <LinearLayout

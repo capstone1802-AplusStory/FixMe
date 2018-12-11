@@ -55,7 +55,6 @@
     <string name="weekly">주간</string>
     <string name="monthly">월간</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="month">월</string>
 
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -74,4 +73,38 @@
     <string name="drawer_header_text">Drawer Header</string>
     <string name="second_activity_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consectetur diam id aliquam scelerisque. Donec ultrices lacus vel dignissim pharetra. Vivamus pharetra augue quis rhoncus placerat. Sed ultricies at risus non cursus. Nam rutrum leo nec placerat consectetur. Vestibulum feugiat eleifend diam, nec interdum augue tincidunt sit amet. Praesent feugiat est auctor lacus consectetur, vitae pellentesque dolor laoreet.</string>
     <string name="title_activity_second">SecondActivity</string>
+
+    <string name="year">년</string>
+    <string name="month">월</string>
+    <string name="day">일</string>
+    <string name="hour">시</string>
+    <string name="hour_period">시간</string>
+    <string name="minute">분</string>
+    <string name="second">초</string>
+    <string name="less_then_a_minute">1분 미만</string>
+
+    <string name="remaining">남음</string>
+    <string name="timesup">정각</string>
+
+    <string name="meter">미터</string>
+
+
+    <string name="repeat_type_none">없음</string>
+    <string name="repeat_type_daily">매일</string>
+    <string name="repeat_type_weekly">매주</string>
+    <string name="repeat_type_monthly">매달</string>
+    <string name="repeat_type_yearly">매년</string>
+
+    <string name="sun">일</string>
+    <string name="mon">월</string>
+    <string name="tue">화</string>
+    <string name="wed">수</string>
+    <string name="thu">목</string>
+    <string name="fri">금</string>
+    <string name="sat">토</string>
+
+    <string name="button_footprint_to_timechart">시간순 보기</string>
+    <string name="button_footprint_to_ratiochart">비율순 보기</string>
+
+    <string name="tmap_api_key">426c8d5b-45a1-49af-8e3d-05f5f36d3b9e</string>
 </resources>

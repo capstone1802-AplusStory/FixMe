@@ -1,6 +1,7 @@
 package com.aplusstory.fixme;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,10 @@ import static com.skt.Tmap.MapUtils.mApiKey;
  */
 public class MapFragment extends Fragment
         implements TMapGpsManager.onLocationChangedCallback, View.OnClickListener {
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_ADDRESS = "address";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -111,6 +116,20 @@ public class MapFragment extends Fragment
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Bundle bd  = this.getArguments();
+        if(bd != null){
+            if(bd.containsKey(KEY_LATITUDE) && bd.containsKey(KEY_LONGITUDE)) {
+                double lat = bd.getDouble(KEY_LATITUDE, -1);
+                double lon = bd.getDouble(KEY_LONGITUDE, -1);
+                if(lat > 0.0 && lon > 0.0) {
+                    this.lat = lat;
+                    this.lon = lon;
+                    Log.d(this.getClass().getName(), "onCreate, lat : " + this.lat + "lon : " + lon);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -132,6 +151,10 @@ public class MapFragment extends Fragment
         linearLayout.addView(tmapview);
         tmapview.setSKTMapApiKey(mApiKey);
 
+        if(this.lat != null && this.lon != null) {
+            tmapview.setLocationPoint(this.lon, this.lat);
+            tmapview.setCenterPoint(this.lon, this.lat);
+        }
 
         /* 현재 보는 방향 */
         tmapview.setCompassMode(true);
@@ -177,6 +200,11 @@ public class MapFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //이곳에 데이터 인텐트에 담아서 넘겨주고, 확정 짓는 코드 필요
+                        Bundle bd = new Bundle();
+                        bd.putDouble(KEY_LATITUDE, lat);
+                        bd.putDouble(KEY_LONGITUDE, lon);
+                        bd.putString(KEY_ADDRESS, address);
+                        MapFragment.this.mListener.onFragmentInteraction(bd);
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -206,19 +234,24 @@ public class MapFragment extends Fragment
             public void onLongPressEvent(ArrayList<TMapMarkerItem> arrayList, ArrayList<TMapPOIItem> arrayList1, TMapPoint tMapPoint) {
                 lat = tMapPoint.getLatitude();
                 lon = tMapPoint.getLongitude();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 tmapdata.convertGpsToAddress(lat, lon, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String strAddress) {
                         address = strAddress;
                     }
                 });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                System.out.println(address);
                 builder.setTitle("이곳으로 지정하시겠습니까?\n"+address);
 
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //이곳에 데이터 인텐트에 담아서 넘겨주고, 확정 짓는 코드 필요
+                        Bundle bd = new Bundle();
+                        bd.putDouble(KEY_LATITUDE, lat);
+                        bd.putDouble(KEY_LONGITUDE, lon);
+                        bd.putString(KEY_ADDRESS, address);
+                        MapFragment.this.mListener.onFragmentInteraction(bd);
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -237,12 +270,6 @@ public class MapFragment extends Fragment
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -262,20 +289,10 @@ public class MapFragment extends Fragment
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Bundle bd);
     }
+
     //핀 찍을 data
     public void addPoint(String name, double latitude, double longitude, String address) {
         // 강남 //
@@ -362,10 +379,10 @@ public class MapFragment extends Fragment
 //                        addPoint("ㅁㄴㅇㄹ",37.570841, 126.985302,"ㅁㄴㅇㄹ"); // SKT타워
 //                        addPoint("ㅁㄴㅇㄹ",37.551135, 126.988205,"ㅁㄴㅇㄹ"); // N서울타워
 //                        addPoint("ㅁㄴㅇㄹ",37.579567, 126.976998,"ㅁㄴㅇㄹ"); // 경복궁
+                        addPoint("컴공인의 고향",37.503838,126.957054,"대한민국 서울특별시 동작구 흑석동 215-1");
                         TMapInfo tmapInfo = tmapview.getDisplayTMapInfo(m_tmapPoint);
                         tmapview.setCenterPoint(tmapInfo.getTMapPoint().getLongitude(),tmapInfo.getTMapPoint().getLatitude());
                         tmapview.setZoomLevel(tmapInfo.getTMapZoomLevel());
-                        Log.d(TAG, "으어어어"+tmapInfo.getTMapZoomLevel()+"\n"+tmapInfo.getTMapPoint());
                         showMarkerPoint();
                     }
                 });
