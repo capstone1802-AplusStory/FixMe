@@ -62,6 +62,19 @@ public class FavoriteDataManager {
         }
     }
 
+    public boolean remove(String name){
+        boolean rt = false;
+        try {
+            this.sp.edit().remove(name).commit();
+            this.refresh();
+            rt = true;
+        }catch (Exception e){
+            Log.d(this.getClass().getName(), e.toString());
+        }
+
+        return rt;
+    }
+
     public Set<String> getFavoriteList(){
         return this.favoList;
     }

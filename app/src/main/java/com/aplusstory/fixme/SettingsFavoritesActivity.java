@@ -44,18 +44,21 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
         }
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, favlist);
 
-
-
         listView = (ListView) findViewById(R.id.favList);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                SettingsFavoritesActivity that = SettingsFavoritesActivity.this;
                 Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
-                intent.putExtra("nickname", String.valueOf(listView.getItemAtPosition(position)));
+                String nickname = String.valueOf(listView.getItemAtPosition(position));
+                intent.putExtra("nickname", nickname);
                 intent.putExtra("location", "중앙대학교");
                 intent.putExtra("address", "서울특별시 동작구 흑석로 84");
-                startActivity(intent);
+//                if(that.dm != null && that.dm.getFavoriteList().contains(nickname)) {
+//                    intent.putExtra(FavoriteActivity.KEY_LOCATION_DATA, that.dm.getFavoriteLocation(nickname));
+//                }
+                startActivityForResult(intent, REQUEST_RESULT);
             }
         });
 
@@ -93,8 +96,20 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
                         this.arrayAdapter.clear();
                         this.favlist = new ArrayList<String>(this.dm.getFavoriteList());
                         this.arrayAdapter.addAll(favlist);
+                        this.arrayAdapter.notifyDataSetChanged();
                     }else {
                         arrayAdapter.add(adr);
+                    }
+                }
+
+                if(data.hasExtra(FavoriteActivity.EXTRA_NAME_ARGUMENT)
+                && data.getBooleanExtra(FavoriteActivity.EXTRA_NAME_ARGUMENT, false)) {
+                    if (this.dm != null) {
+                        this.dm.refresh();
+                        this.arrayAdapter.clear();
+                        this.favlist = new ArrayList<String>(this.dm.getFavoriteList());
+                        this.arrayAdapter.addAll(favlist);
+                        this.arrayAdapter.notifyDataSetChanged();
                     }
                 }
             }

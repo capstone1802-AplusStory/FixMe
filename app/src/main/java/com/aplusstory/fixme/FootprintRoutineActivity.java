@@ -31,6 +31,9 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
     TextView departureTextview;
     TextView totalLapse;
     TextView whenToWhen;
+
+    private LocationDataManager.PathData pathData = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +51,13 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
             moveBundle.putSerializable("MovementData",locaIntent.getSerializableExtra("MovementData"));
             footprintFragment.setArguments(moveBundle);
 
+            this.pathData = (LocationDataManager.PathData) locaIntent.getSerializableExtra("MovementData");
 
-            LocationDataManager.PathData moveIntent = (LocationDataManager.PathData) locaIntent.getSerializableExtra("MovementData");
-
-            int locNum = moveIntent.locaArr.length;
+            int locNum = this.pathData.locaArr.length;
             TMapData tMapData = new TMapData();
 
             try {
-                tMapData.convertGpsToAddress(moveIntent.locaArr[0].latitude, moveIntent.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                tMapData.convertGpsToAddress(this.pathData.locaArr[0].latitude, this.pathData.locaArr[0].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String s) {
                         Log.d(FootprintRoutineActivity.class.toString(), "address : " + s);
@@ -68,7 +70,7 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 //                        departButton.setText(String.valueOf(departureTextview.getText()));
                     }
                 });
-                tMapData.convertGpsToAddress(moveIntent.locaArr[locNum - 1].latitude, moveIntent.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
+                tMapData.convertGpsToAddress(this.pathData.locaArr[locNum - 1].latitude, this.pathData.locaArr[locNum - 1].longitude, new TMapData.ConvertGPSToAddressListenerCallback() {
                     @Override
                     public void onConvertToGPSToAddress(String s) {
                         Log.d(FootprintRoutineActivity.class.toString(), "address : " + s);
@@ -81,7 +83,6 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 //                        arriveButton.setText(String.valueOf(arrivalTextview.getText()));
                     }
                 });
-
 
             } catch (Exception e){
                 Log.d(this.getClass().getName(), e.toString());
@@ -99,13 +100,12 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
 //            );
 //
             DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-            String startTime = dateFormat.format(new Date(moveIntent.locaArr[0].datetime));
-            String endTime = dateFormat.format(new Date(moveIntent.locaArr[locNum-1].datetime));
+            String startTime = dateFormat.format(new Date(this.pathData.locaArr[0].datetime));
+            String endTime = dateFormat.format(new Date(this.pathData.locaArr[locNum-1].datetime));
 
             whenToWhen.setText(startTime + "출발 ~ "+ endTime + "도착");
 
-
-            long lapseTime = moveIntent.locaArr[locNum-1].datetime - moveIntent.locaArr[0].datetime;
+            long lapseTime = this.pathData.locaArr[locNum-1].datetime - this.pathData.locaArr[0].datetime;
 
             String lapseTimeString = String.format("소요시간  : %d 시간 %d 분",
                     TimeUnit.MILLISECONDS.toHours(lapseTime),
@@ -141,8 +141,10 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
         departButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FootprintRoutineActivity that = FootprintRoutineActivity.this;
                 Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
-                intent.putExtra("location", departureTextview.getText());
+                intent.putExtra(FavoriteActivity.KEY_NICKNAME, departureTextview.getText());
+                intent.putExtra(FavoriteActivity.KEY_LOCATION_DATA, that.pathData.locaArr[0]);
                 startActivity(intent);
             }
         });
@@ -152,8 +154,10 @@ public class FootprintRoutineActivity extends AppCompatActivity implements Footp
         arriveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FootprintRoutineActivity that = FootprintRoutineActivity.this;
                 Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
-                intent.putExtra("location", arrivalTextview.getText());
+                intent.putExtra(FavoriteActivity.KEY_NICKNAME, arrivalTextview.getText());
+                intent.putExtra(FavoriteActivity.KEY_LOCATION_DATA, that.pathData.locaArr[that.pathData.locaArr.length - 1]);
                 startActivity(intent);
             }
         });
