@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 public class FavoriteActivity extends AppCompatActivity {
 
+
+    private boolean registered = false;
     Toolbar toolbar;
     private String nickname;
 
@@ -51,15 +53,12 @@ public class FavoriteActivity extends AppCompatActivity {
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (String.valueOf(favoriteButton.getText())) {
-                    case "즐겨찾기 해제":
-                        favoriteButton.setText("즐겨찾기 등록");
-                        starImage.setImageResource(R.drawable.favorite_star_dark_200);
-                        break;
-                    case "즐겨찾기 등록":
-                        favoriteButton.setText("즐겨찾기 해제");
-                        starImage.setImageResource(R.drawable.favorite_star_200);
-                        break;
+                if(FavoriteActivity.this.registered) {
+                    favoriteButton.setText("즐겨찾기 해제");
+                    starImage.setImageResource(R.drawable.favorite_star_200);
+                }else{
+                    favoriteButton.setText("즐겨찾기 등록");
+                    starImage.setImageResource(R.drawable.favorite_star_dark_200);
                 }
             }
         });
