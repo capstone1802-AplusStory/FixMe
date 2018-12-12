@@ -269,9 +269,12 @@ public class PieChartFragment extends Fragment implements View.OnClickListener{
                     }
                     timeDateStr = sb.toString();
                 }
+                double value = dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F;
                 chartInfoArrayList.add(
                         new ChartInfo(
-                                String.valueOf(dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F)
+
+                                String.format("%.2f", value)
+//                                String.valueOf(dataSet.getEntryForIndex(i).getValue() / data.getYValueSum() * 100.0F)
                                 , dataSet.getEntryForIndex(i).getLabel()
                                 , timeDateStr
                                 , ftd

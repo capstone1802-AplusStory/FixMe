@@ -28,7 +28,7 @@ public class ScheduleAlarmManager extends Service {
 //    public static final String KEY_WEEK_REPEATON = "weekly_repeation";
 //    public static final String KEY_REPEATION_END = "repeation_end";
 
-    public static final double RANGE_ALARM = 25.0;
+    public static final double RANGE_ALARM = 50.0;
     public static final Class ALARM_ACTIVITY = FullAlarmActivity.class;//set the alarm activity here
 
 

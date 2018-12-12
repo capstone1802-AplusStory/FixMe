@@ -127,11 +127,12 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
                         this.dataArr.add(pointData);
                         pointData = null;
                         this.dataArr.add(pathData);
-                        lastLoca = null;
+                        lastLoca = loca;
                     } else {
                         Log.d(this.getClass().getName(), "path too short");
                     }
                     bufPath = null;
+                    tBegin = loca.datetime;
                     tEnd = loca.datetime;
                 }else if(loca.distanceTo(pathEndLoca) >= DISTANCE_THRESHOLD){
                     bufPath.add(loca);
@@ -181,7 +182,7 @@ public class TodayFootPrintDataManager implements FootprintDataManager {
             Log.d(this.getClass().getName(), "path ends on : " + pathEndLoca.toString());
             Log.d(this.getClass().getName(), "path length " + path.distance());
             if(pathDistance >= PATH_THRESHOLD) {
-                pathData = new FootPrintData(pathData.dtEnd, now, path);
+                pathData = new FootPrintData(pointData.dtEnd, now, path);
                 Log.d(this.getClass().getName(), "footprint data : " + pathData.toString());
                 if(this.namer != null){
                     pathData.name = this.namer.getName(path);
