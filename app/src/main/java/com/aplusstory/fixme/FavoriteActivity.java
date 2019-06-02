@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     private String nickname;
+    SettingsFavoritesActivity settingsFavoritesActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +33,6 @@ public class FavoriteActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        TextView favoriteName = (TextView) findViewById(R.id.favoriteName);
-        try {
-            favoriteName.setText(intent.getStringExtra("location"));
-        } catch (NullPointerException e) {
-            favoriteName.setText("");
-        }
 
         TextView favoriteAddress = (TextView) findViewById(R.id.favoriteAddress);
         try {

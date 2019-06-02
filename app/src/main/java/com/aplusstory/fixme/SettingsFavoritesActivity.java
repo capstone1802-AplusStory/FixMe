@@ -47,7 +47,6 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), FavoriteActivity.class);
                 intent.putExtra("nickname", String.valueOf(listView.getItemAtPosition(position)));
-                intent.putExtra("location", "중앙대학교");
                 intent.putExtra("address", "서울특별시 동작구 흑석로 84");
                 startActivity(intent);
             }
@@ -74,7 +73,6 @@ public class SettingsFavoritesActivity extends AppCompatActivity {
                 if(data.hasExtra(TMapActivity.EXTRA_NAME_ARGUMENT)){
                     Bundle bd = data.getBundleExtra(TMapActivity.EXTRA_NAME_ARGUMENT);
                     String adr = bd.getString(MapFragment.KEY_ADDRESS);
-                    arrayAdapter.add(adr);
                 }
             }
         }
